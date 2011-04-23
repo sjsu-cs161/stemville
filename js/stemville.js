@@ -1,0 +1,494 @@
+/* 
+ * StemVille library
+ * core functionality -- requires jQuery, Raphael and ...
+ * see README for usage
+ */
+ 
+ (function() { 
+     
+    var StemVille           = window.StemVille = {},
+        BACKEND_MAPS        = "maps/raw_map.php",
+        BACKEND_REGIONS     = "output/regions.php",
+        BACKEND_OUTPUT      = "output/getdata.php", //http://localhost/~bjorkstam/experimental/output/getdata.php?country=NOR&level=1&type=I&start=1&amount=100
+        MAP_SCALE           = 100,                  // X x Y scale
+        OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Should be high; like 10-100
+        simObj              = {},
+        graphObj            = {},
+        loadTracker         = {
+            level: 0,
+            max_level: 7,
+            callback: null,
+            context: this,
+            setCB: function(cb, ctx, max_level) {
+                this.callback = cb;
+                this.context = ctx;
+                this.level = 0;
+                this.max_level = max_level || 7;
+            },
+            flag: function () {
+                if (++this.level === this.max_level && this.callback) {
+                    this.callback.call(this.context);
+                };
+            }        
+        };
+        
+        
+    
+    var loadRegions = function() {
+        this.status.regions = "loading data";
+        var that = this;
+        $.ajax({
+            url: this.OPTIONS.BACKEND_REGIONS || BACKEND_REGIONS,
+            data: "country="+this.country+"&level="+this.level,
+            timeout: 10000,
+            success: function(data){
+                var output = jQuery.parseJSON(data); 
+                if (output.status === "success") {
+                    that.regions = output.data;
+                } else {
+                    that.errors.push(output.msg);
+                };
+            },
+            complete: function() {
+                that.status.regions = "completed load";
+                loadTracker.flag();
+            }
+         });
+    };
+    
+    var loadMap = function() {     
+        this.status.map_data = "loading data";
+        // asynchronous load code follows
+        var that = this;
+        $.ajax({
+            url: this.OPTIONS.BACKEND_MAPS || BACKEND_MAPS,
+            data: "country="+this.country+"&level="+this.level+"&disease="+this.disease+"&scale="+(this.OPTIONS.MAP_SCALE || MAP_SCALE),
+            timeout: 30000,
+            success: function(data){
+                var output = jQuery.parseJSON(data); 
+                if (output.status === "success") {
+                    that.mapData.data = output.data;
+                } else {
+                    that.errors.push(output.msg);
+                };
+            },
+            complete: function() {
+                that.status.map_data = "completed load";
+                loadTracker.flag();
+            }
+         });
+    };
+    
+    var outputHelper = function(type, ctx) {
+        $.ajax({
+            url: ctx.OPTIONS.BACKEND_OUTPUT || BACKEND_OUTPUT,
+            data: "country="+ctx.country+"&level="+ctx.level+"&disease="+ctx.disease+"&type="+type+"&start="+(ctx.output[type].length+1)+"&amount="+(ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT),
+            timeout: 20000,
+            success: function(data){
+                var output = jQuery.parseJSON(data); 
+                if (output.status === "success") {
+                    for (var i=0; i < output.data.length; i++) {
+                        ctx.output[type].push(output.data[i]);
+                    };
+                    
+                    if (output.data.length > 0) {
+                        outputHelper(type, ctx);
+                    } else {
+                        ctx.status.stem_output = "completed load";
+                        loadTracker.flag();
+                    };
+                } else {
+                    ctx.errors.push(output.msg);
+                };
+            },
+            complete: function() {
+            }
+         });
+    };
+    
+    var loadOutput = function() {
+        this.status.stem_output = "loading data";
+        
+        var that = this;
+        for (type in this.output) (function(t) {
+            outputHelper(t, that)
+        })(type);
+    };
+    
+    // Reset functions
+    
+    var resetMap = function() {
+        var that = this;
+        for (var region in this.mapData.regions) (function(region) {
+            that.mapData.regions[region].attr({fill: "#FF0000", 'fill-opacity': 0.0});
+        })(region);
+    };
+    
+    var resetGraph = function() {
+        // Reset some stuff for animation later
+        var that = this;
+        $("#"+this.graphContainer).html('');
+        graphObj[this.OBJECT_ID] = {};
+        graphObj[this.OBJECT_ID].data = {};
+        graphObj[this.OBJECT_ID].labels = [1,2,3,4,5];
+        graphObj[this.OBJECT_ID].colors = {};
+        var seriesObj = [];
+        for (var i=0; i < this.graph.y.length; i++) (function (i) {
+            graphObj[that.OBJECT_ID].data[that.graph.y[i]] = [];
+            graphObj[that.OBJECT_ID].colors[that.graph.y[i]] = '#FF0000';
+            seriesObj.push({name: that.graph.y[i], data: [] });
+        }(i));
+        
+        this.graph.chart = new Highcharts.Chart({
+             chart: {
+                renderTo: that.graphContainer,
+                defaultSeriesType: 'spline'
+             },
+             title: {
+                text: that.graphLabel.title
+             },
+             xAxis: {
+                categories: [],
+                title: {
+                    text: that.graphLabel.x
+                 },
+             },
+             yAxis: {
+                title: {
+                   text: that.graphLabel.y
+                }
+             },
+             plotOptions: {
+                 spline: {
+                     marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                     }
+                 }
+                
+             },
+             series: seriesObj
+        });
+    };
+    
+    // Simulation rendering
+    
+    var renderMap = function(cur_pos) {
+        var that = this,
+            map_regions = this.mapData.regions;
+        
+        for (var region in map_regions) (function(r) {
+            var opacity = that.output.I[cur_pos][r] / 100000;
+            opacity = (opacity > 1.0) ? 1.0 : opacity;
+            map_regions[r].animate({'fill-opacity': opacity}, that.delay);
+        })(region);
+    };
+    
+    var renderGraph = function(cur_pos) {
+        var that        = this;
+        for (var i=0; i < this.graph.y.length; i++) (function(i) {
+            var region = that.graph.y[i];
+            console.log("adding data for:", that.graph.chart.series[i].name)
+            console.log("data added:", that.output[that.graph.output][cur_pos][region]);
+            that.graph.chart.series[i].addPoint(that.output[that.graph.output][cur_pos][region], cur_pos+1);
+        } (i));
+        
+    };
+    var simulation = function(cur_pos, max_pos, callback, ctx) {
+        var that = this;
+        
+        simObj[this.OBJECT_ID].ITER = cur_pos;
+        // Call all functions that render something
+        if (this.hasMap()) {
+            renderMap.call(this, cur_pos);
+        };
+        if (this.hasGraph()) {
+            renderGraph.call(this, cur_pos);
+        };
+        
+        
+        // Callback, with optional parameter current iteration
+        if (callback) {
+            callback.call(ctx, cur_pos+1);
+        };
+        
+        if (++cur_pos < max_pos) {
+            simObj[this.OBJECT_ID].SIM_ID = setTimeout(function() { simulation.call(that, cur_pos, max_pos, callback, ctx); }, this.delay);
+        } else {
+            delete simObj[this.OBJECT_ID].ITER;
+            delete simObj[this.OBJECT_ID].RUNNING;
+        };
+    };
+    
+    StemVille.Scenario = function(country, level, disease) {
+
+        this.country = country;
+        this.level = level;
+        this.disease = disease ? disease : 'Influenza';
+        
+        this.OBJECT_ID = parseInt(Math.ceil(Math.random() * 1000000));
+        
+        this.errors = [];
+        this.status = {
+            regions: "not loaded",
+            stem_output: "not loaded",
+            map_data: "not loaded"
+        };
+
+        this.delay = 200;
+        
+        this.mapData = {
+            canvas: null,
+            data: null,
+            regions: {}
+        };
+        
+        // Graph (AKA Time Series)
+
+        this.graphContainer = null;
+        this.graph = {
+            chart: null,
+            output: "I",                   // I, E, R, S, POP_COUNT -- see this.output 
+            x: "iteration",
+            y: []
+        };
+        this.graphLabel = {
+            title: "STEM Output",
+            x: "time",
+            y: "incidence rate"
+        };
+        
+        this.phaseContainer = null;
+        this.phase = {
+            x: "time",
+            data: null,
+            region: null
+        };
+        this.phaseLabel = {
+            title: "Phase Plot",
+            x: "Time (days)",
+            y: "Phase"
+        }
+        
+        this.output = {
+            "E": [],
+            "I": [],
+            "R": [],
+            "S": [],
+            "POP_COUNT": []
+        };     
+        this.regions = [];
+        
+        this.OPTIONS = {};
+     };
+     
+    var sv_proto = StemVille.Scenario.prototype;
+    
+    sv_proto.setOptions = function(options) {
+        this.OPTIONS = options;
+        
+        return this;
+    };
+     
+    sv_proto.init = function(callback, ctx) { 
+        if (callback) {
+            loadTracker.setCB(callback, ctx ? ctx : this);
+        };
+        
+        simObj[this.OBJECT_ID] = {};
+           
+        loadRegions.call(this);
+        loadMap.call(this);
+        loadOutput.call(this);
+        
+        return this;
+    };
+     
+    sv_proto.setDelay = function(delay) {
+        this.delay = delay;
+        return this;
+    };
+     
+     
+    sv_proto.getErrors = function() {
+        return this.errors;
+    };
+    
+    sv_proto.getRegions = function() {
+        return this.regions;
+    }
+    
+    // Phase plot functionality
+    
+    sv_proto.setPhase = function(container, phase_1, phase_2, reg) {
+        this.phaseContainer = container;
+
+        this.phase = {
+            data: [phase_1, phase_2],
+            region: reg
+        };
+
+        return this;
+    };
+    
+    sv_proto.hasPhase = function() {
+        if (this.phaseContainer && this.phase.data && this.phase.region) return true;
+        return false;
+    };
+    
+    sv_proto.killPhase = function() {
+        this.phaseContainer = null;
+        
+        return this;
+    };
+      
+    // Graph functionality
+      
+    sv_proto.setGraph = function(container, output, y_arr, x_axis) {
+        this.graphContainer = container;
+
+        this.graph = {
+            output: output ? output : "I",
+            y: y_arr,
+            x: x_axis ? x_axis : this.graph.x
+        };
+
+        
+        return this;
+    };
+    
+      
+    sv_proto.setGraphLabel = function(title, label_x, label_y) {
+        this.graphLabel = {
+            title: "STEM Output",
+            x: label_x ? label_x : this.graphLabel.x,
+            y: label_y ? label_y : this.graphLabel.y
+        };
+        
+        return this;
+    };
+
+    sv_proto.hasGraph = function() {
+        if (this.graphContainer && this.graph.y && this.graph.x) return true;
+        return false;
+    };
+
+    sv_proto.killGraph = function() {
+        this.graphContainer = null;
+
+        return this;
+    };
+
+    // Map functionality
+
+    sv_proto.setMap = function(r_canvas) {
+        this.mapData.canvas = r_canvas;
+
+        return this;
+    };
+
+    sv_proto.hasMap = function() {
+        return (this.mapData.canvas && this.mapData.data);
+    };
+
+    sv_proto.killMap = function() {
+        this.mapData.canvas = null;
+
+        return this;
+    };
+    
+    sv_proto.drawMap = function() {
+        if (this.hasMap()) {
+            this.mapData.canvas.clear();
+            for (var region in this.mapData.data) {
+                this.mapData.regions[region] = this.mapData.canvas.path(this.mapData.data[region]);
+            };
+        };
+        
+        return this;
+    };
+    
+    sv_proto.resizeMap = function(new_scale, resize_canvas) {
+        // Old code for 
+        /*var map_regions = this.mapData.regions,
+            scale_factor = new_scale/(this.OPTIONS.MAP_SCALE || MAP_SCALE);
+        for (var region in map_regions) (function(r) {
+            map_regions[r].scale(scale_factor, scale_factor, 0, 0);
+        })(region);*/
+        if (resize_canvas) {
+            this.mapData.canvas.setSize(new_scale, new_scale);
+        };
+        
+        this.OPTIONS.MAP_SCALE = new_scale;
+        
+        loadTracker.setCB(function() {
+            this.drawMap();
+        }, this, 1);
+        
+        loadMap.call(this);        
+        
+        return this;
+    };
+    
+    
+    // Simulation controls
+    
+    sv_proto.run = function(callback, ctx) {
+        // Make sure everything is reset first
+        if (this.isRunning()) this.stop();
+        resetMap.call(this);
+        resetGraph.call(this);
+        
+        // Call centralized function to sync all animations
+        simObj[this.OBJECT_ID].MAX_ITER = this.output.I.length;
+        simObj[this.OBJECT_ID].CALLBACK = callback;
+        simObj[this.OBJECT_ID].CTX = ctx || this;
+        simObj[this.OBJECT_ID].RUNNING = true;
+
+        simulation.call(this, 0, this.output.I.length, callback, ctx || this);
+        
+        return this;
+    };
+    
+    sv_proto.pause = function(callback, ctx) {
+        if (simObj[this.OBJECT_ID].SIM_ID) {
+            clearTimeout(simObj[this.OBJECT_ID].SIM_ID);
+        };
+        
+        return this;
+    };
+    
+    sv_proto.resume = function() {
+        if (!simObj[this.OBJECT_ID].SIM_ID) return this;
+        var CUR_ITER = simObj[this.OBJECT_ID].ITER,
+            MAX_ITER = simObj[this.OBJECT_ID].MAX_ITER,
+            CALLBACK = simObj[this.OBJECT_ID].CALLBACK,
+            CTX      = simObj[this.OBJECT_ID].CTX;
+            
+        simulation.call(this, CUR_ITER, MAX_ITER, CALLBACK, CTX);
+        
+        return this;
+    };
+    
+    sv_proto.stop = sv_proto.reset = function() {
+        if (simObj[this.OBJECT_ID].SIM_ID) {
+            clearTimeout(simObj[this.OBJECT_ID].SIM_ID);
+            simObj[this.OBJECT_ID] = {};
+            var that = this;
+            setTimeout(function() { resetMap.call(that); }, this.delay);
+        };
+        
+        return this;
+    };
+    
+    sv_proto.isRunning = function() {
+        if (simObj[this.OBJECT_ID].RUNNING) return true;
+        return false;
+    };
+    
+    sv_proto.getIter = function() {
+        return simObj[this.OBJECT_ID].ITER || 0;
+    };
+    
+ })();
