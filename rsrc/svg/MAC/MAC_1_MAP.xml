@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+# ***************************************************************************************************
+# * Copyright (c) 2007 IBM Corporation and others.
+# * All rights reserved. This program and the accompanying materials
+# * are made available under the terms of the Eclipse Public License v1.0
+# * which accompanies this distribution, and is available at
+# * http://www.eclipse.org/legal/epl-v10.html
+# *
+# * Contributors:
+# *     IBM Corporation - initial API and implementation
+# ********************************************************************************************** --> 
+<!-- 
+# /*******************************************************************************************************
+# * Key Format: 
+# * 
+# * 	 For level 1 data, the key is the ISO3166-2 code. An ISO3166-2 code is composed as follows: 
+# * a two letter country code followed by up to three alphanumeric characters for the level 1 administration.
+# *
+# * 	 For level 2 data, the key is the ISO3166-2 code followed by six digits. The leftmost two digits indicate
+# * the level 1 container of a level 2 administration (i.e. California is a level 1 container for Orange County
+# * which is a level 2 administration).  The two digits were taken from a lexicographic sorting of all the
+# * level 1 administrations within a country. Similarly, the four leftmost digits indicate the level 2 administration.
+# * Again, these four digits are an index into the lexicographic sorting of all level 2 administrations within 
+# * a level 1 administration. 
+# *************************************************************************************************** --> 
+
+<Map xmlns:gml="http://www.opengis.net/gml" xmlns:georss="http://www.georss.org/georss">
+<title>MAC Level 1 Map</title>
+<subTitle>Administrative Boundaries</subTitle>
+<updated>Tue Nov 07 16:57:55 PST 2006 </updated>
+<entry>
+<georss:where><gml:Polygon gml:id="MO-M">
+<gml:outerBoundaryIs>
+<gml:LinearRing>
+<gml:posList>
+22.213597 113.528951 22.219734 113.531438 22.222342 113.537655 22.221117 113.554379 22.213041 113.550111 22.208215 113.552385 22.205360 113.551171 22.200499 113.554546 22.199966 113.558293 22.196688 113.563942 22.193733 113.565827 22.188985 113.565655 22.183295 113.549475 22.185856 113.546914 22.186060 113.546043 22.188008 113.537666 22.180383 113.530298 22.184341 113.529341 22.192042 113.534274 22.200281 113.535231 22.206157 113.538984 22.208041 113.531742 22.213597 113.528951 
+</gml:posList>
+</gml:LinearRing><gml:LinearRing>
+<gml:posList>
+22.150113 113.559381 22.153811 113.553520 22.155274 113.546478 22.157173 113.545218 22.162864 113.548300 22.163385 113.551429 22.161230 113.554236 22.161862 113.560458 22.156834 113.575590 22.154499 113.577504 22.150113 113.559381 
+</gml:posList>
+</gml:LinearRing><gml:LinearRing>
+<gml:posList>
+22.110675 113.551303 22.116106 113.549498 22.120785 113.551887 22.125407 113.556052 22.137508 113.572227 22.137787 113.576450 22.133027 113.583153 22.132613 113.589570 22.130501 113.591037 22.127831 113.590504 22.121745 113.573883 22.113325 113.572004 22.110675 113.551303 
+</gml:posList>
+</gml:LinearRing></gml:outerBoundaryIs>
+</gml:Polygon>
+</georss:where>
+</entry>
+</Map>

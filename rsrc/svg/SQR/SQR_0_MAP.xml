@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+# ***************************************************************************************************
+# * Copyright (c) 2007 IBM Corporation and others.
+# * All rights reserved. This program and the accompanying materials
+# * are made available under the terms of the Eclipse Public License v1.0
+# * which accompanies this distribution, and is available at
+# * http://www.eclipse.org/legal/epl-v10.html
+# *
+# * Contributors:
+# *     IBM Corporation - initial API and implementation
+# ********************************************************************************************** --> 
+<!-- 
+# /*******************************************************************************************************
+# * Key Format: 
+# * 
+# * 	 For level 1 data, the key is the ISO3166-2 code. An ISO3166-2 code is composed as follows: 
+# * a two letter country code followed by up to three alphanumeric characters for the level 1 administration.
+# *
+# * 	 For level 2 data, the key is the ISO3166-2 code followed by six digits. The leftmost two digits indicate
+# * the level 1 container of a level 2 administration (i.e. California is a level 1 container for Orange County
+# * which is a level 2 administration).  The two digits were taken from a lexicographic sorting of all the
+# * level 1 administrations within a country. Similarly, the four leftmost digits indicate the level 2 administration.
+# * Again, these four digits are an index into the lexicographic sorting of all level 2 administrations within 
+# * a level 1 administration. 
+# *************************************************************************************************** --> 
+
+<Map xmlns:gml="http://www.opengis.net/gml" xmlns:georss="http://www.georss.org/georss">
+<title>SQR Level 0 Map</title>
+<subTitle>Administrative Boundaries</subTitle>
+<updated>Tue Nov 07 16:57:55 PST 2006 </updated>
+<entry>
+<georss:where><gml:Polygon gml:id="SQR">
+<gml:outerBoundaryIs>
+<gml:LinearRing>
+<gml:posList>
+0 0 0 1 1 1 1 0 
+</gml:posList>
+</gml:LinearRing>
+</gml:outerBoundaryIs>
+</gml:Polygon>
+</georss:where>
+</entry>
+</Map>

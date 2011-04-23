@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+# ***************************************************************************************************
+# * Copyright (c) 2007 IBM Corporation and others.
+# * All rights reserved. This program and the accompanying materials
+# * are made available under the terms of the Eclipse Public License v1.0
+# * which accompanies this distribution, and is available at
+# * http://www.eclipse.org/legal/epl-v10.html
+# *
+# * Contributors:
+# *     IBM Corporation - initial API and implementation
+# ********************************************************************************************** --> 
+<!-- 
+# /*******************************************************************************************************
+# * Key Format: 
+# * 
+# * 	 For level 1 data, the key is the ISO3166-2 code. An ISO3166-2 code is composed as follows: 
+# * a two letter country code followed by up to three alphanumeric characters for the level 1 administration.
+# *
+# * 	 For level 2 data, the key is the ISO3166-2 code followed by six digits. The leftmost two digits indicate
+# * the level 1 container of a level 2 administration (i.e. California is a level 1 container for Orange County
+# * which is a level 2 administration).  The two digits were taken from a lexicographic sorting of all the
+# * level 1 administrations within a country. Similarly, the four leftmost digits indicate the level 2 administration.
+# * Again, these four digits are an index into the lexicographic sorting of all level 2 administrations within 
+# * a level 1 administration. 
+# *************************************************************************************************** --> 
+
+<Map xmlns:gml="http://www.opengis.net/gml" xmlns:georss="http://www.georss.org/georss">
+<title>SMR Level 1 Map</title>
+<subTitle>Administrative Boundaries</subTitle>
+<updated>Tue Nov 07 16:57:55 PST 2006 </updated>
+<entry>
+<georss:where><gml:Polygon gml:id="SM-M">
+<gml:outerBoundaryIs>
+<gml:LinearRing>
+<gml:posList>
+43.967489 12.384459 43.982730 12.399659 43.986417 12.410129 43.991886 12.419299 43.998512 12.428685 44.004534 12.436969 44.009911 12.449405 44.015050 12.459496 44.020015 12.468913 44.023547 12.483300 44.022126 12.497750 44.016761 12.509177 44.007069 12.514255 43.997819 12.505349 43.986440 12.496395 43.976989 12.494325 43.968779 12.491499 43.945674 12.479736 43.945674 12.479736 43.933266 12.476480 43.922047 12.463647 43.912502 12.450479 43.907297 12.433861 43.907263 12.414941 43.910500 12.401171 43.915791 12.390385 43.924205 12.383764 43.937299 12.384841 43.948413 12.386866 43.967489 12.384459 
+</gml:posList>
+</gml:LinearRing></gml:outerBoundaryIs>
+</gml:Polygon>
+</georss:where>
+</entry>
+</Map>
