@@ -1,7 +1,7 @@
 stemville
 =========
 
-This is intended to be a relatively stable repository. For small code examples/demos/tests, please use *experimental*. Avoid putting files in here that provide anything useful.
+This is intended to be a relatively stable repository. For small code examples/demos/tests, please use *experimental*. Avoid putting files in here that aren't used in our application.
 
 Directory Structure
 ----------
@@ -12,6 +12,7 @@ for **JavaScript** (*separate, independent files*) use **js/**
 for **CSS** (*stylesheets*) use **css/**
 for **images** (*part of webpage or not*) use **img/**
 for **partials** (*html files loaded through ajax*) use **partials/** and put an *underscore* before the file name: *_filename.html*
+for **plugins** (such as highcharts) use **plugins/** to separate 3rd-party software from our own
 
 Reminder
 --------
