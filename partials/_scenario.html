@@ -1,8 +1,9 @@
-<div id="container">
-	<div class="c-item">
-		<div class="center">
-			<div id="c_scenario">
-                <h2>Scenario</h2>
+<div style="width: 90%; height:400px; margin: 50px auto 0 auto">
+    <h2 style="text-align:center; margin: 10px">Design Scenario</h2>
+<div id="accordion">
+
+                <h3><a href="#">Scenario</a></h3>
+                <div>
                 <form id="frm-scenario" name="frm-scenario">
                     <p>
                         <label>Name:</label>
@@ -16,30 +17,10 @@
                         </select>
                     </p>
                 </form>
-			</div>
-		</div>
-	</div>
-	<!--
-	Name = dis1
-    Disease Model = DeterministicSEIRDiseaseModelImpl //can be 1 of many things
-    Disease Name = dis1
-    Population = human
-    Time Period = 86400000 //seconds i believe?
-    Frequency Dependent = Yes
-    Reference Pop Density = 100
-    Road.Net.Inf.Proportion = 0.01
-    Characteristic Mixing Distance = 2.25
-    Transmission Rate = 1.0
-    Non-Linearity Coefficient = 1.0
-    Infections Recovery Rate = 0.5
-    Infectious Mortality Rate = 0.0
-    Immunity Loss Rate = 0.3
-    Incubation Rate = 0.3
-	-->			
-	<div class="c-item">
-		<div class="center">
-			<div id="c_disease">
-			    <h2>Disease</h2>
+                </div>
+                
+			    <h3><a href="#">Disease</a></h3>
+			    <div>
                 <form id="frm-disease" name="frm-disease">
                     <p>
                         <label>Name:</label>
@@ -104,22 +85,9 @@
                         <input type="text" name="incubation_rate" value="0.3" />
                     </p>
                 </form>
-			</div>
-		</div>
-	</div>
-	<!--
-	Name = inf1
-    type = Infector //i believe can be 1 of two things
-    Disease Name = dis1
-    Population = human //only human for now
-    abs_or_percent = 1000
-    Location = DE-HH //this lettering is chosen manually... we need to find where the list where these values are held.
-    
-	-->
-	<div class="c-item">
-		<div class="center">
-			<div id="c_infector">
-			    <h2>Infector</h2>
+                </div>
+			    <h3><a href="#">Infector</a></h3>
+			    <div>
                 <form id="frm-infector" name="frm-infector">
                     <p>
                         <label>Name:</label>
@@ -144,35 +112,17 @@
                         <input type="text" name="location" value="DE-HH" />
                     </p>
                 </form>
-			</div>
-		</div>
-	</div>
-    <!--
-    Name = dis
-    Title =
-    Description = 
-    Creator = 
-    Date = 
-    Valid = 
-    Created = 
-    Source = 
-    Publisher = 
-    Coverage = 
-    Contributor = 
-    Relation = 
-    Rights = 
-    Subject = 
-    Language = 
-    Citation = 
-    License = 
-    Graphs = {} //graphs accociated (sub directory) of/with the model
-    Models = {} //models accociated (sub directory) of/with the current model.
-    -->
-	<div class="c-item">
-		<div class="center">
-			<div id="c_models">
-			    <h2>Models</h2>
+                </div>
+                
+			    <h3><a href="#">Models</a></h3>
+			    <div>
                 <form id="frm-models" name="frm-models">
+                    <p>
+                        <label>Parent:</label>
+                        <select name="model">
+                                <option value="-">---</option>
+                        </select>
+                    </p>
                     <p>
                         <label>Name:</label>
                         <input type="text" name="name" value="dis" />
@@ -247,19 +197,9 @@
                         <input type="text" name="license" value="" />
                     </p>
                 </form>
-			</div>
-		</div>
-	</div>
-	<!--
-	Name = myseq 
-    Cycle Period = 80 days
-    Start Date = 2011-04-11
-    End Date =
-	-->
-	<div class="c-item">
-		<div class="center">
-			<div id="c_sequencer">
-			   <h2>Sequencer</h2>
+                </div>
+			   <h3><a href="#">Sequencer</a></h3>
+			   <div>
 			   <form id="frm-sequencer" name="frm-sequencer">
                    <p>
                        <label>Name:</label>
@@ -278,18 +218,13 @@
                        <input type="text" name="end_date" value="" />
                    </p>
                </form>
-			</div>
-		</div>
-	</div>
-	
-	<div class="c-item">
-		<div class="center">
-			<div id="c_create">
-			   <h2>Create</h2>
-			   <p>Make sure everything is in order</p>
-			   <p><a onclick="buildScenario()">GENERATE SCENARIO</a></p>
-			   <p id="status"></p>
-			</div>
-		</div>
-	</div>
+               </div>
+
+			   <h3><a href="#"><b>Create</b></a></h3>
+			   <div>
+			       <p>Make sure everything is in order</p>
+			       <p><a onclick="buildScenario()">GENERATE SCENARIO</a></p>
+			       <p id="status"></p>
+			   </div>
+</div>
 </div>
