@@ -53,17 +53,26 @@ window.onload = function() {
                              page_create.show();
                              $("#accordion").accordion();
                          },
-                         complete: function() {
-                             LOADER.unload();
-                         }
+                           complete: function() {
+                               LOADER.unload();
+                           }
                       });
 	             } else {
 	                 page_create.show();
 	                 LOADER.unload();    		                 
 	             }
 	         } else if (which_page === 'load') {
-	             // Display the page where a user can laod a scenario
-	             page_load.show();
+	             $.ajax({
+                      url: "partials/_load-scenario.html",
+                      timeout: 10000,
+                      success: function(data){
+                          page_load.find("> div").html(data);
+                          page_load.show();
+                      },
+                      complete: function() {
+                          LOADER.unload();
+                      }
+                   });
 	         } else if (which_page === 'scenario') {
 	             // Display current scenario workflow
 	             page_scenario.show();
@@ -76,12 +85,119 @@ window.onload = function() {
 	         }
          
 	         // All laoding has been done, now unload
-	         if (which_page !== 'create') {
+	         if (which_page !== 'create' && which_page !== 'load') {
 	             setTimeout(function() { LOADER.unload(); }, 800);
 	         }
         
 	     }
 	}());
-	
-	
+}
+
+/**
+ * Creating objects
+ */
+$.fn.serializeObject = function() {
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name]) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
+function setStatus(status) {
+    $('#status').html(status);
+}
+var TMP_MODELS;
+var insertIntoModel = function(arrModels, parent, model) {
+    if (arrModels.length === 0) {
+        return;
+    }
+    for (var i = 0; i < arrModels.length; i++) {
+        if (arrModels[i].name === parent) {
+            arrModels[i].models.push(model);
+            return;
+        } else {
+            insertIntoModel(arrModels[i].models, parent, model);
+        }
+    }
+}
+var generateModel = function() {
+    var model = $('#frm-models').serializeObject();
+    var first = false;
+    if (!TMP_MODELS) {
+        TMP_MODELS = model;
+        delete TMP_MODELS.parent;
+        TMP_MODELS.models = [];
+        first = true;
+    } else {
+        var parent = model.parent;
+        delete model.parent;
+        model.models = [];
+        
+        if (TMP_MODELS.name === parent) {
+            TMP_MODELS.models.push(model);
+        } else {
+            insertIntoModel(TMP_MODELS.models, parent, model);
+        }
+    }
+    if (first) {
+        $('#frm-models').find('select[name="parent"]').html('<option value="'+model.name+'">'+model.name+'</option>');
+    } else {
+        $('#frm-models').find('select[name="parent"]').append('<option value="'+model.name+'">'+ parent + '/' + model.name+'</option>');
+    }
+    $('#frm-models').find('input').attr('value', '');
+}
+function buildScenario() {
+    /**
+     * TODO:
+     * -----
+     * Each scenario needs *ONE* top level model
+     * each model has an array: models = [model2, model3, ...]
+     * Serialize to a temp object first, modify as necessary THEN assign accordingly to main JSON object
+     * ====================
+     * Drag-n-drop graphs
+     * add graph arrays to EACH model
+     */
+    setStatus('Serializing and Generating JSON...');
+    
+    var data = {};
+    data['project_name'] = 'blah';
+    // Grab the form data
+    data['scenario'] = $('#frm-scenario').serializeObject();
+    data['disease'] = $('#frm-disease').serializeObject();
+    // TODO: Figure graphs out
+    //data['graphs'] = null;
+    data['infector'] = $('#frm-infector').serializeObject();
+    data['models'] = TMP_MODELS;
+    data['sequencer'] = $('#frm-sequencer').serializeObject();
+    
+    // Now do the specifics--linking names to objects
+    
+    data['scenario']['model'] = data['models']['name']+'.model';
+    data['scenario']['sequencer'] = data['sequencer']['name']+'.sequencer';
+    data['scenario']['infector'] = data['infector']['name']+'.standard';
+    
+    // TODO: Figure out what to do with this
+    data['models']['graphs'] = {};
+    
+    console.log(data);
+    
+    setStatus('Sending object to server...');
+    $.ajax({
+        type: "POST",
+        url: "backend/create_scenario.php",
+        dataType: "json",
+        data: { data: data },
+        complete: function() {
+            setStatus('Completed request');
+        }
+    });
 }

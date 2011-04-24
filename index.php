@@ -22,10 +22,28 @@
     	});
     	
 		</script>
-		<style>
-		</style>
+		
 		<link rel="stylesheet" media="screen" href="css/main.css"/>
 		<link rel="stylesheet" media="screen" href="css/custom-theme/jquery-ui-1.8.11.custom.css"/>
+		<style>
+		a.button {
+		    color: #fff;
+		}
+		#accordion form p, div.finalize > p {
+		    clear:both;
+		    margin: 6px 0;
+		}
+		#accordion form p label {
+		    width: 220px;
+		    display:block;
+		    text-align:right;
+		    float:left;
+		    margin-right: 5px;
+		}
+		#accordion form p input {
+		    float:left;
+		}
+		</style>
 	</head>
 	<body>
 		<div id="header">
