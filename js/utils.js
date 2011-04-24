@@ -91,7 +91,6 @@ window.onload = function() {
         
 	     }
 	}());
-<<<<<<< HEAD
 }
 
 /**
