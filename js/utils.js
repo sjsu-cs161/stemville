@@ -51,7 +51,7 @@ window.onload = function() {
                              page_create.find("> div").html(data);
                              loaded_create = true;
                              page_create.show();
-                             $("#accordion").accordion();
+                             $("#accordion").accordion({ autoHeight: false });
                          },
                            complete: function() {
                                LOADER.unload();
@@ -166,9 +166,9 @@ function buildScenario() {
      * Drag-n-drop graphs
      * add graph arrays to EACH model
      */
-     if (!TMP_MODELS) {
-         setStatus("No model created. Aborting.");s
-     }
+    if (!TMP_MODELS) {
+        setStatus("No model created. Aborting.");s
+    }
     LOADER.load();
     setStatus('Serializing and Generating JSON...');
     
