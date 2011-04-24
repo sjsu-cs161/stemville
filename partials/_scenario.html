@@ -236,7 +236,6 @@ $.getJSON("rsrc/json/selectoptions.json",function(data) {
     for (var i=0; i < data.SCENARIO_SOLVER.length; i++) {
         cur_select.append('<option value="'+data.SCENARIO_SOLVER[i]+'">'+data.SCENARIO_SOLVER[i]+'</option>')
     }
-    console.log(data.DISEASE_DISEASE_MODEL);
     // Populate DISEASE MODELS
     cur_select = $('#frm-disease select[name="model"]');
     cur_select.html('');

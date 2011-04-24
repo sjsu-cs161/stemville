@@ -166,6 +166,10 @@ function buildScenario() {
      * Drag-n-drop graphs
      * add graph arrays to EACH model
      */
+     if (!TMP_MODELS) {
+         setStatus("No model created. Aborting.");s
+     }
+    LOADER.load();
     setStatus('Serializing and Generating JSON...');
     
     var data = {};
@@ -198,6 +202,7 @@ function buildScenario() {
         data: { data: data },
         complete: function() {
             setStatus('Completed request');
+            NAV.show('load');
         }
     });
 }
