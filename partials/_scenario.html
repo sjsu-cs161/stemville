@@ -11,10 +11,24 @@
                     </p>
                     <p>
                         <label>Solver:</label>
-                        <select name="solver">
+                       <!-- <select name="solver">
                                 <option value="FiniteDifferenceImpl">FiniteDifferenceImpl</option>
                                 <option value="RungeKuttaImpl">RungeKuttaImpl</option>
-                        </select>
+                        </select>-->
+			<select id = "solver" size = "1">
+			<option value = "nothing" selected="selected">Select a Solver</option>
+			
+			<script type = "text/javascript" charset="UTF-8">
+				var S = $.getJSON("rsrc/json/selectoptions.json",function(json) {
+					var select = document.getElementById("solver");
+					for (var i = 0; i < json.SCENARIO_SOLVER.length; ++i)
+					{
+					select.options[select.options.length] = new Option(json.SCENARIO_SOLVER[i],json.SCENARIO_SOLVER[i]);
+					}
+					});
+				
+			</script>
+			</select>
                     </p>
                 </form>
                 </div>
@@ -28,9 +42,22 @@
                     </p>
                     <p>
                         <label>Disease Model:</label>
-                        <select name="model">
+                       <!-- <select name="model">
                                 <option value="DeterministicSEIRDiseaseModelImpl">DeterministicSEIRDiseaseModelImpl</option>
-                        </select>
+                        </select>-->
+			<select id = "diseasemodel" size = "1">
+			<option value = "nothing" selected="selected">Select a Disease Model</option>
+			
+			<script type = "text/javascript" charset="UTF-8">
+				var S = $.getJSON("rsrc/json/selectoptions.json",function(json) {
+					var select = document.getElementById("diseasemodel");
+					for (var i = 0; i < json.DISEASE_DISEASE_MODEL.length; ++i)
+					{
+					select.options[select.options.length] = new Option(json.DISEASE_DISEASE_MODEL[i],json.DISEASE_DISEASE_MODEL[i]);
+					}
+					});
+				
+			</script>
                     </p>
                     <p>
                         <label>Population:</label>
