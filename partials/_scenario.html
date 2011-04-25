@@ -4,70 +4,43 @@
 
                 <h3><a href="#">Scenario</a></h3>
                 <div>
-                <form id="frm-scenario" name="frm-scenario">
-                    <p>
+                <form class="cf" id="frm-scenario" name="frm-scenario">
+                    <p class="cf">
                         <label>Name:</label>
                         <input type="text" name="name" value="test-scenario" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Solver:</label>
-                       <!-- <select name="solver">
+                        <select name="solver">
                                 <option value="FiniteDifferenceImpl">FiniteDifferenceImpl</option>
                                 <option value="RungeKuttaImpl">RungeKuttaImpl</option>
-                        </select>-->
-			<select id = "solver" size = "1">
-			<option value = "nothing" selected="selected">Select a Solver</option>
-			
-			<script type = "text/javascript" charset="UTF-8">
-				var S = $.getJSON("rsrc/json/selectoptions.json",function(json) {
-					var select = document.getElementById("solver");
-					for (var i = 0; i < json.SCENARIO_SOLVER.length; ++i)
-					{
-					select.options[select.options.length] = new Option(json.SCENARIO_SOLVER[i],json.SCENARIO_SOLVER[i]);
-					}
-					});
-				
-			</script>
-			</select>
+                        </select>
                     </p>
                 </form>
                 </div>
                 
 			    <h3><a href="#">Disease</a></h3>
 			    <div>
-                <form id="frm-disease" name="frm-disease">
-                    <p>
+                <form class="cf" id="frm-disease" name="frm-disease">
+                    <p class="cf">
                         <label>Name:</label>
                         <input type="text" name="name" value="dis1" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Disease Model:</label>
-                       <!-- <select name="model">
+                        <select name="model">
                                 <option value="DeterministicSEIRDiseaseModelImpl">DeterministicSEIRDiseaseModelImpl</option>
-                        </select>-->
-			<select id = "diseasemodel" size = "1">
-			<option value = "nothing" selected="selected">Select a Disease Model</option>
-			
-			<script type = "text/javascript" charset="UTF-8">
-				var S = $.getJSON("rsrc/json/selectoptions.json",function(json) {
-					var select = document.getElementById("diseasemodel");
-					for (var i = 0; i < json.DISEASE_DISEASE_MODEL.length; ++i)
-					{
-					select.options[select.options.length] = new Option(json.DISEASE_DISEASE_MODEL[i],json.DISEASE_DISEASE_MODEL[i]);
-					}
-					});
-				
-			</script>
+                        </select>
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Population:</label>
                         <input type="text" name="population" value="human" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Time Period (ms):</label>
                         <input type="text" name="time_period" value="86400000" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Frequency dependent:</label>
                         <select name="frequency_dependent">
                                 <option value="Yes">Yes</option>
@@ -75,39 +48,39 @@
                         </select>
                     </p>
 
-                    <p>
+                    <p class="cf">
                         <label>Reference Pop Density</label>
                         <input type="text" name="reference_pop_density" value="100" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Road.Net.Inf.Proportion</label>
                         <input type="text" name="road_net_inf_proportion" value="0.01" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Characteristic Mixing Distance:</label>
                         <input type="text" name="characteristic-mixing-distance" value="2.25" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Transmission Rate:</label>
                         <input type="text" name="transmission_rate" value="1.0" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Non-Linearity Coefficient:</label>
                         <input type="text" name="non_linearity_coefficient" value="1.0" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Infections Recovery Rate:</label>
                         <input type="text" name="infections_recovery_rate" value="0.5" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Infectious Mortality Rate:</label>
                         <input type="text" name="infectious_mortality_rate" value="0.0" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Immunity Loss Rate:</label>
                         <input type="text" name="immunity_loss_rate" value="0.3" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Incubation Rate:</label>
                         <input type="text" name="incubation_rate" value="0.3" />
                     </p>
@@ -115,26 +88,26 @@
                 </div>
 			    <h3><a href="#">Infector</a></h3>
 			    <div>
-                <form id="frm-infector" name="frm-infector">
-                    <p>
+                <form class="cf" id="frm-infector" name="frm-infector">
+                    <p class="cf">
                         <label>Name:</label>
                         <input type="text" name="name" value="inf1" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Type:</label>
                         <select name="type">
                                 <option value="Infector">Infector</option>
                         </select>
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Population:</label>
                         <input type="text" name="population" value="human" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>abs_or_percent:</label>
                         <input type="text" name="abs_or_percent" value="1000" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Location:</label>
                         <input type="text" name="location" value="DE-HH" />
                     </p>
@@ -143,104 +116,102 @@
                 
 			    <h3><a href="#">Models</a></h3>
 			    <div>
-                <form id="frm-models" name="frm-models">
-                    <p>
+                <form class="cf" id="frm-models" name="frm-models">
+                    <p class="cf">
                         <label>Parent:</label>
-                        <select name="model">
+                        <select name="parent">
                                 <option value="-">---</option>
                         </select>
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Name:</label>
                         <input type="text" name="name" value="dis" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Title:</label>
                         <input type="text" name="title" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Description:</label>
                         <input type="text" name="description" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Creator:</label>
                         <input type="text" name="creator" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Date:</label>
                         <input type="text" name="date" value="" />
                     </p>
                     <!--
-                    Also add: 
-                    Graphs = {} //graphs accociated (sub directory) of/with the model
-                    Models = {} //models accociated (sub directory) of/with the current model.
-                    -->
-                    <p>
+
+                    <p class="cf">
                         <label>Valid:</label>
                         <input type="text" name="valid" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Created:</label>
                         <input type="text" name="created" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Source:</label>
                         <input type="text" name="source" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Publisher:</label>
                         <input type="text" name="publisher" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Coverage:</label>
                         <input type="text" name="coverage" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Contributor:</label>
                         <input type="text" name="contributor" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Relation:</label>
                         <input type="text" name="relation" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Rights:</label>
                         <input type="text" name="rights" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Subject:</label>
                         <input type="text" name="subject" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Language:</label>
                         <input type="text" name="language" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>Citation:</label>
                         <input type="text" name="citation" value="" />
                     </p>
-                    <p>
+                    <p class="cf">
                         <label>License:</label>
                         <input type="text" name="license" value="" />
-                    </p>
+                    </p>-->
                 </form>
+                <p class="cf"><a class="button" onclick="generateModel()">Add Model</a></p>
                 </div>
 			   <h3><a href="#">Sequencer</a></h3>
 			   <div>
-			   <form id="frm-sequencer" name="frm-sequencer">
-                   <p>
+			   <form class="cf" id="frm-sequencer" name="frm-sequencer">
+                   <p class="cf">
                        <label>Name:</label>
                        <input type="text" name="name" value="myseq" />
                    </p>
-                   <p>
+                   <p class="cf">
                        <label>Cycle Period:</label>
                        <input type="text" name="cycle_period" value="80 days" />
                    </p>
-                   <p>
+                   <p class="cf">
                        <label>Start Date:</label>
                        <input type="text" name="start_date" value="2011-04-11" />
                    </p>
-                   <p>
+                   <p class="cf">
                        <label>End Date:</label>
                        <input type="text" name="end_date" value="" />
                    </p>
@@ -248,10 +219,29 @@
                </div>
 
 			   <h3><a href="#"><b>Create</b></a></h3>
-			   <div>
-			       <p>Make sure everything is in order</p>
-			       <p><a onclick="buildScenario()">GENERATE SCENARIO</a></p>
+			   <div class="finalize">
+			       <p class="cf">Make sure everything is in order</p>
+			       <p class="cf"><a class="button" onclick="buildScenario()">GENERATE SCENARIO</a></p>
 			       <p id="status"></p>
 			   </div>
 </div>
 </div>
+
+<script type = "text/javascript" charset="UTF-8">
+$.getJSON("rsrc/json/selectoptions.json",function(data) {
+    console.log(data);
+    // Johnny Martin would've been proud over this selector statement
+    var cur_select = $('#frm-scenario select[name="solver"]');
+    cur_select.html('');
+    for (var i=0; i < data.SCENARIO_SOLVER.length; i++) {
+        cur_select.append('<option value="'+data.SCENARIO_SOLVER[i]+'">'+data.SCENARIO_SOLVER[i]+'</option>')
+    }
+    // Populate DISEASE MODELS
+    cur_select = $('#frm-disease select[name="model"]');
+    cur_select.html('');
+    for (var i=0; i < data.DISEASE_DISEASE_MODEL.length; i++) {
+        cur_select.append('<option value="'+data.DISEASE_DISEASE_MODEL[i]+'">'+data.DISEASE_DISEASE_MODEL[i]+'</option>')
+    }
+});
+
+</script>

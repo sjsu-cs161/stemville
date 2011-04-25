@@ -9,6 +9,22 @@ html,body {
     font-size:14px;
     font-family: "Trebuchet MS", Verdana, Arial;
 }
+/* For modern browsers */
+.cf:before,
+.cf:after {
+    content:"";
+    display:block;
+    overflow:hidden;
+}
+
+.cf:after {
+    clear:both;
+}
+
+/* For IE 6/7 (trigger hasLayout) */
+.cf {
+    zoom:1;
+}
 #header {
     position:fixed;
     left:0;
@@ -116,3 +132,108 @@ html,body {
         rgb(171,221,255) 100%
     );
 }
+
+
+a.button {
+    padding: 4px 6px;
+    background: blue;
+    cursor: pointer;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+
+    border: 1px solid #666;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight:bold;
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgb(53,123,204)),
+        color-stop(1, rgb(138,200,255))
+    );
+    background-image: -moz-linear-gradient(
+        center bottom,
+        rgb(53,123,204) 0%,
+        rgb(138,200,255) 100%
+    );
+    
+    color: #fff;
+    text-shadow: 1px 1px 1px #222;
+    
+    -moz-box-shadow: 0 0 2px #555;
+    -webkit-box-shadow: 0 0 2px #555;
+    box-shadow: 0 0 2px #555;
+    
+    margin: 10px 0;
+    clear:both;
+}
+a.button:hover {
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgb(30,102,184)),
+        color-stop(1, rgb(112,188,255))
+    );
+    background-image: -moz-linear-gradient(
+        center bottom,
+        rgb(30,102,184) 0%,
+        rgb(112,188,255) 100%
+    );
+}
+
+/* Simulation page style */
+div.sim_outer_boundary {
+    border-style: solid;
+    height: 800px;
+}
+
+div.sim_controls {
+    border-style: solid;
+    border-bottom-right-radius:2em;
+    border-bottom-left-radius:2em;
+    height: 75px;
+}
+img.sim_button {
+    position: relative;
+    left: 1%;
+    top: 3px;
+    border-style: solid;
+    border-radius: 1em;
+    border-color: white;
+}
+
+img.sim_button:hover {
+    border-color: blue;
+}
+
+div.sim_map {
+    border-style: solid;
+    height: 480px;
+}
+
+div.sim_map_canvas {
+    border-style: dashed;
+    margin: 0 50px 5px 5px;
+    height: 380px;
+}
+
+div.sim_time_series {
+    border-style: solid;
+    float: left;
+    margin-right: 8px;
+    width: 49%;
+    height: 230px;
+}
+
+div.sim_phase_plot {
+    border-style: solid;
+    float: left;
+    margin: 0px;
+    width: 49%;
+    height: 230px;
+}
+/* end simulation page style */
