@@ -93,6 +93,9 @@
 		            <h1 style="font-size:100px">Settings for current scenario</h1>
 		        </div>
 		    </div>
+            <div class="c-tab blank" id="simulation_page" style="display:none">
+                <div></div>
+            </div>
 		</div>
 	</body>
 </html>

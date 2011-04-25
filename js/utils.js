@@ -30,6 +30,7 @@ window.onload = function() {
 	     ,  page_load       = $("#load_scenario_page")
 	     ,  page_scenario   = $("#cur_scenario_page")
 	     ,  page_settings   = $("#set_scenario_page")
+         ,  page_simulation = $("#simulation_page")
 	     ,  loaded_create   = false                    // Flag to indicate whether a user is creating a scenario for the first time
 	     ,  NAV             = window.NAV = {};
      
@@ -51,7 +52,7 @@ window.onload = function() {
                              page_create.find("> div").html(data);
                              loaded_create = true;
                              page_create.show();
-                             $("#accordion").accordion({ autoHeight: false });
+                             $("#accordion").accordion();
                          },
                            complete: function() {
                                LOADER.unload();
@@ -68,6 +69,18 @@ window.onload = function() {
                       success: function(data){
                           page_load.find("> div").html(data);
                           page_load.show();
+                      },
+                      complete: function() {
+                          LOADER.unload();
+                      }
+                   });
+            } else if (which_page === 'simulate') {
+	             $.ajax({
+                      url: "partials/_simulation.html",
+                      timeout: 10000,
+                      success: function(data){
+                          page_simulation.find("> div").html(data);
+                          page_simulation.show();
                       },
                       complete: function() {
                           LOADER.unload();
@@ -166,9 +179,9 @@ function buildScenario() {
      * Drag-n-drop graphs
      * add graph arrays to EACH model
      */
-    if (!TMP_MODELS) {
-        setStatus("No model created. Aborting.");s
-    }
+     if (!TMP_MODELS) {
+         setStatus("No model created. Aborting.");s
+     }
     LOADER.load();
     setStatus('Serializing and Generating JSON...');
     
@@ -202,7 +215,13 @@ function buildScenario() {
         data: { data: data },
         complete: function() {
             setStatus('Completed request');
-            NAV.show('load');
+            //NAV.show('load');
+            /*
+             * I assumed that somewhere around here is where the simulation page
+             * would be loaded. That's why the line above is commented out for now.
+             * -Paris
+             */
+            NAV.show('simulate');
         }
     });
 }
