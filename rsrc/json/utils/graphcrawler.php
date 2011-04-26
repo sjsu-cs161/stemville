@@ -49,6 +49,7 @@ if ($fhandle = fopen("ISO-3166-1.json","r"))
 }
 $cc = json_decode($cc, true);
 //GRAPHS
+/*
 $graphs_json = array();
 foreach ($cc as $key =>$elem)
 {
@@ -61,6 +62,7 @@ foreach ($cc as $key =>$elem)
 			$graphs_json[$key][$y] = array(); 
 			$graphs_json[$key][$y]["path"] = str_replace(".", "/", $graphs[$x]);
 			$graphs_json[$key][$y]["path"] = str_replace("_1/1/1","", $graphs_json[$key][$y]["path"]);
+			$graphs_json[$key][$y]["path"] = str_replace("/graph",".graph", $graphs_json[$key][$y]["path"]);
 			preg_match('/\/[^\.\/]+\/[^\.\/]+\/[^\.\/]+.graph/', $graphs[$x], $f);
 			$graphs_json[$key][$y]["file"] = substr($f[0], 1);
 			$y++;
@@ -68,9 +70,9 @@ foreach ($cc as $key =>$elem)
 	}
 }
 echo json_encode($graphs_json);
-
+*/
 //MODELS
-/*
+
 $models_json = array();
 foreach ($cc as $key =>$elem)
 {
@@ -83,6 +85,8 @@ foreach ($cc as $key =>$elem)
 			$models_json[$key][$y] = array();
 			$models_json[$key][$y]["path"] = str_replace(".","/", $models[$x]);
 			$models_json[$key][$y]["path"] = str_replace("_1/1/1","",$models_json[$key][$y]["path"]); 
+			$models_json[$key][$y]["path"] = str_replace("/model",".model", $models_json[$key][$y]["path"]);
+			$models_json[$key][$y]["path"] = str_replace(".models","/models",$models_json[$key][$y]["path"]);
 			preg_match('/\/[^\.\/]+\/[^\.\/]+\/[^\.\/]+.model/', $models[$x],$f);
 			$models_json[$key][$y]["file"] = substr($f[0],1);
 			$y++;
@@ -91,5 +95,5 @@ foreach ($cc as $key =>$elem)
 	}
 }
 echo json_encode($models_json);
-*/
+
 ?>
