@@ -52,7 +52,7 @@ window.onload = function() {
                              page_create.find("> div").html(data);
                              loaded_create = true;
                              page_create.show();
-                             $("#accordion").accordion();
+                             $("#accordion").accordion({autoHeight: false});
                          },
                            complete: function() {
                                LOADER.unload();
