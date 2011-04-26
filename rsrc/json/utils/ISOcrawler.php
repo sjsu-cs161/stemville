@@ -24,21 +24,22 @@ foreach($file_list as $key =>$file)
 	{
 		$level = 0;
 		$l0 = false;
+		$l1 = false;
+		$l2 = false;
 		//echo "opened file : ".$file."\n";
 		while(($buffer = fgets($fhandle, 4096)) !== false)
 		{
 			$buffer = utf8_encode($buffer); //unlike most of eclipses files these are not encoded properly thanks IBM
 			if($buffer{0} === "#")
 				continue;
-			
 			$exploded = explode("=", $buffer."=");
 			if (trim($exploded[0]) ==="") continue;
 			if (strlen(trim($exploded[0])) > 6) $level = 2;
 			if ($level == 0) 
 			{
-				$l0 = true;
-				$l1 = false;
-				$l2 = false;
+				//$l0 = true;
+				//$l1 = false;
+				//$l2 = false;
 				$cc = trim($exploded[0]);
 				$ISOS[$cc] = array();
 				$ISOS[$cc][0] = trim($exploded[1]);
@@ -71,14 +72,14 @@ foreach($file_list as $key =>$file)
 		if (!$l1)
 		{
 			$ISOS[$cc][1][$c] = array();
-			$ISOS[$cc][1][$c]["code"] = "N/A";
-			$ISOS[$cc][1][$c]["name"] = "No Level 1 Data Available";
+			//$ISOS[$cc][1][$c]["code"] = "N/A";
+			//$ISOS[$cc][1][$c]["name"] = "No Level 1 Data Available";
 		}
 		if (!$l2)
 		{
 			$ISOS[$cc][2][$d] = array();
-			$ISOS[$cc][2][$d]["code"] = "N/A";
-			$ISOS[$cc][2][$d]["name"] = "No Level 2 Data Available";
+			//$ISOS[$cc][2][$d]["code"] = "N/A";
+			//$ISOS[$cc][2][$d]["name"] = "No Level 2 Data Available";
 		}
 		fclose($fhandle);
 	}
