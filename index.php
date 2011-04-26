@@ -4,7 +4,8 @@
 		<title>StemVille Prototype</title>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>
-		<script src="maps/raphael-min.js" type="text/javascript" charset="UTF-8"></script>
+		<script src="js/raphael-min.js" type="text/javascript" charset="UTF-8"></script>
+        <script src="js/raphael-zpd.js" type="text/javascript" charset="UTF-8"></script>
         <script src="highcharts/highcharts.js" type="text/javascript"></script>
 		<script type="text/javascript" src="js/stemville.js"></script>
 		<script type="text/javascript" src="js/utils.js"></script>
@@ -94,7 +95,7 @@
 		        </div>
 		    </div>
             <div class="c-tab blank" id="simulation_page" style="display:none">
-                <div></div>
+                <div style="height: 100%;"></div>
             </div>
 		</div>
 	</body>

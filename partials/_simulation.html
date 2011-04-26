@@ -17,8 +17,8 @@ in the form of maps and charts. This page is still a WIP.
         <img class="sim_button" id="stop" alt="stop" title="stop simulation" src="img/sim_buttons/stop.svg"/>
     </div>
     <div class="sim_map">
-        <div class="sim_map_canvas">
-            Map canvas here
+        <div class="sim_map_canvas" id="map_canvas">
+            
         </div>
         Map legend, edges, current display selector, etc. go here
     </div>
@@ -29,5 +29,9 @@ in the form of maps and charts. This page is still a WIP.
         Phase plot here
     </div>
 </div>
+<script type="text/javascript">
+        var map = Raphael("map_canvas", 100, 100);
+        var a = map.rect(10, 10, 10, 10);
+</script>
     <!--</body>
 </html>-->

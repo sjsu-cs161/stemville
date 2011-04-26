@@ -52,7 +52,7 @@ window.onload = function() {
                              page_create.find("> div").html(data);
                              loaded_create = true;
                              page_create.show();
-                             $("#accordion").accordion({autoHeight: false});
+                             $("#accordion").accordion();
                          },
                            complete: function() {
                                LOADER.unload();
@@ -142,36 +142,6 @@ var insertIntoModel = function(arrModels, parent, model) {
         }
     }
 }
-var insertGraphsIntoModel = function(arrModels, parent, graphs) {
-    if (arrModels.length === 0) {
-        return;
-    }
-    for (var i = 0; i < arrModels.length; i++) {
-        if (arrModels[i].name === parent) {
-            if (!arrModels[i].graphs) {
-                arrModels[i].graphs = graphs;
-                return;
-            } else {
-                arrModels[i].graphs = arrModels[i].graphs.concat(graphs);
-                return;
-            }            
-        } else {
-            insertGraphsIntoModel(arrModels[i].models, parent, graphs);
-        }
-    }
-}
-var GLOBAL_GRAPHS = [];
-var addGraphs = function() {
-    var graphs = $('#selectable_graphs').val();
-    var model = $('#graphs_model').val();
-    insertGraphsIntoModel([TMP_MODELS], model, graphs);
-    GLOBAL_GRAPHS = GLOBAL_GRAPHS.concat(graphs);
-    
-    graphs.forEach(function(graph) {
-        $('#graphs_status').append('<p>*** Added <em>'+ graph +'</em> to <strong>'+ model +'</strong></p>');
-    });
-    
-}
 var generateModel = function() {
     var model = $('#frm-models').serializeObject();
     var first = false;
@@ -179,13 +149,11 @@ var generateModel = function() {
         TMP_MODELS = model;
         delete TMP_MODELS.parent;
         TMP_MODELS.models = [];
-        TMP_MODELS.graphs = [];
         first = true;
     } else {
         var parent = model.parent;
         delete model.parent;
         model.models = [];
-        model.graphs = [];
         
         if (TMP_MODELS.name === parent) {
             TMP_MODELS.models.push(model);
@@ -195,12 +163,8 @@ var generateModel = function() {
     }
     if (first) {
         $('#frm-models').find('select[name="parent"]').html('<option value="'+model.name+'">'+model.name+'</option>');
-        $('#graphs_tab').find('select[id="graphs_model"]').html('<option value="'+model.name+'">'+model.name+'</option>');
-        $('#graphs_tab').show();
-        $('#pre_graphs_tab').hide();
     } else {
         $('#frm-models').find('select[name="parent"]').append('<option value="'+model.name+'">'+ parent + '/' + model.name+'</option>');
-        $('#graphs_tab').find('select[id="graphs_model"]').append('<option value="'+model.name+'">'+ parent + '/' + model.name+'</option>');
     }
     $('#frm-models').find('input').attr('value', '');
 }
@@ -216,7 +180,7 @@ function buildScenario() {
      * add graph arrays to EACH model
      */
      if (!TMP_MODELS) {
-         setStatus("No model created. Aborting.");
+         setStatus("No model created. Aborting.");s
      }
     LOADER.load();
     setStatus('Serializing and Generating JSON...');
@@ -239,7 +203,7 @@ function buildScenario() {
     data['scenario']['infector'] = data['infector']['name']+'.standard';
     
     // TODO: Figure out what to do with this
-    data['graphs'] = GLOBAL_GRAPHS || [];
+    data['models']['graphs'] = {};
     
     console.log(data);
     

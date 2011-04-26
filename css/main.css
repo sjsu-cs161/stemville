@@ -188,19 +188,22 @@ a.button:hover {
 /* Simulation page style */
 div.sim_outer_boundary {
     border-style: solid;
-    height: 800px;
+    height: 99%;
 }
 
 div.sim_controls {
     border-style: solid;
     border-bottom-right-radius:2em;
     border-bottom-left-radius:2em;
-    height: 75px;
+    height: 9.5%;
 }
+
 img.sim_button {
     position: relative;
     left: 1%;
     top: 3px;
+    width: 64px;
+    height: 64px;
     border-style: solid;
     border-radius: 1em;
     border-color: white;
@@ -212,28 +215,26 @@ img.sim_button:hover {
 
 div.sim_map {
     border-style: solid;
-    height: 480px;
+    height: 60%;
 }
 
 div.sim_map_canvas {
     border-style: dashed;
     margin: 0 50px 5px 5px;
-    height: 380px;
+    height: 80%;
 }
 
 div.sim_time_series {
     border-style: solid;
     float: left;
-    margin-right: 8px;
     width: 49%;
-    height: 230px;
+    height: 28.5%;
 }
 
 div.sim_phase_plot {
     border-style: solid;
-    float: left;
-    margin: 0px;
+    float: right;
     width: 49%;
-    height: 230px;
+    height: 28.5%;
 }
 /* end simulation page style */
