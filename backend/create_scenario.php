@@ -241,12 +241,13 @@ $doc->save($dir . "/decorators/$v.standard");
 function create_models($dir) {
 	$data = $_POST['data'];
 	#create the scenario object
-	create_model($dir, $data[models]);
+	create_model($dir, $data[models], $data[project_name], $data[disease], $data[infector]);
 	
 
 }
 
-function create_model($dir, $mod) {
+function create_model($dir, $mod, $pname, $dis, $inf) {
+print $pname . "\n";
 	$data = $mod;
 	$doc = new DOMDocument();
 	$doc->formatOutput = true;
@@ -257,27 +258,134 @@ echo "$v\n";
 	$eclipse->setAttribute("xmi:version","2.0");
 	$eclipse->setAttribute("xmlns:xmi","http://www.omg.org/XMI");
 	$eclipse->setAttribute("xmlns:org.eclipse.stem.core.model","http:///org/eclipse/stem/core/model.ecore");
-	$eclipse->setAttribute("uRI","platform:/resource/$dir/models/$v.model");
+	$eclipse->setAttribute("uRI","platform:/resource/$pname/models/$v.model");
 	$eclipse->setAttribute("typeURI","stemtype://org.eclipse.stem/Model");
 	
-	$dublinCore->setAttribute("identifier","platform:/resource/$dir/models/$v.model");
+	$dublinCore->setAttribute("identifier","platform:/resource/$pname/models/$v.model");
 	$dublinCore->setAttribute("creator","");
 	$dublinCore->setAttribute("date","");
-	$dublinCore->setAttribute("format","http:");
-	$dublinCore->setAttribute("type","");
+	$dublinCore->setAttribute("format","http:///org/eclipse/core/model.ecore");
+	$dublinCore->setAttribute("type","stemtype://org.eclipse.stem/Model");
 	$dublinCore->setAttribute("created","");
+	$eclipse->appendChild($dublinCore);
 	$arr = $data[models];
-	foreach ($data as $m) {
-echo "$m\n";
+	foreach ($arr as $m) {
+		$model = $doc->createElement("models");
+		$model->setAttribute("href","platform:/resource/$pname/models/$m[name].model#/");
+		$eclipse->appendChild($model);
+echo $mod[name] . " are we even entering model???\n";
+	}
+	$arr = array_unique($data[graphs]);
+	foreach ($arr as $g) {
+		$graph = $doc->createElement("graphs");
+		$temp = explode("_1.1.1", $g);
+		$gr = $temp[0] . $temp[1];
+echo $temp[0] . $temp[1] . " the graph added \n";
+		$graph->setAttribute("href","platform:/$gr#/");
+		$eclipse->appendChild($graph);
+	}
+	
+	if($inf[infector_model] == $mod[name]) {
+		$node = $doc->createElement("nodeDecorators");
+		$node->setAttribute("href", "platform:/resource/$pname/decorators/$inf[name].standard#/");
+		$eclipse->appendChild($node);
+	}
+	if($dis[disease_model] == $mod[name]) {
+		$node = $doc->createElement("nodeDecorators");
+		$node->setAttribute("href", "platform:/resource/$pname/decorators/$dis[name].standard#/");
+		$eclipse->appendChild($node);
+	}
+	
+	$doc->appendChild($eclipse);
+	$doc->save($dir . "/models/$v.model");
+	#make all sub models
+echo "yourmom \n";
+	$arr = $data[models];
+	foreach ($arr as $m) {
+echo "model: $m[name] \n";
+		create_model($dir, $m, $pname, $dis, $inf);
 	}
 
+
+}
+
+function create_disease ($dir) {
+	$data = $_POST['data'];
+	#create the scenario object
+	$doc = new DOMDocument();
+	$doc->formatOutput = true;
+	$eclipse = $doc->createElement("org.eclipse.stem.diseasemodels.standard:DeterministicSEIRDKodel");
+	$dublinCore = $doc->createElement("dublinCore");
+	$v = $data[disease][name];
+	$eclipse->setAttribute("xmi:version","2.0");
+	$eclipse->setAttribute("xmlns:xmi","http://www.omg.org/XMI");
+	$eclipse->setAttribute("xmlns:org.ecplise.stem.diseasemodels.standard","http:///org/eclipse/stem/diseasemodels/standard.ecore");
+	$eclipse->setAttribute("uRI","platform:/resource/$dir/decorators/$v.standard");
+	$eclipse->setAttribute("typeURI","stemtype://org.eclipse.stem/Identifiable1129451");
+
+	$eclipse->setAttribute("backgroundMortalityRate", $data[disease][infectious_mortality_rate]);
+	$eclipse->setAttribute("diseaseName", $data[disease][name]);
+	$eclipse->setAttribute("recoveryRate", $data[disease][infections_recovery_rate]);
+	$eclipse->setAttribute("incubationRate",$data[disease][incubation_rate]);
+	$eclipse->setAttribute("immunityLossRate", $data[disease][immunity_loss_rate]);
+	$eclipse->setAttribute("transmissionRate", $data[disease][transmission_rate]);
+	$eclipse->setAttribute("incubationRate", $data[disease][incubation_rate]);
+
+	$dublinCore->setAttribute("identifier", "platform:/resource/$dir/decorators/$data[disease][name].standard");
+	$dublinCore->setAttribute("format", "http:///org/eclipse/stem/diseasemodels/standard.ecore" );
+	$dublinCore->setAttribute("type", "stemtype://org.eclipse.stem/diseasemodel" );
+	
+
+	$eclipse->appendChild($dublinCore);
+	$doc->appendChild($eclipse);
+	$doc->save($dir . "/decorators/$v.standard");
+	
+}
+function create_infector ($dir) {
+	$data = $_POST['data'];
+	#create the scenario object
+	$doc = new DOMDocument();
+	$doc->formatOutput = true;
+	$eclipse = $doc->createElement("org.eclipse.stem.diseasemodels.standard:SIInfector");
+	$dublinCore = $doc->createElement("dublinCore");
+	$v = $data[infector][name];
+	$eclipse->setAttribute("xmi:version","2.0");
+	$eclipse->setAttribute("xmlns:xmi","http://www.omg.org/XMI");
+	$eclipse->setAttribute("xmlns:org.ecplise.stem.diseasemodels.standard","http:///org/eclipse/stem/diseasemodels/standard.ecore");
+	$eclipse->setAttribute("uRI","platform:/resource/$dir/decorators/$v.standard");
+	$eclipse->setAttribute("typeURI","stemtype://org.eclipse.stem/Identifiable1129656");
+
+	$eclipse->setAttribute("targetISOKey", $data[infector][location]);
+	$eclipse->setAttribute("diseaseName", $data[disease][name]);
+	$eclipse->setAttribute("populationIdentifier", $data[infector][population]);
+	$eclipse->setAttribute("infectiousCount","15.0");
+
+	$dublinCore->setAttribute("identifier", "platform:/resource/$dir/decorators/$data[infector][name].standard");
+	$dublinCore->setAttribute("format", "http:///org/eclipse/stem/diseasemodels/standard.ecore" );
+	$dublinCore->setAttribute("type", "stemtype://org.eclipse.stem/identifiable1129656" );
+	
+
+	$eclipse->appendChild($dublinCore);
+	$doc->appendChild($eclipse);
+	$doc->save($dir . "/decorators/$v.standard");
+	
+}
+
+function create_graphs ($dir) {
+echo "made it here\n";
+	$data = $_POST['data'];
+	$arr = array_unique($data[graphs]);
+	foreach ($arr as $g) {
+		$h = explode("geography/",$g);
+		$path = "/var/www/cs161/group2/stem/plugins/" . $h[1];
+echo $path . " = path\n";
+		exec("cp $path $dir/graphs/"); 	
+echo "cp $path $dir/graphs\n";
+	}	
 }
 
 
 $data = $_POST['data'];
-//$nfile = fopen("p.txt", "w");
-//fwrite($nfile, $data[scenario][name]);
-//fwrite($nfile, "test\n");
 $p_name = "/var/www/cs161/group2/stem/workspace/" . $data[project_name];
 mkdir($p_name, 0777);
 mkdir($p_name . "/decorators" , 0777);
@@ -293,5 +401,12 @@ mkdir($p_name . "/RecordedSimulations", 0777);
 create_scen($p_name);
 create_sequencer($p_name);
 create_models($p_name);
+create_disease($p_name);
+create_infector($p_name);
+create_graphs($p_name);
 #create("$p_name")
+$stem_path = "./var/www/cs161/group2/stem/";
+echo "$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
+exec("$stem_path\STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
+
 ?>
