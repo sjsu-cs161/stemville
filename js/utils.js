@@ -52,7 +52,7 @@ window.onload = function() {
                              page_create.find("> div").html(data);
                              loaded_create = true;
                              page_create.show();
-                             $("#accordion").accordion();
+                             $("#accordion").accordion({autoHeight: false});
                          },
                            complete: function() {
                                LOADER.unload();
@@ -142,6 +142,62 @@ var insertIntoModel = function(arrModels, parent, model) {
         }
     }
 }
+var insertGraphsIntoModel = function(arrModels, parent, graphs) {
+    if (arrModels.length === 0) {
+        return;
+    }
+    for (var i = 0; i < arrModels.length; i++) {
+        if (arrModels[i].name === parent) {
+            if (!arrModels[i].graphs) {
+                arrModels[i].graphs = graphs;
+                return;
+            } else {
+                arrModels[i].graphs = arrModels[i].graphs.concat(graphs);
+                return;
+            }            
+        } else {
+            insertGraphsIntoModel(arrModels[i].models, parent, graphs);
+        }
+    }
+}
+var insertInfectorIntoModel = function(arrModels, parent, infector) {
+    if (arrModels.length === 0) {
+        return;
+    }
+    for (var i = 0; i < arrModels.length; i++) {
+        if (arrModels[i].name === parent) {
+            arrModels[i].infector = infector;
+            return;        
+        } else {
+            insertInfectorIntoModel(arrModels[i].models, parent, infector);
+        }
+    }
+}
+var insertDiseaseIntoModel = function(arrModels, parent, disease) {
+    if (arrModels.length === 0) {
+        return;
+    }
+    for (var i = 0; i < arrModels.length; i++) {
+        if (arrModels[i].name === parent) {
+            arrModels[i].disease = disease;
+            return;        
+        } else {
+            insertDiseaseIntoModel(arrModels[i].models, parent, disease);
+        }
+    }
+}
+var GLOBAL_GRAPHS = [];
+var addGraphs = function() {
+    var graphs = $('#selectable_graphs').val();
+    var model = $('#graphs_model').val();
+    insertGraphsIntoModel([TMP_MODELS], model, graphs);
+    GLOBAL_GRAPHS = GLOBAL_GRAPHS.concat(graphs);
+    
+    graphs.forEach(function(graph) {
+        $('#graphs_status').append('<p>*** Added <em>'+ graph +'</em> to <strong>'+ model +'</strong></p>');
+    });
+    
+}
 var generateModel = function() {
     var model = $('#frm-models').serializeObject();
     var first = false;
@@ -149,11 +205,13 @@ var generateModel = function() {
         TMP_MODELS = model;
         delete TMP_MODELS.parent;
         TMP_MODELS.models = [];
+        TMP_MODELS.graphs = [];
         first = true;
     } else {
         var parent = model.parent;
         delete model.parent;
         model.models = [];
+        model.graphs = [];
         
         if (TMP_MODELS.name === parent) {
             TMP_MODELS.models.push(model);
@@ -163,9 +221,18 @@ var generateModel = function() {
     }
     if (first) {
         $('#frm-models').find('select[name="parent"]').html('<option value="'+model.name+'">'+model.name+'</option>');
+        $('#graphs_tab').find('select[id="graphs_model"]').html('<option value="'+model.name+'">'+model.name+'</option>');
+        $('#frm-disease').find('select[name="disease_model"]').append('<option value="'+model.name+'">'+model.name+'</option>');
+        $('#frm-infector').find('select[name="infector_model"]').append('<option value="'+model.name+'">'+model.name+'</option>');
+        
+        $('#graphs_tab').show();
+        $('#pre_graphs_tab').hide();
     } else {
         $('#frm-models').find('select[name="parent"]').append('<option value="'+model.name+'">'+ parent + '/' + model.name+'</option>');
-    }
+        $('#graphs_tab').find('select[id="graphs_model"]').append('<option value="'+model.name+'">'+ parent + '/' + model.name+'</option>');
+        $('#frm-disease').find('select[name="disease_model"]').append('<option value="'+model.name+'">'+ parent + '/' + model.name+'</option>');
+        $('#frm-infector').find('select[name="infector_model"]').append('<option value="'+model.name+'">'+ parent + '/' + model.name+'</option>');
+    }    
     $('#frm-models').find('input').attr('value', '');
 }
 function buildScenario() {
@@ -180,19 +247,30 @@ function buildScenario() {
      * add graph arrays to EACH model
      */
      if (!TMP_MODELS) {
-         setStatus("No model created. Aborting.");s
+         setStatus("No model created. Aborting.");
      }
     LOADER.load();
     setStatus('Serializing and Generating JSON...');
     
     var data = {};
+    
+    var infector = $('#frm-infector').serializeObject();
+    var disease  = $('#frm-disease').serializeObject()
+    
+    if (disease['disease_model'] !== '-') {
+        insertDiseaseIntoModel([TMP_MODELS], disease['disease_model'], disease);
+    }
+    if (infector['infector_model'] !== '-') {
+        insertInfectorIntoModel([TMP_MODELS], infector['infector_model'], infector);
+    }
+    
     data['project_name'] = ""+Date.now();
     // Grab the form data
     data['scenario'] = $('#frm-scenario').serializeObject();
-    data['disease'] = $('#frm-disease').serializeObject();
+    data['disease'] = disease;
     // TODO: Figure graphs out
     //data['graphs'] = null;
-    data['infector'] = $('#frm-infector').serializeObject();
+    data['infector'] = infector;
     data['models'] = TMP_MODELS;
     data['sequencer'] = $('#frm-sequencer').serializeObject();
     
@@ -203,7 +281,7 @@ function buildScenario() {
     data['scenario']['infector'] = data['infector']['name']+'.standard';
     
     // TODO: Figure out what to do with this
-    data['models']['graphs'] = {};
+    data['graphs'] = GLOBAL_GRAPHS || [];
     
     console.log(data);
     
