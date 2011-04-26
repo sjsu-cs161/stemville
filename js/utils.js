@@ -222,7 +222,7 @@ function buildScenario() {
     setStatus('Serializing and Generating JSON...');
     
     var data = {};
-    data['project_name'] = 'blah';
+    data['project_name'] = ""+Date.now();
     // Grab the form data
     data['scenario'] = $('#frm-scenario').serializeObject();
     data['disease'] = $('#frm-disease').serializeObject();
