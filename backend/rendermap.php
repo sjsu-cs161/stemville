@@ -8,9 +8,8 @@
 	require_once('MongoClass.php');
 	
 	// TEMP / FALLBACK VARIABLES
-    $MAP_SCALE_X = 590;
-    $MAP_SCALE_Y = 450;
-	//$MAP_SCALE = 100;
+    	$MAP_SCALE_X = 590; //?  LETS FOLLOW DISPLAY CONV THAT X >= Y  so 640 x 480 590 x450 etc 
+    	$MAP_SCALE_Y = 450; // IS the cANVAS ALSO THIS SIZE? canvas =  raphael(i,j, i+590,j+450)?
 	$COUNTRY = 'USA';
 	$LEVEL = 1;
 	
@@ -38,10 +37,11 @@
 //******************************************************************************
 	function scaleLatitude($degreesS, $degreesN, $degreesP)
 	{
-            $yS = 180/pi() * (2 * atan(exp($degreesS * pi()/180)) - pi()/2);
-            $yN = 180/pi() * (2 * atan(exp($degreesN * pi()/180)) - pi()/2);
-            $yP = 180/pi() * (2 * atan(exp($degreesP * pi()/180)) - pi()/2);
-
+	    //THESE MAPS ARE ALREADY PROPERLY IN MERCATOR PROJECTION THIS WAS ACTUALLY
+	    // DISTORTING THEM FURTHER.  MY BAD.
+	    $yS = $degreesS;
+	    $yN = $degreesN;
+	    $yP = $degreesP;
             $spread = $yN - $yS;
             $yP = ($yP - $yS) * (1 / $spread);
             return $yP;
@@ -64,7 +64,9 @@
                 //global $MAP_SCALE;
                 global $MAP_SCALE_X;
                 global $MAP_SCALE_Y;
-            
+            	
+		$ratio = $MAP_SCALE_Y/$MAP_SCALE_X;  // w/h 
+		$shift = ($MAP_SCALE_X - $MAP_SCALE_X*$ratio)/2.0; //maintain a 1:1 ratio but center the drawn object in the available screen.
             	$latLonToXY = "";
             	$latLonArray = $data;
 	      	$y = "";		
@@ -75,7 +77,7 @@
 				$y = scaleLatitude($maxN, $maxS, $latLonArray[$i])*$MAP_SCALE_Y;
 			}else
 			{
-				$x = scaleLongitude($maxE, $maxW, $latLonArray[$i])*$MAP_SCALE_X;
+				$x = $shift + scaleLongitude($maxE, $maxW, $latLonArray[$i])*$MAP_SCALE_X*$ratio;
                 $x = round($x, 6);
                 $y = round($y, 6);
 				$latLonToXY .= $x." ";
