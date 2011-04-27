@@ -25,8 +25,11 @@
         echo json_encode(Array("status" => "error", "msg" => "Query did not match any results"));
         die();
     }
-	if (isset($_GET['scale'])) {
-	    $MAP_SCALE = intval($_GET['scale']);
+	if (isset($_GET['scale_x'])) {
+	    $MAP_SCALE_X = intval($_GET['scale_x']);
+	}
+	if (isset($_GET['scale_y'])) {
+	    $MAP_SCALE_Y = intval($_GET['scale_y']);
 	}
 	
 	$COUNTRY = strtoupper($COUNTRY);

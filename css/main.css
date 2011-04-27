@@ -204,12 +204,12 @@ div.sim_outer_boundary {
 }
 
 div.sim_controls {
-    border-style: solid;
-    border-width: 2px;
+    border: solid 2px #0F4C80;
+    border-top: 0;
     border-bottom-right-radius:2em;
     border-bottom-left-radius:2em;
     background: lightblue;
-    height: 9.5%;
+    height: 40px;
 }
 
 img.sim_button {

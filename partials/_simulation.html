@@ -27,8 +27,11 @@ in the form of maps and charts. This page is still a WIP.
     var CANVAS_WIDTH = 600;
     var CANVAS_HEIGHT = 460;
     var map = Raphael("map_canvas", CANVAS_WIDTH, CANVAS_HEIGHT);
-    scen.setMap(map);
-    scen.drawMap();
+    //var map = Raphael("sim_map_canvas");
+    LOADER.load();
+    scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
+    LOADER.unload();
+    //scen.drawMap();
 
     // setup sim button action listeners
     $("#run").click(function(){

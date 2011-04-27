@@ -10,7 +10,7 @@
         BACKEND_MAPS        = "backend/rendermap.php",
         BACKEND_REGIONS     = "backend/regions.php",
         BACKEND_OUTPUT      = "output/getdata.php", //http://localhost/~bjorkstam/experimental/output/getdata.php?country=NOR&level=1&type=I&start=1&amount=100
-        MAP_SCALE           = 100,                  // X x Y scale
+        MAP_SCALE           = {x: 100, y: 100},                  // X x Y scale
         OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Should be high; like 10-100
         simObj              = {},
         graphObj            = {},
@@ -62,7 +62,7 @@
         var that = this;
         $.ajax({
             url: this.OPTIONS.BACKEND_MAPS || BACKEND_MAPS,
-            data: "project="+this.project_name+"&scale="+(this.OPTIONS.MAP_SCALE || MAP_SCALE),
+            data: "project="+this.project_name+"&scale_x="+(this.OPTIONS.MAP_SCALE.x || MAP_SCALE.x)+"&scale_y="+(this.OPTIONS.MAP_SCALE.y || MAP_SCALE.y),
             timeout: 30000,
             success: function(data){
                 var output = jQuery.parseJSON(data); 
@@ -302,6 +302,7 @@
         this.regions = [];
         
         this.OPTIONS = {};
+        this.OPTIONS.MAP_SCALE = {};
      };
      
     var sv_proto = StemVille.Scenario.prototype;
