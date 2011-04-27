@@ -209,18 +209,17 @@ div.sim_controls {
     border-bottom-right-radius:2em;
     border-bottom-left-radius:2em;
     background: lightblue;
-    height: 40px;
+    height: 32px;
 }
 
 img.sim_button {
     position: relative;
-    left: 1%;
+    left: 50px;
     top: 3px;
-    width: 64px;
-    height: 64px;
-    border-style: solid;
-    border-radius: 1em;
-    border-color: white;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #fff;
+    border-radius:6px;
 }
 
 img.sim_button:hover {
