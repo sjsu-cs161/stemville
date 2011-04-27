@@ -411,7 +411,8 @@
     };
 
     sv_proto.hasMap = function() {
-        return (this.mapData.canvas && this.mapData.data);
+        if (this.mapData.canvas && this.mapData.data) { return true; }
+        return false;
     };
 
     sv_proto.killMap = function() {
@@ -439,7 +440,7 @@
             map_regions[r].scale(scale_factor, scale_factor, 0, 0);
         })(region);*/
         if (resize_canvas) {
-            this.mapData.canvas.setSize(new_scale, new_scale);
+            this.mapData.canvas.setSize(new_scale.x, new_scale.y);
         };
         
         this.OPTIONS.MAP_SCALE = new_scale;
