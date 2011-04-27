@@ -11,7 +11,7 @@ $mc = new MongoClass();
         <?php
         $scen = $mc->listAllRecords();
         for ($i=0; $i < count($scen); $i++) {
-            echo '<option value="'.$scen[$i][project].'||'.$scen[$i][scenario].'">'.$scen[$i][scenario].'</option>';
+            echo '<option value="'.$scen[$i][project].'||'.$scen[$i][scenario].'">'.$scen[$i][scenario].' ('.$scen[$i][maps][0][country].'_'.$scen[$i][maps][0][level].')</option>';
         }
         ?>
     </select>
