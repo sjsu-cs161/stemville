@@ -1,3 +1,7 @@
+// Our global scenario object!
+
+var scen;
+
 window.onload = function() {
     
 	(function() {
@@ -64,7 +68,7 @@ window.onload = function() {
 	             }
 	         } else if (which_page === 'load') {
 	             $.ajax({
-                      url: "partials/_load-scenario.html",
+                      url: "partials/_load-scenario.php",
                       timeout: 10000,
                       success: function(data){
                           page_load.find("> div").html(data);
@@ -307,13 +311,7 @@ function buildScenario() {
         data: { data: data },
         complete: function() {
             setStatus('Completed request');
-            //NAV.show('load');
-            /*
-             * I assumed that somewhere around here is where the simulation page
-             * would be loaded. That's why the line above is commented out for now.
-             * -Paris
-             */
-            NAV.show('simulate');
+            NAV.show('load');
         }
     });
 }

@@ -7,8 +7,8 @@
  (function() { 
      
     var StemVille           = window.StemVille = {},
-        BACKEND_MAPS        = "maps/raw_map.php",
-        BACKEND_REGIONS     = "output/regions.php",
+        BACKEND_MAPS        = "backend/rendermap.php",
+        BACKEND_REGIONS     = "backend/regions.php",
         BACKEND_OUTPUT      = "output/getdata.php", //http://localhost/~bjorkstam/experimental/output/getdata.php?country=NOR&level=1&type=I&start=1&amount=100
         MAP_SCALE           = 100,                  // X x Y scale
         OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Should be high; like 10-100
@@ -23,7 +23,7 @@
                 this.callback = cb;
                 this.context = ctx;
                 this.level = 0;
-                this.max_level = max_level || 7;
+                this.max_level = max_level || 2;
             },
             flag: function () {
                 if (++this.level === this.max_level && this.callback) {
@@ -39,7 +39,7 @@
         var that = this;
         $.ajax({
             url: this.OPTIONS.BACKEND_REGIONS || BACKEND_REGIONS,
-            data: "country="+this.country+"&level="+this.level,
+            data: "project="+this.project_name,
             timeout: 10000,
             success: function(data){
                 var output = jQuery.parseJSON(data); 
@@ -62,7 +62,7 @@
         var that = this;
         $.ajax({
             url: this.OPTIONS.BACKEND_MAPS || BACKEND_MAPS,
-            data: "country="+this.country+"&level="+this.level+"&disease="+this.disease+"&scale="+(this.OPTIONS.MAP_SCALE || MAP_SCALE),
+            data: "project="+this.project_name+"&scale="+(this.OPTIONS.MAP_SCALE || MAP_SCALE),
             timeout: 30000,
             success: function(data){
                 var output = jQuery.parseJSON(data); 
@@ -74,6 +74,28 @@
             },
             complete: function() {
                 that.status.map_data = "completed load";
+                loadTracker.flag();
+            }
+         });
+    };
+    var loadScenarioData = function() {     
+        this.status.scenario_data = "loading data";
+        // asynchronous load code follows
+        var that = this;
+        $.ajax({
+            url: this.OPTIONS.BACKEND_SCENARIO_DATA || BACKEND_SCENARIO_DATA,
+            data: "scenario="+this.scenario,
+            timeout: 30000,
+            success: function(data){
+                var output = jQuery.parseJSON(data); 
+                if (output.status === "success") {
+                    that.mapData.data = output.data;
+                } else {
+                    that.errors.push(output.msg);
+                };
+            },
+            complete: function() {
+                that.status.scenario_data = "completed load";
                 loadTracker.flag();
             }
          });
@@ -221,11 +243,10 @@
         };
     };
     
-    StemVille.Scenario = function(country, level, disease) {
+    StemVille.Scenario = function(project_name, scenario) {
 
-        this.country = country;
-        this.level = level;
-        this.disease = disease ? disease : 'Influenza';
+        this.scenario = scenario;
+        this.project_name = project_name;
         
         this.OBJECT_ID = parseInt(Math.ceil(Math.random() * 1000000));
         

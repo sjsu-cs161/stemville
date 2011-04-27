@@ -80,7 +80,7 @@
 		        </div>
 		    </div>
 		    <div class="c-tab" id="load_scenario_page" style="display:none">
-		        <div style="position:relative; text-align:center; padding-top:15%; color: #fff; text-shadow: 1px 1px 3px #444">
+		        <div>
 		            <h1 style="font-size:100px">Load scenario!</h1>
 		        </div>
 		    </div>
