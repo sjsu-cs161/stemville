@@ -8,7 +8,9 @@
 	require_once('MongoClass.php');
 	
 	// TEMP / FALLBACK VARIABLES
-	$MAP_SCALE = 100;
+    $MAP_SCALE_X = 590;
+    $MAP_SCALE_Y = 450;
+	//$MAP_SCALE = 100;
 	$COUNTRY = 'USA';
 	$LEVEL = 1;
 	
@@ -56,7 +58,9 @@
             	global $maxS;
             	global $maxE;
             	global $maxW;
-                global $MAP_SCALE;
+                //global $MAP_SCALE;
+                global $MAP_SCALE_X;
+                global $MAP_SCALE_Y;
             
             	$latLonToXY = "";
             	$latLonArray = $data;
@@ -65,10 +69,10 @@
 		{
 			if (fmod($i, 2) == 0)
 			{
-				$y = scaleLatitude($maxN, $maxS, $latLonArray[$i])*$MAP_SCALE;
+				$y = scaleLatitude($maxN, $maxS, $latLonArray[$i])*$MAP_SCALE_Y;
 			}else
 			{
-				$x = scaleLongitude($maxE, $maxW, $latLonArray[$i])*$MAP_SCALE;
+				$x = scaleLongitude($maxE, $maxW, $latLonArray[$i])*$MAP_SCALE_X;
                 $x = round($x, 6);
                 $y = round($y, 6);
 				$latLonToXY .= $x." ";

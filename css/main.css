@@ -187,14 +187,28 @@ a.button:hover {
 
 /* Simulation page style */
 div.sim_outer_boundary {
-    border-style: solid;
-    height: 99%;
+    /*border-style: solid;*/
+    height: 100%;
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgb(204,204,204)),
+        color-stop(1, rgb(255,255,255))
+    );
+    background-image: -moz-linear-gradient(
+        center bottom,
+        rgb(204,204,204) 0%,
+        rgb(255,255,255) 100%
+    );
 }
 
 div.sim_controls {
     border-style: solid;
+    border-width: 2px;
     border-bottom-right-radius:2em;
     border-bottom-left-radius:2em;
+    background: lightblue;
     height: 9.5%;
 }
 
@@ -214,27 +228,49 @@ img.sim_button:hover {
 }
 
 div.sim_map {
-    border-style: solid;
+    /*border-style: solid;*/
     height: 60%;
 }
 
 div.sim_map_canvas {
-    border-style: dashed;
+    border-style: solid;
+    border-width: 2px;
+    border-color: lightblue;
+    border-radius: 1em;
+    background: white;
+    position: relative;
+    left: 30%;
+    top: 4%;
     margin: 0 50px 5px 5px;
-    height: 80%;
+    height: 95%;
+    width: 35.7%;
 }
 
 div.sim_time_series {
     border-style: solid;
+    border-width: 2px;
+    border-color: lightblue;
+    border-radius: 1em;
+    background: white;
+    position: relative;
+    top: 0.5%;
+    left: 0.5%;
     float: left;
-    width: 49%;
+    width: 47%;
     height: 28.5%;
 }
 
 div.sim_phase_plot {
     border-style: solid;
+    border-width: 2px;
+    border-color: lightblue;
+    border-radius: 1em;
+    background: white;
+    position: relative;
+    top: 0.5%;
+    right: 0.5%;
     float: right;
-    width: 49%;
+    width: 51%;
     height: 28.5%;
 }
 /* end simulation page style */
