@@ -338,7 +338,7 @@ function countryAutoLvl()
 		}	
 	}
 	for ($i = $highLvl; $i > -1; $i--)
-		if (file_exists("../rsrc/svg/".$iso."/".$iso."_".$i."_MAP.xml", "r"))
+		if (file_exists("../rsrc/svg/".$iso."/".$iso."_".$i."_MAP.xml"))
 		{
 			//$highLvl = $i;
 			break;
@@ -350,7 +350,7 @@ function countryAutoLvl()
 		//DB Record
 		require_once('MongoClass.php');
 		$mc = new MongoClass();
-		$mc = createRecord($data[project_name],$data[scenario][name], $map_array);
+		$mc->createRecord($data[project_name],$data[scenario][name], $map_array);
 	}
 	else
 	{
