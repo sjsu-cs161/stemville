@@ -295,6 +295,8 @@ function buildScenario() {
     // TODO: Figure out what to do with this
     data['graphs'] = GLOBAL_GRAPHS || [];
     
+    data['country'] = COUNTRY_SELECTED;
+    
     console.log(data);
     
     setStatus('Sending object to server...');
