@@ -318,6 +318,7 @@ $stem_path = "./var/www/cs161/group2/stem/";
 echo "$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
 exec("$stem_path\STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
 
+countryAutoLvl();
 //Wicked AutoMagick finds the XXX country and level
 function countryAutoLvl()
 {
@@ -337,10 +338,9 @@ function countryAutoLvl()
 		}	
 	}
 	for ($i = $highLvl; $i > -1; $i--)
-		if ($fhandle = fopen("../rsrc/svg/".$iso."/".$iso."_".$i."_MAP.xml", "r"))
+		if (file_exists("../rsrc/svg/".$iso."/".$iso."_".$i."_MAP.xml", "r"))
 		{
 			//$highLvl = $i;
-			fclose($fhandle);
 			break;
 		}else
 			$highLvl = $i - 1;
