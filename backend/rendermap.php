@@ -15,10 +15,14 @@
 	if (isset($_GET['project'])) {
 	    $mc = new MongoClass();
 	    $rec = $mc->getRecord($_GET['project']);
-	    $map = $rec->maps[0];
-	    $COUNTRY = $map[country];
-	    $LEVEL = $map[level];
+	    $map = $rec[maps][0];
+        $COUNTRY = $map[country];
+        $LEVEL = $map[level];
 	}
+    if (strlen($COUNTRY) != 3 || !isset($LEVEL)) {
+        echo json_encode(Array("status" => "error", "msg" => "Query did not match any results"));
+        die();
+    }
 	if (isset($_GET['scale'])) {
 	    $MAP_SCALE = intval($_GET['scale']);
 	}
@@ -153,4 +157,7 @@
 	//echo "Baseline Data (NSEW): ".$maxN.", ".$maxS.", ".$maxW.", ".$maxE."<br />";
 	//echo "".$isoCC->nodeValue."<br/>";
 	encodeSVGpath();
+    
+    // Render map
+    echo json_encode(Array("status" => "success", "data" => $mapArray));
 ?>
