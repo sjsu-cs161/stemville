@@ -1,6 +1,7 @@
 <div style="width: 90%; height:400px; margin: 50px auto 0 auto">
     <h2 style="text-align:center; margin: 10px">Design Scenario</h2>
-<div id="select_country" style="text-align: center; margin-top: 70px">
+    <p id="country-infect-intro" style="text-align: center; margin-top: 40px; font-weight:bold">Select country to infect</p>
+<div id="select_country" style="text-align: center; margin-top: 30px">
     <select>
         <option value="AFG">Afghanistan</option>
         <option value="ALA">&Aring;land Islands</option>
@@ -251,7 +252,7 @@
     </select>
     <a class="button" onclick="">Select Country</a>
 </div>
-<div id="accordion" style="display:none">
+<div id="accordion" style="display:none; margin-bottom:40px">
 
                 <h3><a href="#">Scenario</a></h3>
                 <div>
@@ -476,7 +477,10 @@
                     </p>
                     <p class="cf">
                         <label>Location:</label>
-                        <input type="text" name="location" value="DE-HH" />
+                        <input type="text" name="manual-location" />
+                        <select name="loc1" style="display:none"></select>
+                        <select name="loc2" style="display:none; margin-left: 10px"></select>
+                        <select name="loc3" style="display:none; margin-left: 10px"></select>
                     </p>
                 </form>
                 </div>
@@ -504,7 +508,8 @@
 
 			   <h3><a href="#"><b>Create</b></a></h3>
 			   <div class="finalize">
-			       <p class="cf">Make sure everything is in order</p>
+			       <p class="cf" style="margin: 30px 0">Once you click <em>Generate Scenario</em> there is no going back. Please make sure that you have filled out all fields and setup your models correctly, including linking them to graphs as well as disease and infector.</p>
+			       <p class="cf" style="margin: 30px 0">After you click <em>Generate Scenario</em>, all the necessary scenario files will be created on the server and properly linked. You can access all created scenarios and load them by clicking on <em>Load Scenario</em> at any given time.</p>
 			       <p class="cf"><a class="button" onclick="buildScenario()">GENERATE SCENARIO</a></p>
 			       <p id="status"></p>
 			   </div>
@@ -528,16 +533,25 @@ $.getJSON("rsrc/json/selectoptions.json",function(data) {
         cur_select.append('<option value="'+data.DISEASE_DISEASE_MODEL[i]+'">'+data.DISEASE_DISEASE_MODEL[i]+'</option>')
     }
     var ISO_MODELS = {}
+      , ISO_REGIONS = {}
       , ISO_GRAPHS = {}
       ;
 });
+// Extend String obj :)
+String.prototype.startsWith = function(str) {
+    return ( str === this.substr( 0, str.length ) );
+}
 //$.getJSON('rsrc/json/models.json', function(data) { ISO_MODELS = data; });
 $.getJSON('rsrc/json/graphs.json', function(data) { 
-    ISO_GRAPHS = data; //<li class="ui-widget-content">Item 1</li>
+    ISO_GRAPHS = data;
+});
+$.getJSON('rsrc/json/full_ISO_3166.json', function(data) { 
+    ISO_REGIONS = data;
 });
 var COUNTRY_SELECTED = 'USA';
 $('#select_country a.button').click(function() {
     COUNTRY_SELECTED = $('#select_country select').attr('value');
+    $('#country-infect-intro').hide();
     $('#select_country').hide();
     $('#accordion').show();
     
@@ -546,6 +560,66 @@ $('#select_country a.button').click(function() {
     for (var i=0; i < graphs.length; i++) {
         $('#selectable_graphs').append('<option value="'+graphs[i].path+'">'+graphs[i].file+'</option>');
     }
+    
+    // POPULATE REGIONS ACCORDINGLY
+    var regions = ISO_REGIONS[COUNTRY_SELECTED][1]
+      , val
+      , r_count
+      ;
+    
+    if (regions.length > 0) {
+        $('#frm-infector input[name="manual-location"]').hide();
+        $('#frm-infector select[name="loc1"]').show();
+    } else {
+        $('#frm-infector input[name="manual-location"]').val(COUNTRY_SELECTED);
+    }
+    $('#frm-infector select[name="loc1"]').html('');
+    for (var i=0; i < regions.length; i++) {
+        $('#frm-infector select[name="loc1"]').append('<option value="'+regions[i].code+'">'+regions[i].name+'</option>');
+    }
+    $('#frm-infector select[name="loc1"]').change(function() {
+        if (ISO_REGIONS[COUNTRY_SELECTED][2].length > 0) {
+            val = $(this).val();
+            regions = ISO_REGIONS[COUNTRY_SELECTED][2];
+            $('#frm-infector select[name="loc3"]').hide();
+            $('#frm-infector select[name="loc2"]').html('<option value="">-</option>');
+            r_count = 0;
+            for (var i=0; i < regions.length; i++) {
+                if (regions[i].code.startsWith(val)) {
+                    r_count++;
+                    $('#frm-infector select[name="loc2"]').append('<option value="'+regions[i].code+'">'+regions[i].name+'</option>');
+                }
+            }
+            if (r_count > 0) {
+                $('#frm-infector select[name="loc2"]').show()
+            }
+            
+            $('#frm-infector select[name="loc2"]').change(function() {
+                if (ISO_REGIONS[COUNTRY_SELECTED][3].length > 0) {
+                    val = $(this).val();
+                    if (val.length <= 1) {
+                        $('#frm-infector select[name="loc3"]').html('').hide();
+                        return;
+                    }
+                    
+                    regions = ISO_REGIONS[COUNTRY_SELECTED][3];
+                    $('#frm-infector select[name="loc3"]').html('<option value="">-</option>');
+                    r_count = 0;
+                    for (var i=0; i < regions.length; i++) {
+                        if (regions[i].code.startsWith(val)) {
+                            r_count++;
+                            $('#frm-infector select[name="loc3"]').append('<option value="'+regions[i].code+'">'+regions[i].name+'</option>');
+                        }
+                    }
+                    if (r_count > 0) {
+                        $('#frm-infector select[name="loc3"]').show()
+                    }
+                }
+            });
+        }
+    });
+    $('#frm-infector select[name="loc1"]').change();
+    
 });
 
 </script>

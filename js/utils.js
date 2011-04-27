@@ -248,6 +248,7 @@ function buildScenario() {
      */
      if (!TMP_MODELS) {
          setStatus("No model created. Aborting.");
+         return;
      }
     LOADER.load();
     setStatus('Serializing and Generating JSON...');
@@ -255,6 +256,17 @@ function buildScenario() {
     var data = {};
     
     var infector = $('#frm-infector').serializeObject();
+    
+    var inform = $('#frm-infector');
+    infector['location'] = inform.find('select[name="loc3"]').val() && (inform.find('select[name="loc3"]').val().length > 1) ? inform.find('select[name="loc3"]').val() : null || inform.find('select[name="loc2"]').val() && (inform.find('select[name="loc2"]').val().length > 1) ? inform.find('select[name="loc2"]').val() : null || inform.find('select[name="loc1"]').val() && (inform.find('select[name="loc1"]').val().length > 1) ? inform.find('select[name="loc1"]').val() : null;
+    if (!infector['location']) {
+        infector['location'] = infector['manual-location']
+    }
+    delete infector['loc1'];
+    delete infector['loc2'];
+    delete infector['loc3'];
+    delete infector['manual-location'];
+    
     var disease  = $('#frm-disease').serializeObject()
     
     if (disease['disease_model'] !== '-') {
