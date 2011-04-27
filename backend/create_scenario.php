@@ -318,4 +318,43 @@ $stem_path = "./var/www/cs161/group2/stem/";
 echo "$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
 exec("$stem_path\STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
 
+//Wicked AutoMagick finds the XXX country and level
+function countryAutoLvl()
+{
+	$data = $_POST['data'];
+	$iso = $data[country];
+	$arr = array_unique($data[graphs]);
+	$highLvl = 0;
+	foreach ($arr as $key => $elem)
+	{
+		if ($success = preg_match('/'.$iso.'_[0-9]/',$elem, $match) == 1)
+		{	
+        		//echo $match[0]."\n";
+        		$tmp = explode("_",$match[0]);
+        		$lvl = $tmp[1];
+        		//echo $lvl."\n";
+			if ($lvl > $highLvl) $highLvl = $lvl;  
+		}	
+	}
+	for ($i = $highLvl; $i > -1; $i--)
+		if ($fhandle = fopen("../rsrc/svg/".$iso."/".$iso."_".$i."_MAP.xml", "r"))
+		{
+			//$highLvl = $i;
+			fclose($fhandle);
+			break;
+		}else
+			$highLvl = $i - 1;
+	if ($highLvl > -1)
+	{
+		$map_array = array(array('country' => $iso, 'level' => $highLvl));
+		//DB Record
+		require_once('MongoClass.php');
+		$mc = new MongoClass();
+		$mc = createRecord($data[project_name],$data[scenario][name], $map_array);
+	}
+	else
+	{
+		//GENERATE SOME ERROR
+	}
+}
 ?>
