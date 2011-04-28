@@ -87,6 +87,7 @@ window.onload = function() {
                           page_simulation.show();
                       },
                       complete: function() {
+                          simulationLoaded();
                           LOADER.unload();
                       }
                    });
