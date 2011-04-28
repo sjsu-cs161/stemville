@@ -26,7 +26,8 @@ function create_scen ($dir) {
 	$value = $data[scenario][solver];
 	$n = $data[scenario][name];
 	$n_s = split($n, ".scenario");
-	$dublinCore->setAttribute("identifier", "platform:/resource/$data[project_name]/scenarios/$n");
+	#$dublinCore->setAttribute("title", "  ");
+	$dublinCore->setAttribute("identifier", "platform:/resource/$data[project_name]/scenarios/$n.scenario");
 	$dublinCore->setAttribute("description","Scenario &quot;$n_s&quot;");
 	$dublinCore->setAttribute("format","http:///org/eclipse/stem/core/scenario.ecore");
 	$dublinCore->setAttribute("type", "stemtype://org.eclipse.stem/Scenario");
@@ -34,11 +35,11 @@ function create_scen ($dir) {
 	$list = array_keys($data[scenario]);
 	foreach ($list as $i) {
 		if ($i == "model") {
-			$model->setAttribute("href", "platform:/resource/$n/models/" . $data[scenario][model] . "#/");
+			$model->setAttribute("href", "platform:/resource/$data[project_name]/models/" . $data[scenario][model] . "#/");
 		}
 		if ($i == "sequencer") {
 			$sequencer->setAttribute("xsi:type", "org.eclipse.stem.core.sequencer:SequentialSequencer");
-			$sequencer->setAttribute("href", "platform:/resource/$n/sequencers/" . $data[scenario][sequencer] . "#/");
+			$sequencer->setAttribute("href", "platform:/resource/$data[project_name]/sequencers/" . $data[scenario][sequencer] . "#/");
 		}
 		if ($i == "solver") {
 			$value = $data[scenario][solver];
@@ -62,7 +63,7 @@ function create_scen ($dir) {
 			}
 		}
 		if ($i == "infector") {
-			$scenarioDecorators->setAttribute("href","platform:/resource/$n/decorators/" . $data[scenario][infector] . "#/");
+			$scenarioDecorators->setAttribute("href","platform:/resource/$data[project_name]/decorators/" . $data[scenario][infector] . "#/");
 		}
 		if ($i == "inoculators") {
 			#there can be multiple innoculators in a scenario... we need to make this a list.
@@ -95,7 +96,7 @@ function create_sequencer ($dir) {
 	#create the scenario object
 	$doc = new DOMDocument();
 	$doc->formatOutput = true;
-	$eclipse = $doc->createElement("org.eclipse.stem.core.sequencer");
+	$eclipse = $doc->createElement("org.eclipse.stem.core.sequencer:SequentialSequencer");
 	$dublinCore = $doc->createElement("dublinCore");	
 	$startTime = $doc->createElement("startTime");
 	$endTime = $doc->createElement("endTime");
@@ -105,7 +106,7 @@ function create_sequencer ($dir) {
 	$eclipse->setAttribute("xmi:version","2.0");
 	$eclipse->setAttribute("xmlns:xmi","http://www.omg.org/XMI");
 	$eclipse->setAttribute("xmlns:org.eclipse.stem.core.sequencer","http:///org/eclipse/stem/core/sequencer.ecore");
-	$eclipse->setAttribute("uRI","platform:/resource/$n/sequencer/$v.sequencer");
+	$eclipse->setAttribute("uRI","platform:/resource/$n/sequencers/$v.sequencer");
 	$eclipse->setAttribute("typeURI","stemtype://org.eclipse.stem/Identifiable");
 
 
@@ -113,38 +114,39 @@ function create_sequencer ($dir) {
 
 	$time = $data[sequencer][cycle_period];
 	$values = explode(" ", $time);
-echo $time . "\n";
 	if ( $values[1] == "days" ) {
-		$t = $value[0]*24*60*60*1000;
-		$eclipse->setAttribute("duration", $t);
-echo $t ."\n";
+		$t = ((int)$values[0]*24*60*60*1000);
+		$eclipse->setAttribute("timeIncrement", $t); #timeIncrement used to be duration
 	}
 	
 	$arr = $data[sequencer];
 	$startTime->setAttribute("startTime", $data[sequencer][start_date] . 								"T12:00:00.265-0700");
 	$d;
-	if ($values[1] == "days") {
-		$d = date('Y-m-d', strtotime($data[sequencer][start_data]. " +$values[0]days"));
-		$endTime->setAttribute("endTime", "$d");	
-	}
 	$currentTime->setAttribute("currentTime", $data[sequencer][start_date] .
          			    "T12:00:00.265-0700");
  
 
-	$dublinCore->setAttribute("titile", "");
+	#$dublinCore->setAttribute("title", "");
 	$dublinCore->setAttribute("identifier","platform:/resource/$data[project_name]/sequencers/$v.sequencer");
 	$dublinCore->setAttribute("description","");
 	$dublinCore->setAttribute("creator","");
-	$dublinCore->setAttribute("format","http://org.eclipse.stem/Identifiable");
-	$dublinCore->setAttribute("source","");
-	$dublinCore->setAttribute("type","stemtype://org.ecplise.stem/Identifiable");
+	$dublinCore->setAttribute("format","http://org.eclipse.stem/sequencer.ecore");
+	#$dublinCore->setAttribute("source","");
+	$dublinCore->setAttribute("type","stemtype://org.ecplise.stem/Sequencer");
 	$dublinCore->setAttribute("created","");
 	$dublinCore->setAttribute("valid","start=$data[sequencer][start_time]; end=$d");
 	
 	$eclipse->appendChild($dublinCore);	
 	$eclipse->appendChild($startTime);	
-	$eclipse->appendChild($endTime);	
-	$eclipse->appendChild($currentTime);	
+	if ($values[1] == "days" && strcmp($data[end_date], "") != 0) {
+		#$d = date('Y-m-d', strtotime($data[sequencer][start_data]. " +$values[0]days"));
+		#$endTime->setAttribute("endTime", "$d");	
+		#$eclipse->appendChild($endTime);	
+		$endTime->setAttribute("endTime", $data[sequencer][end_date] .
+					"T12:00:00.265-0700");
+		$eclipse->appendChild($endTime);
+	}
+#	$eclipse->appendChild($currentTime);	
 	$doc->appendchild($eclipse);	
 	$doc->save($dir . "/sequencers/$v.sequencer");
 
@@ -175,7 +177,7 @@ function create_model($dir, $mod, $pname, $dis, $inf) {
 	$dublinCore->setAttribute("identifier","platform:/resource/$pname/models/$v.model");
 	$dublinCore->setAttribute("creator","");
 	$dublinCore->setAttribute("date","");
-	$dublinCore->setAttribute("format","http:///org/eclipse/core/model.ecore");
+	$dublinCore->setAttribute("format","http:///org/eclipse/stem/core/model.ecore");
 	$dublinCore->setAttribute("type","stemtype://org.eclipse.stem/Model");
 	$dublinCore->setAttribute("created","");
 	$eclipse->appendChild($dublinCore);
@@ -188,17 +190,39 @@ function create_model($dir, $mod, $pname, $dis, $inf) {
 	$arr = array_unique($data[graphs]);
 	foreach ($arr as $g) {
 		$graph = $doc->createElement("graphs");
-		$temp = explode("_1.1.1", $g);
-		$gr = $temp[0] . $temp[1];
-		$graph->setAttribute("href","platform:/$gr#/");
+echo $g . "\n";
+		#$temp = explode("_1.1.1", $g);
+		#$gr = $temp[0] . $temp[1];
+		$gr = $g;
+		#$graph->setAttribute("href","platform:/$gr#/");
+echo $gr . "\n";
+		if (strpos($gr, "population")) {
+			$p = "platform:/plugin/org.eclipse.stem.data.geography.population.human/resources/";
+echo "LET ME KNOW YOU ARE IN HERE MOTHER FUCKER FUCKING NOW!!!!!!!\n";
+			$list = explode("/eclipse/stem/data/geography/population/human/resources/", $gr);
+echo "$list[0] \nlist 0\n";
+echo "$list[1] \nlist 1\n";
+			$p = $p . "$list[1]#/";
+			$graph->setAttribute("href", $p);
+		} else if (strpos($gr, "data/relationship")) {
+			$p = "platform:/plugin/org.eclipse.stem.data.geography/resources/";
+			$list = explode("/eclipse/stem/data/geography/resources/", $gr);
+			$p = $p . "$list[1]#/";
+			$graph->setAttribute("href", $p);
+		} else {
+			$p = "platform:/plugin/org.eclipse.stem.data.geography/resources/";
+			$list = explode("/eclipse/stem/data/geography/resources/", $gr);
+			$p = $p . "$list[1]#/";
+			$graph->setAttribute("href", $p);
+		}
 		$eclipse->appendChild($graph);
 	}
 	
-	if($inf[infector_model] == $mod[name]) {
-		$node = $doc->createElement("nodeDecorators");
-		$node->setAttribute("href", "platform:/resource/$pname/decorators/$inf[name].standard#/");
-		$eclipse->appendChild($node);
-	}
+	#if($inf[infector_model] == $mod[name]) {
+	#	$node = $doc->createElement("nodeDecorators");
+	#	$node->setAttribute("href", "platform:/resource/$pname/decorators/$inf[name].standard#/");
+	#	$eclipse->appendChild($node);
+	#}
 	if($dis[disease_model] == $mod[name]) {
 		$node = $doc->createElement("nodeDecorators");
 		$node->setAttribute("href", "platform:/resource/$pname/decorators/$dis[name].standard#/");
@@ -221,15 +245,15 @@ function create_disease ($dir) {
 	#create the scenario object
 	$doc = new DOMDocument();
 	$doc->formatOutput = true;
-	$eclipse = $doc->createElement("org.eclipse.stem.diseasemodels.standard:DeterministicSEIRDKodel");
+	$eclipse = $doc->createElement("org.eclipse.stem.diseasemodels.standard:DeterministicSEIRDiseaseModel");
 	$dublinCore = $doc->createElement("dublinCore");
 	$v = $data[disease][name];
 	$n = $data[project_name];
 	$eclipse->setAttribute("xmi:version","2.0");
 	$eclipse->setAttribute("xmlns:xmi","http://www.omg.org/XMI");
-	$eclipse->setAttribute("xmlns:org.ecplise.stem.diseasemodels.standard","http:///org/eclipse/stem/diseasemodels/standard.ecore");
+	$eclipse->setAttribute("xmlns:org.eclipse.stem.diseasemodels.standard","http:///org/eclipse/stem/diseasemodels/standard.ecore");
 	$eclipse->setAttribute("uRI","platform:/resource/$n/decorators/$v.standard");
-	$eclipse->setAttribute("typeURI","stemtype://org.eclipse.stem/Identifiable1129451");
+	$eclipse->setAttribute("typeURI","stemtype://org.eclipse.stem/Identifiable");
 
 	$eclipse->setAttribute("backgroundMortalityRate", $data[disease][infectious_mortality_rate]);
 	$eclipse->setAttribute("diseaseName", $data[disease][name]);
@@ -238,10 +262,10 @@ function create_disease ($dir) {
 	$eclipse->setAttribute("immunityLossRate", $data[disease][immunity_loss_rate]);
 	$eclipse->setAttribute("transmissionRate", $data[disease][transmission_rate]);
 	$eclipse->setAttribute("incubationRate", $data[disease][incubation_rate]);
-
-	$dublinCore->setAttribute("identifier", "platform:/resource/$n/decorators/$data[disease][name].standard");
+	$dis_name = $data[disease][name];	
+	$dublinCore->setAttribute("identifier", "platform:/resource/$n/decorators/$dis_name.standard");
 	$dublinCore->setAttribute("format", "http:///org/eclipse/stem/diseasemodels/standard.ecore" );
-	$dublinCore->setAttribute("type", "stemtype://org.eclipse.stem/diseasemodel" );
+	$dublinCore->setAttribute("type", "stemtype://org.eclipse.stem/Identifiable" );
 	
 
 	$eclipse->appendChild($dublinCore);
@@ -260,19 +284,19 @@ function create_infector ($dir) {
 	$n = $data[project_name];
 	$eclipse->setAttribute("xmi:version","2.0");
 	$eclipse->setAttribute("xmlns:xmi","http://www.omg.org/XMI");
-	$eclipse->setAttribute("xmlns:org.ecplise.stem.diseasemodels.standard","http:///org/eclipse/stem/diseasemodels/standard.ecore");
+	$eclipse->setAttribute("xmlns:org.eclipse.stem.diseasemodels.standard","http:///org/eclipse/stem/diseasemodels/standard.ecore");
 	$eclipse->setAttribute("uRI","platform:/resource/$n/decorators/$v.standard");
-	$eclipse->setAttribute("typeURI","stemtype://org.eclipse.stem/Identifiable1129656");
+	$eclipse->setAttribute("typeURI","stemtype://org.eclipse.stem/Identifiable");
 
 	$eclipse->setAttribute("targetISOKey", $data[infector][location]);
 	$eclipse->setAttribute("diseaseName", $data[disease][name]);
 	$eclipse->setAttribute("populationIdentifier", $data[infector][population]);
-	$eclipse->setAttribute("infectiousCount","15.0");
-
-	$dublinCore->setAttribute("identifier", "platform:/resource/$n/decorators/$data[infector][name].standard");
+	$eclipse->setAttribute("infectiousCount", $data[abs_or_percent]);
+	$inf_name = $data[infector][name];
+	$dublinCore->setAttribute("identifier", "platform:/resource/$n/decorators/$inf_name.standard");
 	$dublinCore->setAttribute("format", "http:///org/eclipse/stem/diseasemodels/standard.ecore" );
 	$dublinCore->setAttribute("type", "stemtype://org.eclipse.stem/identifiable1129656" );
-	
+	$dublinCore->setAttribute("created", "");	
 
 	$eclipse->appendChild($dublinCore);
 	$doc->appendChild($eclipse);
