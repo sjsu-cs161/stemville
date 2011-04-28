@@ -214,7 +214,7 @@ div.sim_controls {
 
 img.sim_button {
     position: relative;
-    left: 50px;
+    left: 20px;
     top: 3px;
     width: 24px;
     height: 24px;
@@ -226,9 +226,20 @@ img.sim_button:hover {
     border-color: blue;
 }
 
+div.sim_screen {
+    border-style: hidden;
+    border-width: 2px;
+    border-radius: 1em;
+    border-color: lightblue;
+    height: 95%;
+    position: relative;
+}
+
 div.sim_map {
     /*border-style: solid;*/
     height: 60%;
+    position: relative;
+    width: 100%;
 }
 
 div.sim_map_canvas {
@@ -238,11 +249,10 @@ div.sim_map_canvas {
     border-radius: 1em;
     background: white;
     position: relative;
-    left: 30%;
-    top: 4%;
-    margin: 0 50px 5px 5px;
+    top: 10%;
+    margin: 0 auto;
     height: 95%;
-    width: 35.7%;
+    width: 40%;
 }
 
 div.sim_time_series {
@@ -252,11 +262,11 @@ div.sim_time_series {
     border-radius: 1em;
     background: white;
     position: relative;
-    top: 0.5%;
+    top: 6%;
     left: 0.5%;
     float: left;
     width: 47%;
-    height: 28.5%;
+    height: 30%;
 }
 
 div.sim_phase_plot {
@@ -266,10 +276,10 @@ div.sim_phase_plot {
     border-radius: 1em;
     background: white;
     position: relative;
-    top: 0.5%;
+    top: 6%;
     right: 0.5%;
     float: right;
     width: 51%;
-    height: 28.5%;
+    height: 30%;
 }
 /* end simulation page style */
