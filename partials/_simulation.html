@@ -10,11 +10,11 @@ in the form of maps and charts. This page is still a WIP.
         <img class="sim_button" id="step" alt="step" title="step through 1 iteration" src="img/sim_buttons/step.svg"/>
         <img class="sim_button" id="stop" alt="stop" title="stop simulation" src="img/sim_buttons/stop.svg"/>
     </div>
-    <div class="sim_screen">
+    <div class="sim_screen" id="screen">
+        <img class="sim_button_min" id="minimize" alt="minimize" title="minimize map" src="img/sim_buttons/minimize.svg"/>
         <div class="sim_map">
-            <div class="sim_map_canvas" id="map_canvas">
-
-            </div>
+            <div class="sim_map_canvas" id="map_canvas"></div>
+            <img class="sim_button_max" id="maximize" alt="maximize" title="maximize map" src="img/sim_buttons/maximize.svg"/>
         </div>
         <div class="sim_time_series">
             Time series here
@@ -28,11 +28,23 @@ in the form of maps and charts. This page is still a WIP.
     var CANVAS_WIDTH;
     var CANVAS_HEIGHT;
     var map;
+    var big_map; // for maximized map
 
+    var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+        clearTimeout (timer);
+        timer = setTimeout(callback, ms);
+        };
+    })();
+    
     $(window).resize(function() {
-        CANVAS_WIDTH = $("#map_canvas").width();
-        CANVAS_HEIGHT = $("#map_canvas").height();
-        scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
+    delay(function(){
+       console.log;
+       CANVAS_WIDTH = $("#map_canvas").width();
+       CANVAS_HEIGHT = $("#map_canvas").height();
+       scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
+    }, 500);
     });
 
     function simulationLoaded() {
@@ -48,6 +60,7 @@ in the form of maps and charts. This page is still a WIP.
     $("#run").click(function(){
         scen.run();
     });
+    
     $("#pause").click(function(){
         var flag = 0;
         if (flag == 0){
@@ -58,10 +71,32 @@ in the form of maps and charts. This page is still a WIP.
             flag = 0;
         }
     });
+
     $("#reset").click(function(){
         scen.reset();
     });
+
     $("#stop").click(function(){
         scen.stop();
+    });
+
+    $("#maximize").click(function(){
+        CANVAS_WIDTH = $(".sim_screen").width();
+        CANVAS_HEIGHT = $(".sim_screen").height();
+        $(".sim_screen").css({"border-style": "solid", "background" : "white"});
+        $(".sim_map").hide();
+        $(".sim_time_series").hide();
+        $(".sim_phase_plot").hide();
+
+        big_map = Raphael("screen", CANVAS_WIDTH, CANVAS_HEIGHT);
+        scen.setMap(big_map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
+    });
+   
+    $("#minimize").click(function(){
+        big_map.remove();
+        $(".sim_screen").css({"border-style": "hidden", "background" : "none"});
+        $(".sim_map").show();
+        $(".sim_time_series").show();
+        $(".sim_phase_plot").show();
     });
 </script>

@@ -222,8 +222,32 @@ img.sim_button {
     border-radius:6px;
 }
 
+img.sim_button_max {
+    position: relative;
+    left: 70.5%;
+    bottom: 85.8%;
+    width: 24px;
+    height: 24px;
+    border: 2px solid lightblue;
+    border-radius:6px;
+}
+
+img.sim_button_min {
+    position: relative;
+    left: 80%;
+    bottom: 100%;
+    width: 24px;
+    height: 24px;
+    border: 2px solid lightblue;
+    border-radius:6px;
+}
+
 img.sim_button:hover {
     border-color: blue;
+}
+
+img.sim_button_max:hover, img.sim_button_min:hover {
+    border-color: red;
 }
 
 div.sim_screen {
@@ -236,7 +260,6 @@ div.sim_screen {
 }
 
 div.sim_map {
-    /*border-style: solid;*/
     height: 60%;
     position: relative;
     width: 100%;
