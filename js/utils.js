@@ -34,7 +34,7 @@ window.onload = function() {
 	     ,  page_load       = $("#load_scenario_page")
 	     ,  page_scenario   = $("#cur_scenario_page")
 	     ,  page_settings   = $("#set_scenario_page")
-         ,  page_simulation = $("#simulation_page")
+       ,  page_simulation = $("#simulation_page")
 	     ,  loaded_create   = false                    // Flag to indicate whether a user is creating a scenario for the first time
 	     ,  NAV             = window.NAV = {};
      
@@ -88,12 +88,17 @@ window.onload = function() {
                       },
                       complete: function() {
                           simulationLoaded();
+                          $.getJSON('rsrc/json/flags.json', function(data) {
+                              var file = '<img style="height:30px; float: left; padding-top:6px; margin-right:6px;" src="rsrc/flags/'+data[scen.getCountry()]+'"/>';
+                              $('#scen_show').html(file+' '+ scen.getScenario()).show();
+                          });
                           LOADER.unload();
                       }
                    });
 	         } else if (which_page === 'scenario') {
 	             // Display current scenario workflow
-	             page_scenario.show();
+	             //page_scenario.show();
+               page_simulation.show();
 	         } else if (which_page === 'settings') {
 	             // Display settings for current scenario
 	             page_settings.show();
