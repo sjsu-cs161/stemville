@@ -538,8 +538,8 @@ $.getJSON("rsrc/json/selectoptions.json",function(data) {
       ;
 });
 
-$('#frm-sequencer input[name="start_date"]').datepicker();
-$('#frm-sequencer input[name="end_date"]').datepicker();
+$('#frm-sequencer input[name="start_date"]').datepicker({ dateFormat: 'yy-mm-dd' });
+$('#frm-sequencer input[name="end_date"]').datepicker({ dateFormat: 'yy-mm-dd' });
 
 // Extend String obj :)
 String.prototype.startsWith = function(str) {
