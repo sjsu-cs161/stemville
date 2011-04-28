@@ -222,24 +222,15 @@ img.sim_button {
     border-radius:6px;
 }
 
-img.sim_button_max {
-    position: relative;
-    left: 70.5%;
-    bottom: 85.8%;
+img.sim_button_minmax {
+    position: absolute;
+    right: 10px;
+    top: 10px;
     width: 24px;
     height: 24px;
     border: 2px solid lightblue;
     border-radius:6px;
-}
-
-img.sim_button_min {
-    position: relative;
-    left: 80%;
-    bottom: 100%;
-    width: 24px;
-    height: 24px;
-    border: 2px solid lightblue;
-    border-radius:6px;
+    z-index: 99;
 }
 
 img.sim_button:hover {

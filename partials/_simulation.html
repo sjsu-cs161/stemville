@@ -11,10 +11,13 @@ in the form of maps and charts. This page is still a WIP.
         <img class="sim_button" id="stop" alt="stop" title="stop simulation" src="img/sim_buttons/stop.svg"/>
     </div>
     <div class="sim_screen" id="screen">
-        <img class="sim_button_min" id="minimize" alt="minimize" title="minimize map" src="img/sim_buttons/minimize.svg"/>
+    <img class="sim_button_minmax" id="minimize" alt="minimize" title="minimize map" src="img/sim_buttons/minimize.svg" style="display:none" />
         <div class="sim_map">
-            <div class="sim_map_canvas" id="map_canvas"></div>
-            <img class="sim_button_max" id="maximize" alt="maximize" title="maximize map" src="img/sim_buttons/maximize.svg"/>
+            <div class="sim_map_canvas" id="map_canvas">
+<img class="sim_button_minmax" id="maximize" alt="maximize" title="maximize map" src="img/sim_buttons/maximize.svg"/>
+
+            </div>
+            
         </div>
         <div class="sim_time_series">
             Time series here
@@ -87,7 +90,8 @@ in the form of maps and charts. This page is still a WIP.
         $(".sim_map").hide();
         $(".sim_time_series").hide();
         $(".sim_phase_plot").hide();
-
+        $(this).hide();
+        $('#minimize').show();
         big_map = Raphael("screen", CANVAS_WIDTH, CANVAS_HEIGHT);
         scen.setMap(big_map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
     });
@@ -98,5 +102,7 @@ in the form of maps and charts. This page is still a WIP.
         $(".sim_map").show();
         $(".sim_time_series").show();
         $(".sim_phase_plot").show();
+        $(this).hide();
+        $('#maximize').show();
     });
 </script>
