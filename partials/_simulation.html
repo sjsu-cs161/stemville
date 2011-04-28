@@ -10,28 +10,39 @@ in the form of maps and charts. This page is still a WIP.
         <img class="sim_button" id="step" alt="step" title="step through 1 iteration" src="img/sim_buttons/step.svg"/>
         <img class="sim_button" id="stop" alt="stop" title="stop simulation" src="img/sim_buttons/stop.svg"/>
     </div>
-    <div class="sim_map">
-        <div class="sim_map_canvas" id="map_canvas">
-            
+    <div class="sim_screen">
+        <div class="sim_map">
+            <div class="sim_map_canvas" id="map_canvas">
+
+            </div>
         </div>
-        Map legend, edges, current display selector, etc. go here
-    </div>
-    <div class="sim_time_series">
-        Time series here
-    </div>
-    <div class="sim_phase_plot">
-        Phase plot here
+        <div class="sim_time_series">
+            Time series here
+        </div>
+        <div class="sim_phase_plot">
+            Phase plot here
+        </div>
     </div>
 </div>
 <script type="text/javascript">
-    var CANVAS_WIDTH = 600;
-    var CANVAS_HEIGHT = 460;
-    var map = Raphael("map_canvas", CANVAS_WIDTH, CANVAS_HEIGHT);
-    //var map = Raphael("sim_map_canvas");
-    LOADER.load();
-    scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
-    LOADER.unload();
-    //scen.drawMap();
+    var CANVAS_WIDTH;
+    var CANVAS_HEIGHT;
+    var map;
+
+    $(window).resize(function() {
+        CANVAS_WIDTH = $("#map_canvas").width();
+        CANVAS_HEIGHT = $("#map_canvas").height();
+        scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
+    });
+
+    function simulationLoaded() {
+       CANVAS_WIDTH = $("#map_canvas").width();
+       CANVAS_HEIGHT = $("#map_canvas").height();
+
+       map = Raphael("map_canvas", CANVAS_WIDTH, CANVAS_HEIGHT);
+
+       scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
+    }
 
     // setup sim button action listeners
     $("#run").click(function(){
