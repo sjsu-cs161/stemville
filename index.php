@@ -21,6 +21,9 @@
     	$('#stemville_logo').live('click', function() {
     	    NAV.show('front');
     	});
+    	$('#scen_show').live('click', function() {
+    		NAV.show('scenario');
+    	});
     	
 		</script>
 		
@@ -55,6 +58,7 @@
     		    <div class="right" id="menu">
     		        <div id="menu_create">Design Scenario</div>
     		        <div id="menu_load">Load Scenario</div>
+    		        <div id="scen_show" style="display: none">Current Scenario</div>
     		    </div>
     		</div>
 		</div>

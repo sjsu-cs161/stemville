@@ -243,10 +243,12 @@
         };
     };
     
-    StemVille.Scenario = function(project_name, scenario) {
+    StemVille.Scenario = function(project_name, scenario, country, level) {
 
         this.scenario = scenario;
         this.project_name = project_name;
+        this.country = country;
+        this.level = parseInt(level) || level;
         
         this.OBJECT_ID = parseInt(Math.ceil(Math.random() * 1000000));
         
@@ -512,6 +514,19 @@
     
     sv_proto.getIter = function() {
         return simObj[this.OBJECT_ID].ITER || 0;
+    };
+
+    sv_proto.getScenario = function() {
+        return this.scenario;
+    };
+    sv_proto.getProjectName = function() {
+        return this.project_name;
+    };
+    sv_proto.getCountry = function() {
+        return this.country;
+    };
+    sv_proto.getLevel = function() {
+        return this.level;
     };
     
  })();

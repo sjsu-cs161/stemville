@@ -11,7 +11,7 @@ $mc = new MongoClass();
         <?php
         $scen = $mc->listAllRecords();
         for ($i=0; $i < count($scen); $i++) {
-            echo '<option value="'.$scen[$i][project].'||'.$scen[$i][scenario].'">'.$scen[$i][scenario].' ('.$scen[$i][maps][0][country].'_'.$scen[$i][maps][0][level].')</option>';
+            echo '<option value="'.$scen[$i][project].'|||'.$scen[$i][scenario].'|||'.$scen[$i][maps][0][country].'|||'.$scen[$i][maps][0][level].'">'.$scen[$i][scenario].' ('.$scen[$i][maps][0][country].'_'.$scen[$i][maps][0][level].')</option>';
         }
         ?>
     </select>
@@ -20,17 +20,20 @@ $mc = new MongoClass();
 
 
 <script type="text/javascript">
+
 $('#btn_load-scen').click(function() {
     LOADER.load();
-    var val         = $('#scen-select').val().split('||')
+    var val         = $('#scen-select').val().split('|||')
       , proj_name   = val[0]
       , scen_name   = val[1]
+      , country     = val[2]
+      , level       = val[3]
       ;
       
       console.log("proj_name:",proj_name);
       console.log("scen_name:",scen_name);
       
-      scen = new StemVille.Scenario(proj_name, scen_name);
+      scen = new StemVille.Scenario(proj_name, scen_name, country, level);
       
       scen.init(function() {
           console.log("loaaaded!!");

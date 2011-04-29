@@ -10,7 +10,7 @@
 	// TEMP / FALLBACK VARIABLES
     	$MAP_SCALE_X = 590; //?  LETS FOLLOW DISPLAY CONV THAT X >= Y  so 640 x 480 590 x450 etc 
     	$MAP_SCALE_Y = 450; // IS the cANVAS ALSO THIS SIZE? canvas =  raphael(i,j, i+590,j+450)?
-	$COUNTRY = 'USA';
+	$COUNTRY = 'ITA';
 	$LEVEL = 1;
 	
 	if (isset($_GET['project'])) {
@@ -34,57 +34,62 @@
 	$COUNTRY = strtoupper($COUNTRY);
 	$INPUT_FILE = "../rsrc/svg/".$COUNTRY."/".$COUNTRY."_".$LEVEL."_MAP.xml";
 
-//******************************************************************************
-	function scaleLatitude($degreesS, $degreesN, $degreesP)
+//****************************************************************************************
+	function scale($degreesE, $degreesW, $degreesPX, $degreesN, $degreesS, $degreesPY)
 	{
-	    //THESE MAPS ARE ALREADY PROPERLY IN MERCATOR PROJECTION THIS WAS ACTUALLY
-	    // DISTORTING THEM FURTHER.  MY BAD.
-	    $yS = $degreesS;
-	    $yN = $degreesN;
-	    $yP = $degreesP;
-            $spread = $yN - $yS;
-            $yP = ($yP - $yS) * (1 / $spread);
-            return $yP;
-        }	
+		$ySpread = $degreesN - $degreesS;
+		$xSpread = $degreesE - $degreesW;
+		$xy = array('x'=>0,'y'=>0);
+
+		if (abs($ySpread) >= abs($xSpread))
+		{
+			$diff = abs($ySpread) - abs($xSpread);
+			$diff /= 2.0;
+			$degreesW -= $diff;			
+			$xy['y'] = (($degreesN - $degreesPY)*(1/$ySpread));
+			$xy['x'] = (($degreesPX - $degreesW)*(1/$ySpread));
+		}else
+		{
+			$diff = abs($xSpread) - abs($ySpread);
+			$diff /= 2.0;
+			$degreesN += $diff;
+			$xy['y'] = (($degreesN - $degreesPY)*(1/$xSpread));
+			$xy['x'] = (($degreesPX - $degreesW)*(1/$xSpread));
+		}
+		return $xy;
+	}
 //******************************************************************************
-	function scaleLongitude($degreesE, $degreesW, $degreesP)
+ 	function latLonToXY($data)
 	{
-		$spread = $degreesE - $degreesW;
-		$degreesP = ($degreesP - $degreesW) * (1 / $spread);
-		return $degreesP;
-        }
-//******************************************************************************
-        function latLonToXY($data)
-	{
-            	// Mercator data
                 global $maxN;
             	global $maxS;
             	global $maxE;
             	global $maxW;
-                //global $MAP_SCALE;
+		global $dWE;
+		global $dNS;
                 global $MAP_SCALE_X;
-                global $MAP_SCALE_Y;
+            	global $MAP_SCALE_Y;
             	
-		$ratio = $MAP_SCALE_Y/$MAP_SCALE_X;  // w/h 
-		$shift = ($MAP_SCALE_X - $MAP_SCALE_X*$ratio)/2.0; //maintain a 1:1 ratio but center the drawn object in the available screen.
-            	$latLonToXY = "";
+		$ratio = $MAP_SCALE_Y/$MAP_SCALE_X;
+		$shift = ($MAP_SCALE_X - $MAP_SCALE_X*$ratio)/2.0;
+		
+		$latLonToXY = "";
             	$latLonArray = $data;
+
 	      	$y = "";		
-		for ($i = 0; $i < count($latLonArray); ++$i)
+		$limit =  sizeof($latLonArray);
+		$limit--;
+
+		for ($i = 0; $i < $limit; $i = $i + 2)
 		{
-			if (fmod($i, 2) == 0)
-			{
-				$y = scaleLatitude($maxN, $maxS, $latLonArray[$i])*$MAP_SCALE_Y;
-			}else
-			{
-				$x = $shift + scaleLongitude($maxE, $maxW, $latLonArray[$i])*$MAP_SCALE_X*$ratio;
-                $x = round($x, 6);
-                $y = round($y, 6);
-				$latLonToXY .= $x." ";
-				$latLonToXY .= $y." ";
-			}
+			$xy = array();
+			$xy = scale($maxE, $maxW, $latLonArray[$i+1],$maxN, $maxS, $latLonArray[$i]);
+			$x = $shift + $xy['x']*$MAP_SCALE_X*$ratio;
+			$y = $xy['y']*$MAP_SCALE_Y;
+			$latLonToXY .= $x." ";
+			$latLonToXY .= $y." ";
 		}
-            	return $latLonToXY;
+		return $latLonToXY;
         }
 //******************************************************************************
         function encodeSVGpath()
