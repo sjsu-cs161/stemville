@@ -120,10 +120,12 @@ function create_sequencer ($dir) {
 	}
 	
 	$arr = $data[sequencer];
-	$startTime->setAttribute("startTime", $data[sequencer][start_date] . 								"T12:00:00.265-0700");
+	$taco = $data[sequencer][start_date];
+	echo "$taco  this is the start date ***************\n";
+	$startTime->setAttribute("time", $taco . "T12:00:00.265-0700");
 	$d;
-	$currentTime->setAttribute("currentTime", $data[sequencer][start_date] .
-         			    "T12:00:00.265-0700");
+	#$currentTime->setAttribute("currentTime", $data[sequencer][start_date] .
+        # 			    "T12:00:00.265-0700");
  
 
 	#$dublinCore->setAttribute("title", "");
@@ -197,22 +199,39 @@ echo $g . "\n";
 		#$graph->setAttribute("href","platform:/$gr#/");
 echo $gr . "\n";
 		if (strpos($gr, "population")) {
-			$p = "platform:/plugin/org.eclipse.stem.data.geography.population.human/resources/";
-echo "LET ME KNOW YOU ARE IN HERE MOTHER FUCKER FUCKING NOW!!!!!!!\n";
-			$list = explode("/eclipse/stem/data/geography/population/human/resources/", $gr);
-echo "$list[0] \nlist 0\n";
-echo "$list[1] \nlist 1\n";
-			$p = $p . "$list[1]#/";
+#<graphs href="platform:/plugin/org.eclipse.stem.data.geography.population.human/resources/data/country/DEU/DEU_1_human_2006_population.graph#/"/>
+			#$p = "platform:/plugin/org.eclipse.stem.data.geography.population.human/resources/";
+#echo "LET ME KNOW YOU ARE IN HERE MOTHER FUCKER FUCKING NOW!!!!!!!\n";
+#echo $gr . " do i know???\n";
+#			$list = explode("/", $gr);
+#echo "$list[0] \nlist 0\n";
+#echo "$list[1] \nlist 1\n";
+			#$p = $p . "$list[1]#/";
+#			$p = "platform:/resource/$pname/graphs/$list[11]#/";
+			$list = explode("/", $gr);
+			$p = "platform:/plugin/org.eclipse.stem.data.geography.population.human/resources/data/country/" . $list[10] . "/" . $list[11] . "#/";
 			$graph->setAttribute("href", $p);
 		} else if (strpos($gr, "data/relationship")) {
-			$p = "platform:/plugin/org.eclipse.stem.data.geography/resources/";
-			$list = explode("/eclipse/stem/data/geography/resources/", $gr);
-			$p = $p . "$list[1]#/";
+			#$p = "platform:/plugin/org.eclipse.stem.data.geography/resources/";
+			#$list = explode("/eclipse/stem/data/geography/resources/", $gr);
+			#$p = $p . "$list[1]#/";
+#			$list = explode("/", $gr);
+#			$p = "platform:/resource/$pname/graphs/$list[9]#/";
+#		platform:/plugin/org.eclipse.stem.data.geography/resources/data/country/USA/USA_2.graph#	
+			$list = explode("/", $gr);
+echo $gr . " taco time\n";
+			$p = "platform:/plugin/org.eclipse.stem.data.geography/resources/data/relationship/$list[8]/$list[9]#/"; 
 			$graph->setAttribute("href", $p);
 		} else {
-			$p = "platform:/plugin/org.eclipse.stem.data.geography/resources/";
-			$list = explode("/eclipse/stem/data/geography/resources/", $gr);
-			$p = $p . "$list[1]#/";
+echo $gr . " data rels\n";
+			#$p = "platform:/plugin/org.eclipse.stem.data.geography/resources/";
+			#$list = explode("/eclipse/stem/data/geography/resources/", $gr);
+			#$p = $p . "$list[1]#/";
+#			$list = explode("/", $gr);
+#			$p = "platform:/resource/$pname/graphs/$list[9]#/";
+			$list = explode("/", $gr);
+echo $gr . " taco2 time\n";
+			$p = "platform:/plugin/org.eclipse.stem.data.geography/resources/data/country/$list[8]/$list[9]#/";
 			$graph->setAttribute("href", $p);
 		}
 		$eclipse->appendChild($graph);
@@ -291,7 +310,7 @@ function create_infector ($dir) {
 	$eclipse->setAttribute("targetISOKey", $data[infector][location]);
 	$eclipse->setAttribute("diseaseName", $data[disease][name]);
 	$eclipse->setAttribute("populationIdentifier", $data[infector][population]);
-	$eclipse->setAttribute("infectiousCount", $data[abs_or_percent]);
+	$eclipse->setAttribute("infectiousCount", $data[infector][abs_or_percent]);
 	$inf_name = $data[infector][name];
 	$dublinCore->setAttribute("identifier", "platform:/resource/$n/decorators/$inf_name.standard");
 	$dublinCore->setAttribute("format", "http:///org/eclipse/stem/diseasemodels/standard.ecore" );
@@ -312,9 +331,37 @@ echo "made it here\n";
 		$h = explode("geography/",$g);
 		$path = "/var/www/cs161/group2/stem/plugins/" . $h[1];
 echo $path . " = path\n";
+		if(strpos($g, "population")) {
+echo $g . " hello g\n";
+			$j = explode("/", $g);
+echo "this is j $j[11]\n";
+			$path = "/var/www/cs161/group2/stem/plugins/population/human/data/country/$j[10]/$j[11]";
+		}
 		exec("cp $path $dir/graphs/"); 	
+echo $dir . "            ------------this is the dir\n";
 echo "cp $path $dir/graphs\n";
 	}	
+}
+
+function create_project ($dir) {
+	$data = $_POST['data'];
+	$doc = new DOMDocument();
+	$doc->formatOutput = true;
+	$project = $doc->createElement("projectDescription");
+	$name = $doc->createElement("name", $data[project_name]);
+	$comment = $doc->createElement("comment");
+	$projects = $doc->createElement("projects");
+	$buildSpec = $doc->createElement("buildSpec");
+	$natures = $doc->createElement("natures");
+	$nature = $doc->createElement("nature", "org.eclipse.stem.stemnature");
+	$natures->appendChild($nature);
+	$project->appendChild($name);	
+	$project->appendChild($comment);	
+	$project->appendChild($projects);	
+	$project->appendChild($buildSpec);	
+	$project->appendChild($natures);	
+	$doc->appendChild($project);
+	$doc->save($dir . "/.project");
 }
 
 
@@ -337,6 +384,7 @@ create_models($p_name);
 create_disease($p_name);
 create_infector($p_name);
 create_graphs($p_name);
+create_project($p_name);
 #create("$p_name")
 $stem_path = "./var/www/cs161/group2/stem/";
 echo "$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
