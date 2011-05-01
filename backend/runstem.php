@@ -15,7 +15,7 @@ if (!isset($project) || !isset($scenario)) {
 	die();
 }
 
-$stem_path = "./var/www/cs161/group2/stem/";
+$stem_path = "/var/www/cs161/group2/stem";
 
 $stem_cmd = "$stem_path/STEM -headless -log -uri platform:/resource/$project/scenarios/$scenario";
 
