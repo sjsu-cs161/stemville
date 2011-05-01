@@ -386,10 +386,16 @@ create_infector($p_name);
 create_graphs($p_name);
 create_project($p_name);
 #create("$p_name")
+<<<<<<< HEAD
 $stem_path = "/var/www/cs161/group2/stem/";
 #echo "$stem_path" . "STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
 #exec("export DIPLAY=:0");
 #exec("$stem_path." "STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
+=======
+$stem_path = "./var/www/cs161/group2/stem/";
+echo "$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
+//exec("$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
+>>>>>>> d7276f3a25ac398ead1fc1968c72206d7b8fcef5
 
 countryAutoLvl();
 //Wicked AutoMagick finds the XXX country and level
