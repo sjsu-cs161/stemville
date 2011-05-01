@@ -7,7 +7,7 @@ if (isset($_GET['project'])) {
 	$project = $_GET['project'];
 }
 if (isset($_GET['scenario'])) {
-	$project = $_GET['scenario'];
+	$scenario = $_GET['scenario'];
 }
 
 if (!isset($project) || !isset($scenario)) {
