@@ -388,7 +388,7 @@ create_project($p_name);
 #create("$p_name")
 $stem_path = "./var/www/cs161/group2/stem/";
 echo "$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
-exec("$stem_path\STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
+//exec("$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
 
 countryAutoLvl();
 //Wicked AutoMagick finds the XXX country and level
