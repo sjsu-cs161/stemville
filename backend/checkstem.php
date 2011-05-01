@@ -11,11 +11,12 @@ if (!isset($pid)) {
 	die();
 }
 $stem = new Process();
-$stem->setPid($pid)
+$stem->setPid($pid);
+
 if ($stem->status()) {
-	echo json_encode(Array("status" => "success", "pid" => $stem->getPid()));
+	echo json_encode(Array("status" => "success", "msg" => "STEM is currently running"));
 } else {
-	echo json_encode(Array("status" => "error", "msg" => "could not launch stem"));
+	echo json_encode(Array("status" => "error", "msg" => "STEM is not running"));
 }
 
 
