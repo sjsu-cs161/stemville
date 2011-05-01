@@ -16,6 +16,7 @@ class Process{
     }
     private function runCom(){
         $command = 'nohup '.$this->command.' > /dev/null 2>&1 & echo $!';
+        exec("export DISPLAY=:0");
         exec($command ,$op);
         $this->pid = (int)$op[0];
     }
@@ -29,7 +30,7 @@ class Process{
     }
 
     public function status(){
-        $command = 'ps -p '.$this->pid;
+        $command = 'ps -p '.$this->pid;        
         exec($command,$op);
         if (!isset($op[1]))return false;
         else return true;
