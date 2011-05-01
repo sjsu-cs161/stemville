@@ -17,7 +17,7 @@ if (!isset($project) || !isset($scenario)) {
 
 $stem_path = "/var/www/cs161/group2/stem";
 
-$stem_cmd = "$stem_path/STEM -headless -log -uri platform:/resource/$project/scenarios/$scenario";
+$stem_cmd = $stem_path."/STEM -headless -log -uri platform:/resource/".$project."/scenarios/".$scenario.".scenario";
 
 $stem = new Process($stem_cmd);
 
