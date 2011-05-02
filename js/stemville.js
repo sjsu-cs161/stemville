@@ -569,5 +569,12 @@
     sv_proto.getLevel = function() {
         return this.level;
     };
+
+    sv_proto.getDataTypes = function() {
+        var out = [];
+        for (var type in this.output) (function(type){ 
+            out.push(type);
+        }(type));
+    };
     
  })();
