@@ -10,7 +10,7 @@
         BACKEND_MAPS        = "backend/rendermap.php",
         BACKEND_REGIONS     = "backend/regions.php",
         BACKEND_STEM        = "backend/runstem.php",
-        BACKEND_OUTPUT      = "output/getdata.php", //http://localhost/~bjorkstam/experimental/output/getdata.php?country=NOR&level=1&type=I&start=1&amount=100
+        BACKEND_OUTPUT      = "backend/getdata.php", //http://localhost/~bjorkstam/experimental/output/getdata.php?country=NOR&level=1&type=I&start=1&amount=100
         MAP_SCALE           = {x: 100, y: 100},                  // X x Y scale
         FETCH_DELAY         = 1000 * 20,             // delay between each output fetch
         OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Should be high; like 10-100
@@ -129,7 +129,7 @@
         console.log(" + loading output for", type);
         $.ajax({
             url: ctx.OPTIONS.BACKEND_OUTPUT || BACKEND_OUTPUT,
-            data: "project="+ctx.project+"&scenario="+ctx.scenario+"&type="+type+"&start="+(ctx.output[type].length+1)+"&amount="+(ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT),
+            data: "project="+ctx.project+"&scenario="+ctx.scenario+"&type="+type+"&level="+ctx.level+"&start="+(ctx.output[type].length+1)+"&amount="+(ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT),
             timeout: 20000,
             success: function(data){
                 var output = jQuery.parseJSON(data); 
