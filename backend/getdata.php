@@ -35,7 +35,7 @@ chdir($path_to_workspace);
 exec("ls -t -c -l", $dir_list);
 $dir = explode(" ", $dir_list[1]);
 $scenario_folder = $dir[7];
-$disease_folder = "dis1"; //FOR NOW...
+$disease_folder = "dis1/human"; //FOR NOW...
 
 $OUTPUT_DIR = '/home/tseng/group2/stem/workspace/'.$project.'/Recorded Simulations/'.$scenario_folder.'/'.$disease_folder.'/';
 
