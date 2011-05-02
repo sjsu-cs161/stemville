@@ -1,4 +1,4 @@
-S<?php
+<?php
 
 
 if (isset($_GET['project'])) {
