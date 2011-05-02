@@ -47,7 +47,6 @@
                 if (output.status === "success") {
                     that.PID = output.pid;
                     that.status.stem = "started stem";
-                    loadOutput.call(that);
                 } else {
                     that.status.stem = "could not start stem ... retrying soon";
                     that.errors.push(output.msg);
@@ -126,6 +125,7 @@
     };
     
     var outputHelper = function(type, ctx) {
+        console.log(" + loading output for", type);
         $.ajax({
             url: ctx.OPTIONS.BACKEND_OUTPUT || BACKEND_OUTPUT,
             data: "project="+ctx.project+"&scenario="+ctx.scenario+"&type="+type+"&start="+(ctx.output[type].length+1)+"&amount="+(ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT),
@@ -149,15 +149,16 @@
     };
     
     var loadOutput = function() {
+        console.log("-- setting up output load --");
         this.status.stem_output = "loading data";
         var that = this;
         $.getJSON('backend/checkstem.php?pid='+this.PID, function(data) {
             
             for (type in this.output) (function(t) {
-                outputHelper(t, that)
+                outputHelper(t, that);
             })(type);
 
-            if (data.success) {
+            if (data.status == "success") {
                 setTimeout(function() {
                     loadOutput.call(that);
                 }, FETCH_DELAY);
