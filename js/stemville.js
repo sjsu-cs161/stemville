@@ -498,8 +498,13 @@
     sv_proto.run = function(callback, ctx) {
         // Make sure everything is reset first
         if (this.isRunning()) this.stop();
-        resetMap.call(this);
-        resetGraph.call(this);
+        if (this.hasGraph()) {
+            resetGraph.call(this);
+        };
+        if (this.hasMap()) {
+            resetMap.call(this);
+        };        
+        
         
         // Call centralized function to sync all animations
         simObj[this.OBJECT_ID].MAX_ITER = this.output.I.length;
