@@ -11,13 +11,19 @@ in the form of maps and charts. This page is still a WIP.
         <img class="sim_button" id="stop" alt="stop" title="stop simulation" src="img/sim_buttons/stop.svg"/>
     </div>
     <div class="sim_screen" id="screen">
-    <img class="sim_button_minmax" id="minimize" alt="minimize" title="minimize map" src="img/sim_buttons/minimize.svg" style="display:none" />
+        <img class="sim_button_minmax" id="minimize" alt="minimize" title="minimize map" src="img/sim_buttons/minimize.svg" style="display:none" />
         <div class="sim_map">
+            <div class="map_info"></div>
             <div class="sim_map_canvas" id="map_canvas">
-<img class="sim_button_minmax" id="maximize" alt="maximize" title="maximize map" src="img/sim_buttons/maximize.svg"/>
-
+                <img class="sim_button_minmax" id="maximize" alt="maximize" title="maximize map" src="img/sim_buttons/maximize.svg"/>
+                <table class="map_legend" cellspacing="5">
+                    <tr><th colspan="2"><b>Legend</b></th></tr>
+                    <tr><td>S</td><td style="background: blue">&nbsp;&nbsp;</td></tr>
+                    <tr><td>E</td><td style="background: yellow">&nbsp;&nbsp;</td></tr>
+                    <tr><td>I</td><td style="background: red">&nbsp;&nbsp;</td></tr>
+                    <tr><td>R</td><td style="background: green">&nbsp;&nbsp;</td></tr>
+                </table>
             </div>
-            
         </div>
         <div class="sim_time_series">
             Time series here
@@ -25,6 +31,13 @@ in the form of maps and charts. This page is still a WIP.
         <div class="sim_phase_plot">
             Phase plot here
         </div>
+        <table class="map_legend_max" cellspacing="5" style="display:none">
+                    <tr><th colspan="2"><b>Legend</b></th></tr>
+                    <tr><td>S</td><td style="background: blue">&nbsp;&nbsp;</td></tr>
+                    <tr><td>E</td><td style="background: yellow">&nbsp;&nbsp;</td></tr>
+                    <tr><td>I</td><td style="background: red">&nbsp;&nbsp;</td></tr>
+                    <tr><td>R</td><td style="background: green">&nbsp;&nbsp;</td></tr>
+        </table>
     </div>
 </div>
 <script type="text/javascript">
@@ -40,6 +53,9 @@ in the form of maps and charts. This page is still a WIP.
         timer = setTimeout(callback, ms);
         };
     })();
+
+    // Display the map's info
+    $(".map_info").html("<b>Country: </b>"+scen.getCountry()+"&nbsp;&nbsp;<b>Level: </b>"+scen.getLevel());
     
     $(window).resize(function() {
     delay(function(){
@@ -58,7 +74,7 @@ in the form of maps and charts. This page is still a WIP.
 
        scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
     }
-
+    
     // setup sim button action listeners
     $("#run").click(function(){
         scen.run();
@@ -92,6 +108,7 @@ in the form of maps and charts. This page is still a WIP.
         $(".sim_phase_plot").hide();
         $(this).hide();
         $('#minimize').show();
+        $(".map_legend_max").show();
         big_map = Raphael("screen", CANVAS_WIDTH, CANVAS_HEIGHT);
         scen.setMap(big_map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
     });
@@ -103,6 +120,7 @@ in the form of maps and charts. This page is still a WIP.
         $(".sim_time_series").show();
         $(".sim_phase_plot").show();
         $(this).hide();
+        $(".map_legend_max").hide();
         $('#maximize').show();
     });
 </script>
