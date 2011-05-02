@@ -158,7 +158,7 @@
                 outputHelper(t, that);
             })(type);
 
-            if (data.status == "success") {
+            if (data.status === "success") {
                 setTimeout(function() {
                     loadOutput.call(that);
                 }, FETCH_DELAY);
