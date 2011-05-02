@@ -26,7 +26,7 @@ if ($type == 'POP_COUNT') {
 } else if ($type == 'DISEASE_DEATHS') {
     $type = 'Disease Deaths';
 }
-
+/home/tseng/group2/stem/workspace/
 $path_to_workspace = "/home/tseng/group2/stem/workspace/".$project;
 $dir_list = array();
 // TODO: PLEASE FIGURE OUT THE REST OF THE PATH (VARIES W/ DATE)
@@ -37,7 +37,7 @@ $dir = explode(" ", $dir_list[1]);
 $scenario_folder = $dir[7];
 $disease_folder = "dis1"; //FOR NOW...
 
-$OUTPUT_DIR = '/home/tseng/group2/stem/workspace/'.$project.'/Recorded Simulations/'.$scenario_folder.'/'.$disease_folder;
+$OUTPUT_DIR = '/home/tseng/group2/stem/workspace/'.$project.'/Recorded Simulations/'.$scenario_folder.'/'.$disease_folder.'/';
 
 
 
