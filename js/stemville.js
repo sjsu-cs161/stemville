@@ -47,6 +47,7 @@
                 if (output.status === "success") {
                     that.PID = output.pid;
                     that.status.stem = "started stem";
+                    loadOutput.call(that);
                 } else {
                     that.status.stem = "could not start stem ... retrying soon";
                     that.errors.push(output.msg);
