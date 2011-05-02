@@ -575,6 +575,12 @@
         for (var type in this.output) (function(type){ 
             out.push(type);
         }(type));
+
+        return out;
+    };
+    sv_proto.getOutput = function(type) {
+        type = type.toUpperCase()
+        return this.output[type];
     };
     
  })();
