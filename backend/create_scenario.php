@@ -144,7 +144,7 @@ function create_sequencer ($dir) {
 		#$d = date('Y-m-d', strtotime($data[sequencer][start_data]. " +$values[0]days"));
 		#$endTime->setAttribute("endTime", "$d");	
 		#$eclipse->appendChild($endTime);	
-		$endTime->setAttribute("endTime", $data[sequencer][end_date] .
+		$endTime->setAttribute("time", $data[sequencer][end_date] .
 					"T12:00:00.265-0700");
 		$eclipse->appendChild($endTime);
 	}
