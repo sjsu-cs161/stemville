@@ -15,8 +15,9 @@ class Process{
         }
     }
     private function runCom(){
-        $command = 'nohup '.$this->command.' > /dev/null 2>&1 & echo $!';
-        exec("export DISPLAY=:0");
+        $command = 'cd /home/tseng/group2/stem && export DISPLAY=:0 && nohup '.$this->command.' > /home/tseng/group2/stemweblog 2>&1 & echo $!';
+        //exec("export DISPLAY=:0");
+	//exec("cd /home/tseng/group2/stem");
         exec($command ,$op);
         $this->pid = (int)$op[0];
     }
