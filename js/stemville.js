@@ -155,7 +155,7 @@
         var that = this;
         $.getJSON('backend/checkstem.php?pid='+this.PID, function(data) {
             
-            for (type in this.output) (function(t) {
+            for (type in that.output) (function(t) {
                 outputHelper(t, that);
             })(type);
 
