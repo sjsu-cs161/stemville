@@ -97,7 +97,7 @@ window.onload = function() {
                    });
 	         } else if (which_page === 'scenario') {
 	             // Display current scenario workflow
-	             page_scenario.show();
+	             page_simulation.show();
                //page_simulation.show();
 	         } else if (which_page === 'settings') {
 	             // Display settings for current scenario
