@@ -231,7 +231,7 @@
             map_regions = this.mapData.regions;
         
         for (var region in map_regions) (function(r) {
-            var opacity = that.output.I[cur_pos][r] / 100000;
+            var opacity = that.output[that.mapData.output][cur_pos][r] / 100000;
             opacity = (opacity > 1.0) ? 1.0 : opacity;
             map_regions[r].animate({'fill-opacity': opacity}, that.delay);
         })(region);
@@ -295,6 +295,7 @@
         
         this.mapData = {
             canvas: null,
+            output: "I",
             data: null,
             regions: {}
         };
@@ -442,8 +443,10 @@
 
     // Map functionality
 
-    sv_proto.setMap = function(r_canvas) {
+    sv_proto.setMap = function(r_canvas, r_output) {
         this.mapData.canvas = r_canvas;
+
+        this.mapData.output = r_output || "I";
 
         return this;
     };
@@ -579,7 +582,7 @@
         return out;
     };
     sv_proto.getOutput = function(type) {
-        type = type.toUpperCase()
+        type = type.toUpperCase();
         return this.output[type];
     };
     
