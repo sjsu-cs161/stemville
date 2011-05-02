@@ -9,8 +9,10 @@
     var StemVille           = window.StemVille = {},
         BACKEND_MAPS        = "backend/rendermap.php",
         BACKEND_REGIONS     = "backend/regions.php",
+        BACKEND_STEM        = "backend/runstem.php",
         BACKEND_OUTPUT      = "output/getdata.php", //http://localhost/~bjorkstam/experimental/output/getdata.php?country=NOR&level=1&type=I&start=1&amount=100
         MAP_SCALE           = {x: 100, y: 100},                  // X x Y scale
+        FETCH_DELAY         = 1000 * 20,             // delay between each output fetch
         OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Should be high; like 10-100
         simObj              = {},
         graphObj            = {},
@@ -33,7 +35,29 @@
         };
         
         
-    
+    var loadSTEM = function() {
+        var that = this;
+        this.status.stem = "starting stem";
+        $.ajax({
+            url: this.OPTIONS.BACKEND_STEM || BACKEND_STEM,
+            data: "project="+this.project_name+"&scenario="+this.scenario,
+            timeout: 30000,
+            success: function(data){
+                var output = jQuery.parseJSON(data); 
+                if (output.status === "success") {
+                    that.PID = output.pid;
+                    that.status.stem = "started stem";
+
+                } else {
+                    that.status.stem = "could not start stem ... retrying soon";
+                    that.errors.push(output.msg);
+                    setTimeout(function() {
+                        loadSTEM.call(that);
+                    }, 1000 * 10)
+                };
+            }
+         });
+    };
     var loadRegions = function() {
         this.status.regions = "loading data";
         var that = this;
@@ -104,7 +128,7 @@
     var outputHelper = function(type, ctx) {
         $.ajax({
             url: ctx.OPTIONS.BACKEND_OUTPUT || BACKEND_OUTPUT,
-            data: "country="+ctx.country+"&level="+ctx.level+"&disease="+ctx.disease+"&type="+type+"&start="+(ctx.output[type].length+1)+"&amount="+(ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT),
+            data: "project="+ctx.project+"&scenario="+ctx.scenario+"&type="+type+"&start="+(ctx.output[type].length+1)+"&amount="+(ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT),
             timeout: 20000,
             success: function(data){
                 var output = jQuery.parseJSON(data); 
@@ -112,13 +136,9 @@
                     for (var i=0; i < output.data.length; i++) {
                         ctx.output[type].push(output.data[i]);
                     };
-                    
-                    if (output.data.length > 0) {
+                    if (output.data.length > (ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT)-5) {
                         outputHelper(type, ctx);
-                    } else {
-                        ctx.status.stem_output = "completed load";
-                        loadTracker.flag();
-                    };
+                    }
                 } else {
                     ctx.errors.push(output.msg);
                 };
@@ -130,11 +150,19 @@
     
     var loadOutput = function() {
         this.status.stem_output = "loading data";
-        
         var that = this;
-        for (type in this.output) (function(t) {
-            outputHelper(t, that)
-        })(type);
+        $.getJSON('backend/checkstem.php?pid='+this.PID, function(data) {
+            
+            for (type in this.output) (function(t) {
+                outputHelper(t, that)
+            })(type);
+
+            if (data.success) {
+                setTimeout(function() {
+                    loadOutput.call(that);
+                }, FETCH_DELAY);
+            };
+        });       
     };
     
     // Reset functions
@@ -249,6 +277,8 @@
         this.project_name = project_name;
         this.country = country;
         this.level = parseInt(level) || level;
+
+        this.PID = null;
         
         this.OBJECT_ID = parseInt(Math.ceil(Math.random() * 1000000));
         
@@ -299,7 +329,9 @@
             "I": [],
             "R": [],
             "S": [],
-            "POP_COUNT": []
+            "POP_COUNT": [],
+            "INCIDENCE": [],
+            "DISEASE_DEATHS": []
         };     
         this.regions = [];
         
@@ -324,7 +356,9 @@
            
         loadRegions.call(this);
         loadMap.call(this);
-        loadOutput.call(this);
+        //loadOutput.call(this);
+        // start stem
+        loadSTEM.call(this);
         
         return this;
     };
