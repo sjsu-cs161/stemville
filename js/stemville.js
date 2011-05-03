@@ -300,8 +300,8 @@
             colors: {
                 "E": "#FFF000",
                 "I": "#FF0000",
-                "R": "#0000FF",
-                "S": "#00FF00",
+                "R": "#00FF00",
+                "S": "#0000FF",
                 "POP_COUNT": "#FF00DD",
                 "INCIDENCE": "#FF00DD",
                 "DISEASE_DEATHS": "#FF00DD"
