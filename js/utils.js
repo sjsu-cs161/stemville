@@ -95,7 +95,24 @@ window.onload = function() {
                           LOADER.unload();
                       }
                    });
-	         } else if (which_page === 'scenario') {
+	         } else if (which_page === 'sim2') {
+               $.ajax({
+                      url: "partials/_simul2.html",
+                      timeout: 10000,
+                      success: function(data){
+                          page_simulation.find("> div").html(data);
+                          page_simulation.show();
+                      },
+                      complete: function() {
+                          simulationLoaded();
+                          $.getJSON('rsrc/json/flags.json', function(data) {
+                              var file = '<img style="height:30px; float: left; padding-top:6px; margin-right:6px;" src="rsrc/flags/'+data[scen.getCountry()]+'"/>';
+                              $('#scen_show').html(file+' '+ scen.getScenario()).show();
+                          });
+                          LOADER.unload();
+                      }
+                   });
+           } else if (which_page === 'scenario') {
 	             // Display current scenario workflow
 	             page_simulation.show();
                //page_simulation.show();
