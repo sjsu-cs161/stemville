@@ -1,0 +1,40 @@
+
+<div class="sim_controls">
+	<img class="sim_button" id="run" alt="run" title="run simulation" src="img/sim_buttons/run.svg"/>
+	<img class="sim_button" id="pause" alt="pause" title="pause simulation" src="img/sim_buttons/pause.svg"/>
+	<img class="sim_button" id="reset" alt="restart" title="restart simulation" src="img/sim_buttons/restart.svg"/>
+	<img class="sim_button" id="step" alt="step" title="step through 1 iteration" src="img/sim_buttons/step.svg"/>
+	<img class="sim_button" id="stop" alt="stop" title="stop simulation" src="img/sim_buttons/stop.svg"/>
+</div>
+
+<div id="rmap_canvas"></div>
+<div id="graph_container">
+	<div class="c-graph">
+		<div id="ts_canvas"><div>
+	</div>
+</div>
+
+
+
+<script type="text/javascript">
+
+
+var map;
+function simulationLoaded() {
+	LOADER.load();
+
+	map = Raphael("rmap_canvas");
+	var canvas_size = { x: $('#rmap_canvas').width(), y: $('#rmap_canvas').height()};
+	scen.setMap(map).setOptions({MAP_SCALE: canvas_size}).init(function() {
+
+		this.setGraph('ts_canvas', 'I', this.getRegions().splice(0,2));
+		console.log("initialized scenario");
+		this.drawMap();
+		LOADER.unload();
+	});
+
+	$('div.c-graph').draggable();
+	$('div.c-graph').resizable();
+}
+
+</script>
