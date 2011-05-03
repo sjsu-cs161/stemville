@@ -217,9 +217,12 @@ img.sim_button {
     left: 20px;
     top: 3px;
     width: 24px;
-    height: 24px;
-    border: 1px solid #fff;
-    border-radius:6px;
+    height: 24px
+
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
 }
 
 img.sim_button_minmax {
@@ -234,7 +237,10 @@ img.sim_button_minmax {
 }
 
 img.sim_button:hover {
-    border-color: blue;
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
 }
 
 img.sim_button_minmax:hover {
@@ -274,6 +280,25 @@ table.map_legend, .map_legend_max {
     bottom: 10px;
     right: 10px;
     z-index: 99;
+}
+
+select.data_select {
+    border-style: solid;
+    border-color: lightblue;
+    border-width: 2px;
+    border-radius: 1em;
+    position: absolute;
+    height: 7%;
+    width: 10%;
+    padding: 5px;
+    left: 10px;
+    bottom: 10px;
+}
+
+b.data_select_title {
+    position: absolute;
+    bottom: 10%;
+    left: 7px
 }
 
 div.sim_map_canvas {

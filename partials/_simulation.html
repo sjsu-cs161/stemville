@@ -23,6 +23,13 @@ in the form of maps and charts. This page is still a WIP.
                     <tr><td>I</td><td style="background: red">&nbsp;&nbsp;</td></tr>
                     <tr><td>R</td><td style="background: green">&nbsp;&nbsp;</td></tr>
                 </table>
+                <b class="data_select_title">Data Select</b>
+                <select class="data_select">
+                    <option id="data_select_opt">S</option>
+                    <option id="data_select_opt">E</option>
+                    <option id="data_select_opt">I</option>
+                    <option id="data_select_opt">R</option>
+                </select>
             </div>
         </div>
         <div class="sim_time_series">
@@ -123,4 +130,8 @@ in the form of maps and charts. This page is still a WIP.
         $(".map_legend_max").hide();
         $('#maximize').show();
     });
+
+    $("#data_select_opt").click(function(){
+        scen.setMap(map, $("#data_select_opt").html());
+    })
 </script>
