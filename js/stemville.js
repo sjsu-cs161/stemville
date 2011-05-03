@@ -12,7 +12,7 @@
         BACKEND_STEM        = "backend/runstem.php",
         BACKEND_OUTPUT      = "backend/getdata.php", //http://localhost/~bjorkstam/experimental/output/getdata.php?country=NOR&level=1&type=I&start=1&amount=100
         MAP_SCALE           = {x: 100, y: 100},                  // X x Y scale
-        FETCH_DELAY         = 1000 * 20,             // delay between each output fetch
+        FETCH_DELAY         = 1000 * 10,             // delay between each output fetch
         OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Should be high; like 10-100
         simObj              = {},
         graphObj            = {},
