@@ -24,16 +24,16 @@ in the form of maps and charts. This page is still a WIP.
                     <tr><td>R</td><td style="background: green">&nbsp;&nbsp;</td></tr>
                 </table>
                 <b class="data_select_title">Data Select</b>
-                <select class="data_select">
-                    <option id="data_select_opt">S</option>
-                    <option id="data_select_opt">E</option>
-                    <option id="data_select_opt">I</option>
-                    <option id="data_select_opt">R</option>
+                <select id="data_select">
+                    <option value="I">I</option>
+                    <option value="S">S</option>
+                    <option value="E">E</option>
+                    <option value="R">R</option>
                 </select>
             </div>
         </div>
         <div class="sim_time_series">
-            Time series here
+            <div id="ts_canvas"></div>
         </div>
         <div class="sim_phase_plot">
             Phase plot here
@@ -85,6 +85,7 @@ in the form of maps and charts. This page is still a WIP.
     // setup sim button action listeners
     $("#run").click(function(){
         scen.run();
+        scen.setGraph('ts_canvas', 'I', scen.getRegions().splice(0,2));
     });
     
     $("#pause").click(function(){
@@ -131,7 +132,7 @@ in the form of maps and charts. This page is still a WIP.
         $('#maximize').show();
     });
 
-    $("#data_select_opt").click(function(){
-        scen.setMap(map, $("#data_select_opt").html());
-    })
+    $("#data_select").change(function(){
+        scen.setMap(map, $("#data_select").val());
+    });
 </script>

@@ -282,7 +282,7 @@ table.map_legend, .map_legend_max {
     z-index: 99;
 }
 
-select.data_select {
+#data_select {
     border-style: solid;
     border-color: lightblue;
     border-width: 2px;
