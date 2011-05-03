@@ -126,7 +126,6 @@
     };
     
     var outputHelper = function(type, ctx) {
-        console.log(" + loading output for", type);
         $.ajax({
             url: ctx.OPTIONS.BACKEND_OUTPUT || BACKEND_OUTPUT,
             data: "project="+ctx.project_name+"&scenario="+ctx.scenario+"&type="+type+"&level="+ctx.level+"&start="+(ctx.output[type].length+1)+"&amount="+(ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT),
@@ -150,7 +149,7 @@
     };
     
     var loadOutput = function() {
-        console.log("-- setting up output load --");
+        
         this.status.stem_output = "loading data";
         var that = this;
         $.getJSON('backend/checkstem.php?pid='+this.PID, function(data) {
