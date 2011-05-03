@@ -172,7 +172,7 @@
     var resetMap = function() {
         var that = this;
         for (var region in this.mapData.regions) (function(region) {
-            that.mapData.regions[region].attr({fill: "#FF0000", 'fill-opacity': 0.0});
+            that.mapData.regions[region].attr({fill: that.mapData.colors[that.mapData.output], 'fill-opacity': 0.0});
         })(region);
     };
     
@@ -297,7 +297,16 @@
             canvas: null,
             output: "I",
             data: null,
-            regions: {}
+            regions: {},
+            colors: {
+                "E": "#FFF000",
+                "I": "#FF0000",
+                "R": "#0000FF",
+                "S": "#00FF00",
+                "POP_COUNT": "#FF00DD",
+                "INCIDENCE": "#FF00DD",
+                "DISEASE_DEATHS": "#FF00DD"
+            }
         };
         
         // Graph (AKA Time Series)
