@@ -34,7 +34,12 @@
             }        
         };
         
-        
+    var killSTEM = function() {
+	$.getJSON('backend/killstem.php?pid='+this.PID, function(data) {
+	    console.log("Killed STEM simulation -- all data loaded");
+        });
+    };
+    
     var loadSTEM = function() {
         var that = this;
         this.status.stem = "starting stem";
@@ -138,25 +143,26 @@
                     };
                     if (output.data.length > (ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT)-5) {
                         outputHelper(type, ctx);
-                    }
+                    };
                 } else {
                     ctx.errors.push(output.msg);
                 };
-            },
-            complete: function() {
             }
          });
     };
     
     var loadOutput = function() {
-        
+        if (this.output.I.length >= 500) {
+	    killSTEM.call(this);
+	    return;
+        }; 
         this.status.stem_output = "loading data";
         var that = this;
         $.getJSON('backend/checkstem.php?pid='+this.PID, function(data) {
             
             for (type in that.output) (function(t) {
                 outputHelper(t, that);
-            })(type);
+            }(type));
 
             if (data.status === "success") {
                 setTimeout(function() {
@@ -240,8 +246,6 @@
         var that        = this;
         for (var i=0; i < this.graph.y.length; i++) (function(i) {
             var region = that.graph.y[i];
-            console.log("adding data for:", that.graph.chart.series[i].name)
-            console.log("data added:", that.output[that.graph.output][cur_pos][region]);
             that.graph.chart.series[i].addPoint(that.output[that.graph.output][cur_pos][region], cur_pos+1);
         } (i));
         

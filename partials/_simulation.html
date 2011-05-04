@@ -35,7 +35,7 @@ in the form of maps and charts. This page is still a WIP.
         <div class="sim_time_series">
             <div id="ts_canvas"></div>
 	    <div id="ts_settings">
-		*settings placeholder*
+		
 	    </div>
         </div>
         <div class="sim_phase_plot">
@@ -55,7 +55,7 @@ in the form of maps and charts. This page is still a WIP.
     var CANVAS_HEIGHT;
     var map;
     var big_map; // for maximized map
-
+    var IS_RUNNING = false;
     var delay = (function(){
         var timer = 0;
         return function(callback, ms){
@@ -89,28 +89,23 @@ in the form of maps and charts. This page is still a WIP.
     
     // setup sim button action listeners
     $("#run").click(function(){
-        scen.run();
-        //scen.setGraph('ts_canvas', 'I', scen.getRegions().splice(0,2));
+	if (IS_RUNNING) {
+	    scen.resume();
+	} else {
+            scen.run();
+	    IS_RUNNING = true;
+	}
     });
     
     $("#pause").click(function(){
-        var flag = 0;
-        if (flag == 0){
-            scen.pause();
-            flag = 1;
-        } else {
-            scen.resume();
-            flag = 0;
-        }
+        scen.pause();
     });
 
-    $("#reset").click(function(){
+    $("#reset, #stop").click(function(){
         scen.reset();
+	IS_RUNNING = false;
     });
 
-    $("#stop").click(function(){
-        scen.stop();
-    });
 
     $("#maximize").click(function(){
         CANVAS_WIDTH = $(".sim_screen").width();
