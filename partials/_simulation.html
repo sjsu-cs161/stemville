@@ -15,7 +15,7 @@ in the form of maps and charts. This page is still a WIP.
         <div class="sim_map">
             <div class="map_info"></div>
             <div class="sim_map_canvas" id="map_canvas">
-                <img class="sim_button_minmax" id="maximize" alt="maximize" title="maximize map" src="img/sim_buttons/maximize.svg"/>
+               <!-- <img class="sim_button_minmax" id="maximize" alt="maximize" title="maximize map" src="img/sim_buttons/maximize.svg"/>-->
                 <table class="map_legend" cellspacing="5">
                     <tr><th colspan="2"><b>Legend</b></th></tr>
                     <tr><td>S</td><td style="background: blue">&nbsp;&nbsp;</td></tr>
@@ -34,6 +34,9 @@ in the form of maps and charts. This page is still a WIP.
         </div>
         <div class="sim_time_series">
             <div id="ts_canvas"></div>
+	    <div id="ts_settings">
+		*settings placeholder*
+	    </div>
         </div>
         <div class="sim_phase_plot">
             Phase plot here
@@ -63,7 +66,7 @@ in the form of maps and charts. This page is still a WIP.
 
     // Display the map's info
     $(".map_info").html("<b>Country: </b>"+scen.getCountry()+"&nbsp;&nbsp;<b>Level: </b>"+scen.getLevel());
-    
+   /* 
     $(window).resize(function() {
     delay(function(){
        console.log;
@@ -72,20 +75,22 @@ in the form of maps and charts. This page is still a WIP.
        scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
     }, 500);
     });
-
+    */
     function simulationLoaded() {
        CANVAS_WIDTH = $("#map_canvas").width();
        CANVAS_HEIGHT = $("#map_canvas").height();
 
        map = Raphael("map_canvas", CANVAS_WIDTH, CANVAS_HEIGHT);
-
+       scen.setGraph('ts_canvas', 'I', scen.getRegions().splice(0,2));
        scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
+       $('#map_canvas').draggable();
+       $('.sim_time_series').draggable().resizable();
     }
     
     // setup sim button action listeners
     $("#run").click(function(){
         scen.run();
-        scen.setGraph('ts_canvas', 'I', scen.getRegions().splice(0,2));
+        //scen.setGraph('ts_canvas', 'I', scen.getRegions().splice(0,2));
     });
     
     $("#pause").click(function(){
