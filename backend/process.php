@@ -1,4 +1,6 @@
 <?php
+require_once 'settings.php';
+
 /* An easy way to keep in track of external processes.
  * Ever wanted to execute a process in php, but you still wanted to have somewhat controll of the process ? Well.. This is a way of doing it.
  * @compability: Linux only. (Windows does not work).
@@ -15,7 +17,7 @@ class Process{
         }
     }
     private function runCom(){
-        $command = 'cd /home/tseng/group2/stem && export DISPLAY=:0 && nohup '.$this->command.' > /home/tseng/group2/stemweblog 2>&1 & echo $!';
+        $command = $STEM_COMMAND;
         //exec("export DISPLAY=:0");
 	//exec("cd /home/tseng/group2/stem");
         exec($command ,$op);

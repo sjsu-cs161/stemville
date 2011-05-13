@@ -1,10 +1,12 @@
 <?php
 
+require_once 'settings.php';
+
 class MongoClass
 {
 	// SET XML MAIN DIRECTORY & CSV MAIN DIRECTORIES
-	public $xml_main_dir = "/var/www/cs161/group2/stemville";
-	public $csv_main_dir = "/var/www/cs161/group2/stemville";
+	public $xml_main_dir = STEMVILLE_ROOT_PATH;
+	public $csv_main_dir = STEMVILLE_ROOT_PATH;
 
 	//return 1 if successful
 	public function createRecord($project, $scenario, $maps) {				// keep parameters?

@@ -1,5 +1,7 @@
 <?php
 
+require_once 'settings.php';
+
 require_once('process.php');
 
 
@@ -15,9 +17,7 @@ if (!isset($project) || !isset($scenario)) {
 	die();
 }
 
-$stem_path = "/var/www/cs161/group2/stem";
-
-$stem_cmd = $stem_path."/STEM -headless -log -uri platform:/resource/".$project."/scenarios/".$scenario.".scenario";
+$stem_cmd = STEM_ROOT_PATH."/STEM -headless -log -uri platform:/resource/".$project."/scenarios/".$scenario.".scenario";
 
 $stem = new Process($stem_cmd);
 

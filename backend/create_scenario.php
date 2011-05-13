@@ -1,5 +1,6 @@
 <?php
 
+require_once 'settings.php';
 
 function create_scen ($dir) {
 	$data = $_POST['data'];
@@ -329,13 +330,13 @@ echo "made it here\n";
 	$arr = array_unique($data[graphs]);
 	foreach ($arr as $g) {
 		$h = explode("geography/",$g);
-		$path = "/var/www/cs161/group2/stem/plugins/" . $h[1];
+		$path = STEM_ROOT_PATH . "/plugins/" . $h[1];
 echo $path . " = path\n";
 		if(strpos($g, "population")) {
 echo $g . " hello g\n";
 			$j = explode("/", $g);
 echo "this is j $j[11]\n";
-			$path = "/var/www/cs161/group2/stem/plugins/population/human/data/country/$j[10]/$j[11]";
+			$path = STEM_ROOT_PATH . "/plugins/population/human/data/country/$j[10]/$j[11]";
 		}
 		exec("cp $path $dir/graphs/"); 	
 echo $dir . "            ------------this is the dir\n";
@@ -366,7 +367,7 @@ function create_project ($dir) {
 
 
 $data = $_POST['data'];
-$p_name = "/var/www/cs161/group2/stem/workspace/" . $data[project_name];
+$p_name = STEM_ROOT_PATH . "/workspace/" . $data[project_name];
 mkdir($p_name, 0777);
 mkdir($p_name . "/decorators" , 0777);
 mkdir($p_name . "/experiments" , 0777);
@@ -387,13 +388,11 @@ create_graphs($p_name);
 create_project($p_name);
 #create("$p_name")
 #<<<<<<< HEAD
-$stem_path = "/var/www/cs161/group2/stem/";
 #echo "$stem_path" . "STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
 #exec("export DIPLAY=:0");
 #exec("$stem_path." "STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
 #=======
-$stem_path = "./var/www/cs161/group2/stem/";
-echo "$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
+echo STEM_ROOT_PATH . "/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
 //exec("$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
 
 countryAutoLvl();
@@ -416,7 +415,7 @@ function countryAutoLvl()
 		}	
 	}
 	for ($i = $highLvl; $i > -1; $i--)
-		if (file_exists("../rsrc/svg/".$iso."/".$iso."_".$i."_MAP.xml"))
+		if (file_exists(STEMVILLE_ROOT_PATH . "/rsrc/svg/" . $iso . "/" . $iso . "_" . $i . "_MAP.xml"))
 		{
 			//$highLvl = $i;
 			break;

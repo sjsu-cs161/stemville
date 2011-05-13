@@ -1,5 +1,6 @@
 <?php
 
+require_once 'settings.php';
 
 if (isset($_GET['project'])) {
     $project = $_GET['project'];
@@ -26,7 +27,7 @@ if ($type == 'POP_COUNT') {
 } else if ($type == 'DISEASE_DEATHS') {
     $type = 'Disease Deaths';
 }
-$path_to_workspace = "/home/tseng/group2/stem/workspace/".$project.'/Recorded\ Simulations';
+$path_to_workspace = STEM_ROOT_PATH."/workspace/" . $project . '/Recorded\ Simulations';
 $dir_list = array();
 // TODO: PLEASE FIGURE OUT THE REST OF THE PATH (VARIES W/ DATE)
 // DON'T FORGET TO APPEND TRAILING SLASH (/) TO $OUTPUT_DIR
@@ -36,7 +37,7 @@ $dir = explode(" ", $dir_list[1]);
 $scenario_folder = $dir[9];
 $disease_folder = "dis1/human"; //FOR NOW...
 
-$OUTPUT_DIR = '/home/tseng/group2/stem/workspace/'.$project.'/Recorded Simulations/'.$scenario_folder.'/'.$disease_folder.'/';
+$OUTPUT_DIR = STEM_ROOT_PATH.'/workspace/'.$project.'/Recorded Simulations/'.$scenario_folder.'/'.$disease_folder.'/';
 
 
 
