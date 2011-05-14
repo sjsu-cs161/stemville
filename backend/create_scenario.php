@@ -137,7 +137,8 @@ function create_sequencer ($dir) {
 	#$dublinCore->setAttribute("source","");
 	$dublinCore->setAttribute("type","stemtype://org.ecplise.stem/Sequencer");
 	$dublinCore->setAttribute("created","");
-	$dublinCore->setAttribute("valid","start=$data[sequencer][start_time]; end=$d");
+	$tempers = $data[sequencer][start_time];
+        $dublinCore->setAttribute("valid","start=$tempers; end=$d");
 	
 	$eclipse->appendChild($dublinCore);	
 	$eclipse->appendChild($startTime);	
