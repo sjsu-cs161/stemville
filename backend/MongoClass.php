@@ -8,8 +8,9 @@ class MongoClass
 	public $xml_main_dir = STEMVILLE_ROOT_PATH;
 	public $csv_main_dir = STEMVILLE_ROOT_PATH;
 
-	//return 1 if successful
-	public function createRecord($project, $scenario, $maps) {				// keep parameters?
+	// Creates a record that holds project names, scenario names, and needed maps
+	// Returns 1 if successful
+	public function createRecord($project, $scenario, $maps) {
 		try {
 			$connection = new Mongo("localhost");
 			$collection = $connection->test->stem1;
@@ -31,7 +32,8 @@ class MongoClass
 		}
 	}
 
-	// Note: first index is always the MongoID
+	// Lists all the created records.
+	// Returns an array of all the records. Note: first index is always the MongoID
 	public function listAllRecords() {
 		try {
 			$connection = new Mongo("localhost");
@@ -58,7 +60,8 @@ class MongoClass
 		}
 	}
 
-	// Note: first index is always the MongoID
+	// Retrieves the recorded for the inputted project name
+	// Returns the record. Note: first index is always the MongoID
 	public function getRecord($proj_name) {
 		try {
 			$connection = new Mongo("localhost");
@@ -93,9 +96,8 @@ class MongoClass
 	}
 
 
-
-
-	//return 1 if successful
+	// Inserts JSON object into the database with a specified scenario
+	// Returns 1 if successful
 	public function insertJSON($jsonObj, $scen_key) {
 		try {
 			$connection = new Mongo("localhost");
@@ -116,7 +118,8 @@ class MongoClass
 		}
 	}
 
-
+	// Retrieves JSON object for a specified scenario
+	// Returns a JSON object if successful
 	public function retrieveJSON($scen_key) {
 		try {
 			$connection = new Mongo("localhost");
@@ -136,8 +139,8 @@ class MongoClass
 		}
 	}
 
-
-	// $fileLocation = unique scenario folder + filename
+	// Converts an XML file into a JSON object, then persists it into the database using a scenario name.
+	// Note: $fileLocation = unique scenario folder + filename
 	public function insertXML($file_location, $scen_key)
 	{
 		try {
@@ -162,7 +165,8 @@ class MongoClass
 
 	}
 
-	// $fileLocation = unique user folder + filename
+	// Inserts a CSV file directly into the database using a scenario name.
+	// Note: $fileLocation = unique user folder + filename
 	public function insertCSV($file_location, $scen_key)
 	{
 		try {
@@ -185,7 +189,8 @@ class MongoClass
 		}
 	}
 
-	// returns number of bytes in file written
+	// Retrieves a CSV file from the database.
+	// Returns a CSV file and the number of bytes written
 	public function retrieveCSV($scen_key)
 	{
 		try {
@@ -210,6 +215,7 @@ class MongoClass
 		}
 	}
 
+	// Deletes all information for a specified scenario name.
 	public function deleteAll($scen_key)
 	{
 		try {
