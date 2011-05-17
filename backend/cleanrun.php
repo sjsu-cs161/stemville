@@ -1,5 +1,9 @@
 <?php
+require_once('settings.php');
 
-exec("sudo pkill -u www-data");
-exec("sudo rm -r ../../stem/workspace/1*/R*");
+
+exec("rm -r " . STEM_ROOT_PATH . "/workspace/1*/R*");
+exec("pkill -u www-data");
+
+echo "killed all stem processes and cleaned logged data";
 ?>

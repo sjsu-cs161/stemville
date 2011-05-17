@@ -15,6 +15,7 @@ function create_scen ($dir) {
 	$solver = $doc->createElement("solver");
 	$dublin2 = $doc->createElement("dublinCore");
 	$v = $data[scenario][name];
+print "this is the scenario $v **************\n ";
 	$n = $data[project_name];
 	$eclipse->setAttribute("xmi:version","2.0");
 	$eclipse->setAttribute("xmlns:xmi","http://www.omg.org/XMI");
@@ -86,6 +87,7 @@ function create_scen ($dir) {
 	$solver->appendChild($dublin2);
 	$eclipse->appendChild($solver);
 	$doc->appendChild($eclipse);
+	$v = $data[scenario][name];
 	$doc->save($dir . "/scenarios/$v.scenario");
 
 
@@ -369,6 +371,7 @@ function create_project ($dir) {
 
 $data = $_POST['data'];
 $p_name = STEM_ROOT_PATH . "/workspace/" . $data[project_name];
+print "$p_name this is pname\n";
 mkdir($p_name, 0777);
 mkdir($p_name . "/decorators" , 0777);
 mkdir($p_name . "/experiments" , 0777);
@@ -393,7 +396,7 @@ create_project($p_name);
 #exec("export DIPLAY=:0");
 #exec("$stem_path." "STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
 #=======
-echo STEM_ROOT_PATH . "/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
+#echo STEM_ROOT_PATH . "/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario\n";;
 //exec("$stem_path/STEM -headless -log -uri platform:/resource/$data[project_name]/scenarios/$data[scenario][name].scenario");
 
 countryAutoLvl();
