@@ -42,7 +42,7 @@ class MongoClass
 			$listarray = array();
 			$i = 0;
 
-			$cursor = $collection->find()->sort(array('date'=>-1));
+			$cursor = $collection->find()->sort(array('project'=>-1));
 
 			foreach ($cursor as $obj) {
 				$listarray[$i] = $obj;
