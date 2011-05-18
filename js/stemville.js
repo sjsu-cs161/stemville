@@ -14,6 +14,7 @@
         MAP_SCALE           = {x: 100, y: 100},                  // X x Y scale
         FETCH_DELAY         = 1000 * 10,             // delay between each output fetch
         OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Should be high; like 10-100
+	CYCLE_KILL	    = 500, // Kill STEM after cycles fetched. Set to 0 for continuous run
         simObj              = {},
         graphObj            = {},
         loadTracker         = {
@@ -141,6 +142,9 @@
                     for (var i=0; i < output.data.length; i++) {
                         ctx.output[type].push(output.data[i]);
                     };
+		    if (ctx.callbacks.load) {
+			ctx.callbacks.load.call(ctx);
+		    };
                     if (output.data.length > (ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT)-5) {
                         outputHelper(type, ctx);
                     };
@@ -152,8 +156,11 @@
     };
     
     var loadOutput = function() {
-        if (this.output.I.length >= 500) {
+        if (CYCLE_KILL > 0 && this.output.I.length >= CYCLE_KILL) {
 	    killSTEM.call(this);
+	    if (this.callbacks.loaded) {
+		this.callbacks.loaded.call(this);
+	    };
 	    return;
         }; 
         this.status.stem_output = "loading data";
@@ -296,6 +303,8 @@
 
         this.delay = 200;
         
+	this.callbacks = {};
+ 
         this.mapData = {
             canvas: null,
             output: "I",
@@ -361,7 +370,21 @@
         
         return this;
     };
-     
+
+
+    // Set a callback used when loading    
+    sv_proto.setLoadCallback = function(callback) {
+	this.callbacks.load = callback;
+	
+	return this;
+    };
+    // Callback for finished loading
+    sv_proto.setLoadedCallback = function(callback) {
+	this.callbacks.loaded = callback;
+
+	return this;
+    };
+
     sv_proto.init = function(callback, ctx) { 
         if (callback) {
             loadTracker.setCB(callback, ctx ? ctx : this);

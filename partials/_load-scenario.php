@@ -16,10 +16,17 @@ $mc = new MongoClass();
         ?>
     </select>
     <a class="button" id="btn_load-scen">Load Scenario</a>
+    <div style="margin-top: 100px">
+	<a class="button" id="clear_processes">Kill All Running STEM Processes</a>
+    </div>
 </div>
 
 
 <script type="text/javascript">
+
+$('#clear_processes').click(function() {
+    $.get('backend/cleanrun.php');
+});
 
 $('#btn_load-scen').click(function() {
     LOADER.load();

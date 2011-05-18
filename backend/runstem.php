@@ -17,8 +17,8 @@ if (!isset($project) || !isset($scenario)) {
 	die();
 }
 
-$stem_cmd = STEM_ROOT_PATH."/STEM -headless -log -uri platform:/resource/".$project."/scenarios/".$scenario.".scenario";
-
+$stem_cmd = "./STEM -headless -log -uri platform:/resource/".$project."/scenarios/".$scenario.".scenario";
+//echo $stem_cmd;
 $stem = new Process($stem_cmd);
 
 if ($stem->status()) {
