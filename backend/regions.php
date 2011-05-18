@@ -15,7 +15,7 @@ if (strlen($COUNTRY) != 3 || !isset($LEVEL)) {
     die();
 }
 
-$list = json_decode(file_get_contents(STEMVILLE_ROOT_PATH."/rsrc/json/full_ISO_3166.json"));
+$list = json_decode(file_get_contents("../rsrc/json/full_ISO_3166.json"));
 $output = Array();
 $region_data = $list->$COUNTRY->$LEVEL;
 

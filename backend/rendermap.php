@@ -35,7 +35,7 @@ require_once 'settings.php';
 	}
 	
 	$COUNTRY = strtoupper($COUNTRY);
-	$INPUT_FILE = STEMVILLE_ROOT_PATH."/rsrc/svg/".$COUNTRY."/".$COUNTRY."_".$LEVEL."_MAP.xml";
+	$INPUT_FILE = "../rsrc/svg/".$COUNTRY."/".$COUNTRY."_".$LEVEL."_MAP.xml";
 
 //****************************************************************************************
 	function scale($degreesE, $degreesW, $degreesPX, $degreesN, $degreesS, $degreesPY)
