@@ -157,11 +157,7 @@
     
     var loadOutput = function() {
         if (CYCLE_KILL > 0 && this.output.I.length >= CYCLE_KILL) {
-	    killSTEM.call(this);
-	    if (this.callbacks.loaded) {
-		this.callbacks.loaded.call(this);
-	    };
-	    return;
+	        this.stopLoad();
         }; 
         this.status.stem_output = "loading data";
         var that = this;
@@ -596,6 +592,14 @@
         
         return this;
     };
+
+    sv_proto.stopLoad = function() { 
+        killSTEM.call(this);
+        if (this.callbacks.loaded) {
+            this.callbacks.loaded.call(this);
+        };
+        return;
+    }
     
     sv_proto.isRunning = function() {
         if (simObj[this.OBJECT_ID].RUNNING) return true;

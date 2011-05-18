@@ -43,6 +43,7 @@ Initializing data load...</span>
         <strong class="delay_title">Delay (ms)</strong>
         <input type="text" value="600" id="delay_input" />
     
+        <strong class="progress_title">Simulation Progress</strong>
         <div id="progressbar"></div>
 
         <!-- <div class="map_info"></div> -->
@@ -112,7 +113,7 @@ Initializing data load...</span>
        scen.setDelay(600);
 
        scen.setLoadCallback(function() {
-	       $('#sim_status').html('<img src="img/csv_load.gif" alt="loading" />' + " Loading.... "+this.output.I.length+" cycles loaded");
+	       $('#sim_status').html('<img src="img/csv_load.gif" alt="loading" />' + ' Loading.... <strong>'+this.output.I.length+'</strong> cycles loaded. <a onclick="scen.stopLoad()">STOP LOADING</a>');
            $('#cycle_num').html(this.output.I.length);
        });
 
@@ -186,9 +187,10 @@ Initializing data load...</span>
     });
 
     $("#reset, #stop").click(function(){
-        scen.reset();
+        scen.reset().initGraph();
 	    IS_RUNNING = false;
         setProgress(0);
+
     });
 
     $('#delay_input').change(function() {
