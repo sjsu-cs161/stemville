@@ -255,7 +255,7 @@
         } (i));
         
     };
-    var simulation = function(cur_pos, max_pos, callback, ctx) {
+    var simulation = function(cur_pos, max_pos, callback, callback_finished) {
         var that = this;
         
         simObj[this.OBJECT_ID].ITER = cur_pos;
@@ -270,12 +270,15 @@
         
         // Callback, with optional parameter current iteration and max iterations
         if (callback) {
-            callback.call(ctx, cur_pos+1, max_pos);
+            callback.call(this, cur_pos+1, max_pos);
         };
         
-        if (cur_pos++ < max_pos) {
-            simObj[this.OBJECT_ID].SIM_ID = setTimeout(function() { simulation.call(that, cur_pos, max_pos, callback, ctx); }, this.delay);
+        if (++cur_pos < max_pos) {
+            simObj[this.OBJECT_ID].SIM_ID = setTimeout(function() { simulation.call(that, cur_pos, max_pos, callback, callback_finished); }, this.delay);
         } else {
+            if (callback_finished) {
+                callback_finished.call(that);
+            };
             delete simObj[this.OBJECT_ID].ITER;
             delete simObj[this.OBJECT_ID].RUNNING;
         };
@@ -540,7 +543,7 @@
     
     // Simulation controls
     
-    sv_proto.run = function(callback, ctx) {
+    sv_proto.run = function(callback, callback_finished) {
         // Make sure everything is reset first
         if (this.isRunning()) this.stop();
         if (this.hasGraph()) {
@@ -552,19 +555,19 @@
         
         
         // Call centralized function to sync all animations
-        simObj[this.OBJECT_ID].MAX_ITER = this.output.I.length;
-        simObj[this.OBJECT_ID].CALLBACK = callback;
-        simObj[this.OBJECT_ID].CTX = ctx || this;
-        simObj[this.OBJECT_ID].RUNNING = true;
+        simObj[this.OBJECT_ID].MAX_ITER          = this.output.I.length;
+        simObj[this.OBJECT_ID].CALLBACK          = callback;
+        simObj[this.OBJECT_ID].CALLBACK_FINISHED = callback_finished;
+        simObj[this.OBJECT_ID].RUNNING           = true;
 
-        simulation.call(this, 0, this.output.I.length, callback, ctx || this);
+        simulation.call(this, 0, this.output.I.length, callback, callback_finished);
         
         return this;
     };
 
     
     
-    sv_proto.pause = function(callback, ctx) {
+    sv_proto.pause = function() {
         if (simObj[this.OBJECT_ID].SIM_ID) {
             clearTimeout(simObj[this.OBJECT_ID].SIM_ID);
         };
@@ -574,12 +577,12 @@
     
     sv_proto.resume = function() {
         if (!simObj[this.OBJECT_ID].SIM_ID) return this;
-        var CUR_ITER = simObj[this.OBJECT_ID].ITER,
-            MAX_ITER = simObj[this.OBJECT_ID].MAX_ITER,
-            CALLBACK = simObj[this.OBJECT_ID].CALLBACK,
-            CTX      = simObj[this.OBJECT_ID].CTX;
+        var CUR_ITER          = simObj[this.OBJECT_ID].ITER,
+            MAX_ITER          = simObj[this.OBJECT_ID].MAX_ITER,
+            CALLBACK          = simObj[this.OBJECT_ID].CALLBACK,
+            CALLBACK_FINISHED = simObj[this.OBJECT_ID].CALLBACK_FINISHED;
             
-        simulation.call(this, CUR_ITER, MAX_ITER, CALLBACK, CTX);
+        simulation.call(this, CUR_ITER, MAX_ITER, CALLBACK, CALLBACK_FINISHED);
         
         return this;
     };

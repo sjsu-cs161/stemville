@@ -177,6 +177,8 @@ Initializing data load...</span>
 	} else {
         scen.run(function(iter, max) {
             setProgress(100 * iter/max);
+        }, function() {
+            setProgress(100);
         });
 	    IS_RUNNING = true;
 	}
