@@ -16,28 +16,50 @@ Initializing data load...</span>
     <div class="sim_screen" id="screen">
     <div id="ts-holder">
         <div id="ts_canvas"></div>
+
+        <div id="info_box">
+
+        <h3>Information</h3>
+        <ol>
+            <li>Click on any region on the map that you wish to graph in the time series above.</li>
+
+            <li>STEM is currently running and is generating data. Currently <strong id="cycle_num">0</strong> cycles have been fetched.</li>
+            <li>Select what data (S,E,I,R) to plot as well as simulation speed</li>
+            <li>Run simulation by clicking the play button at the top</li>
+            <li><a onclick='$("#info_box").hide()'>Hide this info by clicking here</a></li>
+        </ol>
+        </div>
+
+
+        <table class="map_legend" cellspacing="5">
+            <tr><th colspan="2"><strong>Legend</strong></th></tr>
+            <tr><td>S</td><td style="background: blue">&nbsp;&nbsp;</td></tr>
+            <tr><td>E</td><td style="background: yellow">&nbsp;&nbsp;</td></tr>
+            <tr><td>I</td><td style="background: red">&nbsp;&nbsp;</td></tr>
+            <tr><td>R</td><td style="background: green">&nbsp;&nbsp;</td></tr>
+        </table>
+        <strong class="data_select_title">Data Select</strong>
+        <select id="data_select">
+            <option value="I">I</option>
+            <option value="S">S</option>
+            <option value="E">E</option>
+            <option value="R">R</option>
+        </select>
+
+        <strong class="delay_title">Delay (ms)</strong>
+        <input type="text" value="600" id="delay_input" />
+    
+        <div class="map_info"></div>
+
+
     </div>
 
     <div id="map-holder">
 
-        <div class="map_info"></div>
+        
             <div class="" id="map_canvas" style="width:95%; margin: 0 auto">
-                <table class="map_legend" cellspacing="5">
-                    <tr><th colspan="2"><strong>Legend</strong></th></tr>
-                    <tr><td>S</td><td style="background: blue">&nbsp;&nbsp;</td></tr>
-                    <tr><td>E</td><td style="background: yellow">&nbsp;&nbsp;</td></tr>
-                    <tr><td>I</td><td style="background: red">&nbsp;&nbsp;</td></tr>
-                    <tr><td>R</td><td style="background: green">&nbsp;&nbsp;</td></tr>
-                </table>
-                <strong class="data_select_title">Data Select</strong>
-                <select id="data_select">
-                    <option value="I">I</option>
-                    <option value="S">S</option>
-                    <option value="E">E</option>
-                    <option value="R">R</option>
-                </select>
+                
             </div>
-
     </div>
         <div class="sim_time_series"> 
 	       <div id="ts_settings"></div>
@@ -55,7 +77,7 @@ Initializing data load...</span>
     var GRAPH_ARR = [];
     function graphAdd(region) {
         GRAPH_ARR.push(region);
-        scen.setGraph('ts_canvas', "I", GRAPH_ARR);
+        scen.setGraph('ts_canvas', DATA_SELECT, GRAPH_ARR);
 
         scen.initGraph();
     }
@@ -96,10 +118,12 @@ Initializing data load...</span>
        setTimeout(function() { mapInit.call(scen) }, 500); // Make regions clickable
        scen.setDelay(600);
        scen.setLoadCallback(function() {
-	   $('#sim_status').html('<img src="img/csv_load.gif" alt="loading" />' + " Loading.... "+this.output.I.length+" cycles loaded");
+	       $('#sim_status').html('<img src="img/csv_load.gif" alt="loading" />' + " Loading.... "+this.output.I.length+" cycles loaded");
+           $('#cycle_num').html(this.output.I.length);
        });
        scen.setLoadedCallback(function() {
 	       $('#sim_status').html("Finished loading "+this.output.I.length+" cycles");
+           $('#cycle_num').html(this.output.I.length);
        });
     }
 
@@ -162,8 +186,14 @@ Initializing data load...</span>
 	   IS_RUNNING = false;
     });
 
+    $('#delay_input').change(function() {
+        var delay = parseInt($(this).val());
+        scen.setDelay(delay);
+    });
+
     $("#data_select").change(function(){
         DATA_SELECT = $("#data_select").val();
+        scen.setGraphLabel(null,null,DATA_SELECT).initGraph();
         scen.setMap(map, DATA_SELECT);
     });
 </script>

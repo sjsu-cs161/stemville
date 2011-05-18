@@ -333,7 +333,7 @@
         this.graphLabel = {
             title: "STEM Output",
             x: "time",
-            y: "incidence rate"
+            y: "I"
         };
         
         this.phaseContainer = null;
@@ -458,9 +458,9 @@
       
     sv_proto.setGraphLabel = function(title, label_x, label_y) {
         this.graphLabel = {
-            title: "STEM Output",
-            x: label_x ? label_x : this.graphLabel.x,
-            y: label_y ? label_y : this.graphLabel.y
+            title: title || "STEM Output",
+            x: label_x || this.graphLabel.x,
+            y: label_y || this.graphLabel.y
         };
         
         return this;
@@ -473,6 +473,14 @@
 
     sv_proto.killGraph = function() {
         this.graphContainer = null;
+
+        return this;
+    };
+
+    sv_proto.initGraph = function() {
+        if (this.hasGraph()) {
+            resetGraph.call(this);
+        };
 
         return this;
     };
@@ -556,13 +564,7 @@
         return this;
     };
 
-    sv_proto.initGraph = function() {
-        if (this.hasGraph()) {
-            resetGraph.call(this);
-        };
-
-        return this;
-    };
+    
     
     sv_proto.pause = function(callback, ctx) {
         if (simObj[this.OBJECT_ID].SIM_ID) {

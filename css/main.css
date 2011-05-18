@@ -266,7 +266,7 @@ div.sim_map {
 
 div.map_info {
     position: absolute;
-    left: 140px;
+    left: 230px;
     bottom: 12px;
 }
 
@@ -293,9 +293,22 @@ table.map_legend {
     bottom: 10px;
 }
 
+#delay_input {
+    position: absolute;
+
+    width: 65px;
+    left: 140px;
+    bottom: 10px;
+}
+
+strong.delay_title {
+    position: absolute;
+    left: 140px;
+    bottom: 40px;
+}
 strong.data_select_title {
     position: absolute;
-    bottom: 35px;
+    bottom: 40px;
     left: 10px
 }
 
@@ -313,43 +326,6 @@ div.sim_phase_plot {
     width: 51%;
     height: 30%;
 }
-/* end simulation page style */
-
-
-/* MIKAEL's ALTERNATE */
-
-/* Simulation page style */
-/*
-div.sim_controls {
-    border-bottom: solid 2px #0F4C80;
-    border-top: 0;
-    
-    background: lightblue;
-    height: 32px;
-    border-radius: 0;
-
-
-    position:fixed;
-    top: 44px;
-    left:0;
-    right:0;
-
-    background-image: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(1, rgb(173,216,230)),
-        color-stop(0, rgb(160,205,219))
-    );
-    background-image: -moz-linear-gradient(
-        center bottom,
-        rgb(173,216,230) 100%,
-        rgb(160,205,219) 0%
-    );
-
-
-}*/
-
 
 
 /* end simulation page style */
@@ -389,6 +365,9 @@ div.c-graph {
 
     background: rgba(179,218,230, .7);
     -webkit-transition: background .2s ease-in-out;
+    -moz-transition: background .2s ease-in-out;
+    -o-transition: background .2s ease-in-out;
+    transition: background .2s ease-in-out;
 }
 div.c-graph:hover {
     background: rgba(179,218,230, 1);
@@ -408,4 +387,37 @@ div#map-holder {
     height: 100%;
     position: relative;
     float: left;
+}
+div#info_box {
+    padding: 10px;
+    width: 80%;
+    margin: 0 auto;
+    margin-top:20px;
+    line-height: 1.8em;
+
+    opacity: 0.6;
+
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+
+    background: #eee;
+
+
+    -webkit-transition: opacity .2s ease-in-out;
+    -moz-transition: opacity .2s ease-in-out;
+    -o-transition: opacity .2s ease-in-out;
+    transition: opacity .2s ease-in-out;
+}
+div#info_box:hover {
+    opacity: 1.0;
+}
+div#info_box a {
+    color: orange;
+    text-decoration:underline;
+    cursor:pointer;
+}
+div#info_box ol li {
+    margin-left: 30px;
 }
