@@ -9,7 +9,9 @@ in the form of maps and charts. This page is still a WIP.
         <img class="sim_button" id="reset" alt="restart" title="restart simulation" src="img/sim_buttons/restart.svg"/>
         <img class="sim_button" id="step" alt="step" title="step through 1 iteration" src="img/sim_buttons/step.svg"/>
         <img class="sim_button" id="stop" alt="stop" title="stop simulation" src="img/sim_buttons/stop.svg"/>
-<span id="sim_status" style="float:right; margin-right: 30px; line-height: 32px; text-shadow: 1px 1px 1px #fff">Initializing data load...</span>
+<span id="sim_status" style="float:right; margin-right: 30px; line-height: 32px; text-shadow: 1px 1px 1px #fff">
+<img src="img/csv_load.gif" alt="loading" />
+Initializing data load...</span>
     </div>
     <div class="sim_screen" id="screen">
         <img class="sim_button_minmax" id="minimize" alt="minimize" title="minimize map" src="img/sim_buttons/minimize.svg" style="display:none" />
@@ -84,8 +86,9 @@ in the form of maps and charts. This page is still a WIP.
        map = Raphael("map_canvas", CANVAS_WIDTH, CANVAS_HEIGHT);
        scen.setGraph('ts_canvas', 'I', scen.getRegions().splice(0,2));
        scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
+       scen.setDelay(700);
        scen.setLoadCallback(function() {
-	   $('#sim_status').html("Loading.... "+this.output.I.length+" cycles loaded");
+	   $('#sim_status').html('<img src="img/csv_load.gif" alt="loading" />' + " Loading.... "+this.output.I.length+" cycles loaded");
        });
        scen.setLoadedCallback(function() {
 	   $('#sim_status').html("Finished loading "+this.output.I.length+" cycles");
