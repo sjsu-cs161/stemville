@@ -305,7 +305,7 @@
         this.delay = 200;
         
 	this.callbacks = {};
- 
+
         this.mapData = {
             canvas: null,
             output: "I",
@@ -555,7 +555,7 @@
         
         
         // Call centralized function to sync all animations
-        simObj[this.OBJECT_ID].MAX_ITER          = this.output.I.length;
+        simObj[this.OBJECT_ID].MAX_ITER          = this.output[this.mapData.output].length;
         simObj[this.OBJECT_ID].CALLBACK          = callback;
         simObj[this.OBJECT_ID].CALLBACK_FINISHED = callback_finished;
         simObj[this.OBJECT_ID].RUNNING           = true;

@@ -179,6 +179,7 @@ Initializing data load...</span>
             setProgress(100 * iter/max);
         }, function() {
             setProgress(100);
+            IS_RUNNING = false;
         });
 	    IS_RUNNING = true;
 	}
