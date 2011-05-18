@@ -270,9 +270,9 @@
         };
         
         
-        // Callback, with optional parameter current iteration
+        // Callback, with optional parameter current iteration and max iterations
         if (callback) {
-            callback.call(ctx, cur_pos+1);
+            callback.call(ctx, cur_pos+1, max_pos);
         };
         
         if (++cur_pos < max_pos) {

@@ -270,6 +270,13 @@ div.map_info {
     bottom: 12px;
 }
 
+div#progressbar {
+    height: 14px;
+    width: 300px;
+    position: absolute;
+    bottom: 10px;
+    left: 230px;
+}
 table.map_legend {
     background: rgba(255,255,255,.75);
     border-radius: 3px;
@@ -288,7 +295,6 @@ table.map_legend {
     position: absolute;
 
     width: 100px;
-    padding: 5px;
     left: 10px;
     bottom: 10px;
 }

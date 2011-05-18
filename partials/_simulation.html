@@ -43,13 +43,14 @@ Initializing data load...</span>
         <strong class="delay_title">Delay (ms)</strong>
         <input type="text" value="600" id="delay_input" />
     
-        <div class="map_info"></div>
+        <div id="progressbar"></div>
+
+        <!-- <div class="map_info"></div> -->
 
 
     </div>
 
     <div id="map-holder">
-
         
             <div class="" id="map_canvas" style="width:95%; margin: 0 auto">
                 <table class="map_legend" cellspacing="5">
@@ -103,21 +104,24 @@ Initializing data load...</span>
     $(".map_info").html("<strong>Country: </strong>"+scen.getCountry()+"&nbsp;&nbsp;<strong>Level: </strong>"+scen.getLevel());
     function simulationLoaded() {
        CANVAS_HEIGHT = CANVAS_WIDTH = $("#map-holder").width()*0.95;
-       //CANVAS_HEIGHT = $("#map-holder").height()*0.8;
 
        map = Raphael("map_canvas", CANVAS_WIDTH, CANVAS_HEIGHT);
        scen.setGraph('ts_canvas', 'I', []);
        scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT}).initGraph();
        setTimeout(function() { mapInit.call(scen) }, 500); // Make regions clickable
        scen.setDelay(600);
+
        scen.setLoadCallback(function() {
 	       $('#sim_status').html('<img src="img/csv_load.gif" alt="loading" />' + " Loading.... "+this.output.I.length+" cycles loaded");
            $('#cycle_num').html(this.output.I.length);
        });
+
        scen.setLoadedCallback(function() {
 	       $('#sim_status').html("Finished loading "+this.output.I.length+" cycles");
            $('#cycle_num').html(this.output.I.length);
        });
+
+       $('#progressbar').progressbar({ value: 0 });
     }
 
     function mapInit() {
@@ -159,13 +163,20 @@ Initializing data load...</span>
             setTimeout(function() { mapInit.call(that); }, 500);
         }
     }
+
+    // Update the progressbar
+    function setProgress(status) {
+        $('#progressbar').progressbar( "option", "value", status );
+    }
     
     // setup sim button action listeners
     $("#run").click(function(){
 	if (IS_RUNNING) {
 	    scen.resume();
 	} else {
-        scen.run();
+        scen.run(function(iter, max) {
+            setProgress(100 * iter/max);
+        });
 	    IS_RUNNING = true;
 	}
     });
@@ -176,7 +187,8 @@ Initializing data load...</span>
 
     $("#reset, #stop").click(function(){
         scen.reset();
-	   IS_RUNNING = false;
+	    IS_RUNNING = false;
+        setProgress(0);
     });
 
     $('#delay_input').change(function() {
