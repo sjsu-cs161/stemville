@@ -450,6 +450,7 @@
             x: x_axis ? x_axis : this.graph.x
         };
 
+        //resetGraph.call(this);
         
         return this;
     };
@@ -552,6 +553,14 @@
 
         simulation.call(this, 0, this.output.I.length, callback, ctx || this);
         
+        return this;
+    };
+
+    sv_proto.initGraph = function() {
+        if (this.hasGraph()) {
+            resetGraph.call(this);
+        };
+
         return this;
     };
     

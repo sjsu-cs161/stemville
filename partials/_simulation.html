@@ -14,19 +14,22 @@ in the form of maps and charts. This page is still a WIP.
 Initializing data load...</span>
     </div>
     <div class="sim_screen" id="screen">
-        <img class="sim_button_minmax" id="minimize" alt="minimize" title="minimize map" src="img/sim_buttons/minimize.svg" style="display:none" />
-        <div class="sim_map">
-            <div class="map_info"></div>
-            <div class="sim_map_canvas" id="map_canvas">
-               <!-- <img class="sim_button_minmax" id="maximize" alt="maximize" title="maximize map" src="img/sim_buttons/maximize.svg"/>-->
+    <div id="ts-holder">
+        <div id="ts_canvas"></div>
+    </div>
+
+    <div id="map-holder">
+
+        <div class="map_info"></div>
+            <div class="" id="map_canvas" style="width:95%; margin: 0 auto">
                 <table class="map_legend" cellspacing="5">
-                    <tr><th colspan="2"><b>Legend</b></th></tr>
+                    <tr><th colspan="2"><strong>Legend</strong></th></tr>
                     <tr><td>S</td><td style="background: blue">&nbsp;&nbsp;</td></tr>
                     <tr><td>E</td><td style="background: yellow">&nbsp;&nbsp;</td></tr>
                     <tr><td>I</td><td style="background: red">&nbsp;&nbsp;</td></tr>
                     <tr><td>R</td><td style="background: green">&nbsp;&nbsp;</td></tr>
                 </table>
-                <b class="data_select_title">Data Select</b>
+                <strong class="data_select_title">Data Select</strong>
                 <select id="data_select">
                     <option value="I">I</option>
                     <option value="S">S</option>
@@ -34,18 +37,13 @@ Initializing data load...</span>
                     <option value="R">R</option>
                 </select>
             </div>
+
+    </div>
+        <div class="sim_time_series"> 
+	       <div id="ts_settings"></div>
         </div>
-        <div class="sim_time_series">
-            <div id="ts_canvas"></div>
-	    <div id="ts_settings">
-		
-	    </div>
-        </div>
-       <!-- <div class="sim_phase_plot">
-            Phase plot here
-        </div>-->
         <table class="map_legend_max" cellspacing="5" style="display:none">
-                    <tr><th colspan="2"><b>Legend</b></th></tr>
+                    <tr><th colspan="2"><strong>Legend</strong></th></tr>
                     <tr><td>S</td><td style="background: blue">&nbsp;&nbsp;</td></tr>
                     <tr><td>E</td><td style="background: yellow">&nbsp;&nbsp;</td></tr>
                     <tr><td>I</td><td style="background: red">&nbsp;&nbsp;</td></tr>
@@ -54,6 +52,25 @@ Initializing data load...</span>
     </div>
 </div>
 <script type="text/javascript">
+    var GRAPH_ARR = [];
+    function graphAdd(region) {
+        GRAPH_ARR.push(region);
+        scen.setGraph('ts_canvas', "I", GRAPH_ARR);
+
+        scen.initGraph();
+    }
+    function graphRemove(region) {
+        for (var i = 0; i < GRAPH_ARR.length; i++) {
+            if (GRAPH_ARR[i] === region) {
+                GRAPH_ARR.splice(i,1);
+                scen.setGraph('ts_canvas', DATA_SELECT, GRAPH_ARR);
+
+                scen.initGraph();
+                break;
+            }
+        }
+    }
+    var DATA_SELECT = "I";
     var CANVAS_WIDTH;
     var CANVAS_HEIGHT;
     var map;
@@ -68,33 +85,62 @@ Initializing data load...</span>
     })();
 
     // Display the map's info
-    $(".map_info").html("<b>Country: </b>"+scen.getCountry()+"&nbsp;&nbsp;<b>Level: </b>"+scen.getLevel());
-   /* 
-    $(window).resize(function() {
-    delay(function(){
-       console.log;
-       CANVAS_WIDTH = $("#map_canvas").width();
-       CANVAS_HEIGHT = $("#map_canvas").height();
-       scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
-    }, 500);
-    });
-    */
+    $(".map_info").html("<strong>Country: </strong>"+scen.getCountry()+"&nbsp;&nbsp;<strong>Level: </strong>"+scen.getLevel());
     function simulationLoaded() {
-       CANVAS_WIDTH = $("#map_canvas").width();
-       CANVAS_HEIGHT = $("#map_canvas").height();
+       CANVAS_HEIGHT = CANVAS_WIDTH = $("#map-holder").width()*0.95;
+       //CANVAS_HEIGHT = $("#map-holder").height()*0.8;
 
        map = Raphael("map_canvas", CANVAS_WIDTH, CANVAS_HEIGHT);
-       scen.setGraph('ts_canvas', 'I', scen.getRegions().splice(0,2));
-       scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
-       scen.setDelay(700);
+       scen.setGraph('ts_canvas', 'I', []);
+       scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT}).initGraph();
+       setTimeout(function() { mapInit.call(scen) }, 500); // Make regions clickable
+       scen.setDelay(600);
        scen.setLoadCallback(function() {
 	   $('#sim_status').html('<img src="img/csv_load.gif" alt="loading" />' + " Loading.... "+this.output.I.length+" cycles loaded");
        });
        scen.setLoadedCallback(function() {
-	   $('#sim_status').html("Finished loading "+this.output.I.length+" cycles");
+	       $('#sim_status').html("Finished loading "+this.output.I.length+" cycles");
        });
-       $('#map_canvas').draggable();
-       $('.sim_time_series').draggable().resizable();
+    }
+
+    function mapInit() {
+        var map_ref = this.mapData;
+        var count = 0;
+        for (region in map_ref.regions) (function(region) {
+            count++;
+            map_ref.regions[region].attr({fill: "#fff"});
+            var old_sw = 1,
+                clicked = false;
+           /* map_ref.regions[region].hover(function (event) {
+                var attr = this.attr();
+                old_sw = attr['stroke-width'] ? attr['stroke-width'] : 1;
+                this.attr({stroke: "#FF0000", 'stroke-width': 4});
+                clicked = false;
+            }, function (event) {
+                if (!clicked) {
+                    this.attr({stroke: '#000', 'stroke-width':old_sw});
+                }
+            });*/
+            map_ref.regions[region].click(function (event) {
+                var attr = this.attr();
+                clicked = true;
+
+                if (attr['stroke-width'] === 3) {
+                    graphRemove(region);
+                    this.attr({'stroke-width': 1, stroke: "#000"});
+                } else {
+                    graphAdd(region);
+                    this.attr({'stroke-width': 3, stroke: "#000"});
+                }
+            });
+            
+        }(region));
+
+        // Not ready yet, try again...
+        if (count === 0) {
+            var that = this;
+            setTimeout(function() { mapInit.call(that); }, 500);
+        }
     }
     
     // setup sim button action listeners
@@ -102,7 +148,7 @@ Initializing data load...</span>
 	if (IS_RUNNING) {
 	    scen.resume();
 	} else {
-            scen.run();
+        scen.run();
 	    IS_RUNNING = true;
 	}
     });
@@ -113,36 +159,11 @@ Initializing data load...</span>
 
     $("#reset, #stop").click(function(){
         scen.reset();
-	IS_RUNNING = false;
-    });
-
-
-    $("#maximize").click(function(){
-        CANVAS_WIDTH = $(".sim_screen").width();
-        CANVAS_HEIGHT = $(".sim_screen").height();
-        $(".sim_screen").css({"border-style": "solid", "background" : "white"});
-        $(".sim_map").hide();
-        $(".sim_time_series").hide();
-        $(".sim_phase_plot").hide();
-        $(this).hide();
-        $('#minimize').show();
-        $(".map_legend_max").show();
-        big_map = Raphael("screen", CANVAS_WIDTH, CANVAS_HEIGHT);
-        scen.setMap(big_map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT});
-    });
-   
-    $("#minimize").click(function(){
-        big_map.remove();
-        $(".sim_screen").css({"border-style": "hidden", "background" : "none"});
-        $(".sim_map").show();
-        $(".sim_time_series").show();
-        $(".sim_phase_plot").show();
-        $(this).hide();
-        $(".map_legend_max").hide();
-        $('#maximize').show();
+	   IS_RUNNING = false;
     });
 
     $("#data_select").change(function(){
-        scen.setMap(map, $("#data_select").val());
+        DATA_SELECT = $("#data_select").val();
+        scen.setMap(map, DATA_SELECT);
     });
 </script>
