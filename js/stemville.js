@@ -142,9 +142,11 @@
                     for (var i=0; i < output.data.length; i++) {
                         ctx.output[type].push(output.data[i]);
                     };
-		    if (ctx.callbacks.load) {
-			ctx.callbacks.load.call(ctx);
-		    };
+
+        		    if (ctx.callbacks.load) {
+        			    ctx.callbacks.load.call(ctx);
+        		    };
+
                     if (output.data.length > (ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT)-5) {
                         outputHelper(type, ctx);
                     };
@@ -158,16 +160,16 @@
     var loadOutput = function() {
         if (CYCLE_KILL > 0 && this.output.I.length >= CYCLE_KILL) {
 	        this.stopLoad();
+            return;
         }; 
         this.status.stem_output = "loading data";
         var that = this;
-        $.getJSON('backend/checkstem.php?pid='+this.PID, function(data) {
-            
-            for (type in that.output) (function(t) {
-                outputHelper(t, that);
-            }(type));
-
+        $.getJSON('backend/checkstem.php?pid='+this.PID, function(data) {            
             if (data.status === "success") {
+                for (type in that.output) (function(t) {
+                    outputHelper(t, that);
+                }(type));
+
                 setTimeout(function() {
                     loadOutput.call(that);
                 }, FETCH_DELAY);
@@ -598,7 +600,8 @@
         if (this.callbacks.loaded) {
             this.callbacks.loaded.call(this);
         };
-        return;
+        
+        return this;
     }
     
     sv_proto.isRunning = function() {
