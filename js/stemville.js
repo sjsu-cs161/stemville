@@ -273,7 +273,7 @@
             callback.call(ctx, cur_pos+1, max_pos);
         };
         
-        if (++cur_pos < max_pos) {
+        if (cur_pos++ < max_pos) {
             simObj[this.OBJECT_ID].SIM_ID = setTimeout(function() { simulation.call(that, cur_pos, max_pos, callback, ctx); }, this.delay);
         } else {
             delete simObj[this.OBJECT_ID].ITER;
@@ -600,7 +600,7 @@
         if (this.callbacks.loaded) {
             this.callbacks.loaded.call(this);
         };
-        
+
         return this;
     }
     
