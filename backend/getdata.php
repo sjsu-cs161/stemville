@@ -27,7 +27,7 @@ if ($type == 'POP_COUNT') {
 } else if ($type == 'DISEASE_DEATHS') {
     $type = 'Disease Deaths';
 }
-$path_to_workspace = STEM_ROOT_PATH."/workspace/" . $project . '/Recorded\\ Simulations';
+$path_to_workspace = STEM_ROOT_PATH."/workspace/" . $project . '/Recorded Simulations';
 $dir_list = scandir($path_to_workspace, -1);
 $scenario_folder = $dir_list[0];;
 $disease_folder = "dis1/human"; //FOR NOW...
@@ -35,9 +35,7 @@ $disease_folder = "dis1/human"; //FOR NOW...
 $OUTPUT_DIR = STEM_ROOT_PATH.'/workspace/'.$project.'/Recorded Simulations/'.$scenario_folder.'/'.$disease_folder.'/';
 
 
-
 $INPUT_PATH = $OUTPUT_DIR.$type.'_'.$level.'.csv';
-
 
 // ##########################
 // ##### END SETTINGS #######
