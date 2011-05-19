@@ -1,20 +1,31 @@
-// Our global scenario object!
+/*
+ * utils.js is used for various tasks directly affecting the UI
+ * It provides core functionality for navigation as well as other helpers
+ */
 
 var scen;
 
+// Attach an onload handler that enables a LOAD screen
+// Creates global object LOADER which can be used to set or unset the load screen
 window.onload = function() {
     
 	(function() {
 	    var loading = false
 	     ,  LOADER = window.LOADER = {};
+
+       // display load screen
 	     LOADER.load = function() {
 	         loading = true;
 	         $('#loader').show();
 	     }
+       // hide load screen
 	     LOADER.unload = function() {
 	         loading = false;
 	         $('#loader').hide();
 	     }
+
+       // Automatic toggle of load screen.
+       // Hide if visible, show if not
 	     LOADER.toggle = function() {
 	         loading ? this.unload() : this.load();
 	     }
@@ -22,7 +33,10 @@ window.onload = function() {
 
 
 	(function() {
-	    /**
+	  /**
+     * The following code enables easy page navigation using ajax load of partial HTML files
+     * Defines one global namespace: NAV
+     * 
 		 * Please define all pages correctly below to enable a smooth navigation system.
 		 * All pages must be valid elements which have class="c-tab" defined and valid ID.
 		 * Make sure they are nested properly or major messups will occur
@@ -33,18 +47,20 @@ window.onload = function() {
 	     ,  page_create     = $("#new_scenario_page")
 	     ,  page_load       = $("#load_scenario_page")
 	     ,  page_scenario   = $("#cur_scenario_page")
-	     ,  page_settings   = $("#set_scenario_page")
        ,  page_simulation = $("#simulation_page")
 	     ,  loaded_create   = false                    // Flag to indicate whether a user is creating a scenario for the first time
 	     ,  NAV             = window.NAV = {};
      
+       // The show function is used as a router dealing w/ partial page loads
+       // as well as making sure to display the correct view (page) to the user
 	     NAV.show = function(which_page) {
 	         // First set the loader
 	         LOADER.load();
 	         // Then we hide *everything*
 	         pages.hide();
 	         // Then we do something else
-         
+            
+           // load *create scenario* page
 	         if (which_page === 'create') {
 	             // Load create page for a new scenario
 	             // For first time load, ajax load the page _scenario.html
@@ -66,6 +82,7 @@ window.onload = function() {
 	                 page_create.show();
 	                 LOADER.unload();    		                 
 	             }
+           // load *load scenario* page
 	         } else if (which_page === 'load') {
 	             $.ajax({
                       url: "partials/_load-scenario.php",
@@ -78,6 +95,7 @@ window.onload = function() {
                           LOADER.unload();
                       }
                    });
+            // load *simulation* page
             } else if (which_page === 'simulate') {
 	             $.ajax({
                       url: "partials/_simulation.html",
@@ -95,36 +113,16 @@ window.onload = function() {
                           LOADER.unload();
                       }
                    });
-	         } else if (which_page === 'sim2') {
-               $.ajax({
-                      url: "partials/_simul2.html",
-                      timeout: 10000,
-                      success: function(data){
-                          page_simulation.find("> div").html(data);
-                          page_simulation.show();
-                      },
-                      complete: function() {
-                          simulationLoaded();
-                          $.getJSON('rsrc/json/flags.json', function(data) {
-                              var file = '<img style="height:30px; float: left; padding-top:6px; margin-right:6px;" src="rsrc/flags/'+data[scen.getCountry()]+'"/>';
-                              $('#scen_show').html(file+' '+ scen.getScenario()).show();
-                          });
-                          LOADER.unload();
-                      }
-                   });
-           } else if (which_page === 'scenario') {
+           // No loading, just display currentscenario page
+	         } else if (which_page === 'scenario') {
 	             // Display current scenario workflow
 	             page_simulation.show();
-               //page_simulation.show();
-	         } else if (which_page === 'settings') {
-	             // Display settings for current scenario
-	             page_settings.show();
 	         } else {
 	             // Show the front page:
 	             page_front.show();
 	         }
          
-	         // All laoding has been done, now unload
+	         // All loading has been done, now unload
 	         if (which_page !== 'create' && which_page !== 'load') {
 	             setTimeout(function() { LOADER.unload(); }, 800);
 	         }
@@ -135,6 +133,7 @@ window.onload = function() {
 
 /**
  * Creating objects
+ * Code found online: serializes a form into JS object
  */
 $.fn.serializeObject = function() {
     var o = {};
@@ -152,10 +151,20 @@ $.fn.serializeObject = function() {
     return o;
 };
 
+// ******************************************************
+// THE FOLLOWING CODE IS USED WITH *CREATE SCENARIO* PAGE
+// ******************************************************
+
+
+// Set status
 function setStatus(status) {
     $('#status').html(status);
 }
+
+// TMP_MODELS is the core/root models object
 var TMP_MODELS;
+
+// Recursive function to insert a model into a model
 var insertIntoModel = function(arrModels, parent, model) {
     if (arrModels.length === 0) {
         return;
@@ -169,6 +178,7 @@ var insertIntoModel = function(arrModels, parent, model) {
         }
     }
 }
+// Recursive function to insert a graph into a model
 var insertGraphsIntoModel = function(arrModels, parent, graphs) {
     if (arrModels.length === 0) {
         return;
@@ -187,6 +197,7 @@ var insertGraphsIntoModel = function(arrModels, parent, graphs) {
         }
     }
 }
+// Recursive function to insert an infector into a model
 var insertInfectorIntoModel = function(arrModels, parent, infector) {
     if (arrModels.length === 0) {
         return;
@@ -200,6 +211,7 @@ var insertInfectorIntoModel = function(arrModels, parent, infector) {
         }
     }
 }
+// Recursive function to insert a disease into a model
 var insertDiseaseIntoModel = function(arrModels, parent, disease) {
     if (arrModels.length === 0) {
         return;
@@ -213,7 +225,11 @@ var insertDiseaseIntoModel = function(arrModels, parent, disease) {
         }
     }
 }
+
+// Global graph object
 var GLOBAL_GRAPHS = [];
+
+// Add one or multiple graphs to a model as well as global_graphs
 var addGraphs = function() {
     var graphs = $('#selectable_graphs').val();
     var model = $('#graphs_model').val();
@@ -225,6 +241,9 @@ var addGraphs = function() {
     });
     
 }
+
+// Generate a model (triggered when user add model in form)
+// Creates the correct structure and outputs new nesting options
 var generateModel = function() {
     var model = $('#frm-models').serializeObject();
     var first = false;
@@ -262,23 +281,24 @@ var generateModel = function() {
     }    
     $('#frm-models').find('input').attr('value', '');
 }
+
+// Core function -- assembles all forms on a page into a JSON object,
+// including the models and graph data.
+// Additionally, it cleans the data up and determines relationships
 function buildScenario() {
-    /**
-     * TODO:
-     * -----
-     * Each scenario needs *ONE* top level model
-     * each model has an array: models = [model2, model3, ...]
-     * Serialize to a temp object first, modify as necessary THEN assign accordingly to main JSON object
-     * ====================
-     * Drag-n-drop graphs
-     * add graph arrays to EACH model
-     */
+
+     // Make sure the user created at least one model
      if (!TMP_MODELS) {
          setStatus("No model created. Aborting.");
          return;
      }
+    // display load screen
     LOADER.load();
     setStatus('Serializing and Generating JSON...');
+    
+
+    // Assemble all data and serialize all forms:
+
     
     var data = {};
     
@@ -307,8 +327,6 @@ function buildScenario() {
     // Grab the form data
     data['scenario'] = $('#frm-scenario').serializeObject();
     data['disease'] = disease;
-    // TODO: Figure graphs out
-    //data['graphs'] = null;
     data['infector'] = infector;
     data['models'] = TMP_MODELS;
     data['sequencer'] = $('#frm-sequencer').serializeObject();
@@ -319,14 +337,16 @@ function buildScenario() {
     data['scenario']['sequencer'] = data['sequencer']['name']+'.sequencer';
     data['scenario']['infector'] = data['infector']['name']+'.standard';
     
-    // TODO: Figure out what to do with this
+    // Graphs!
     data['graphs'] = GLOBAL_GRAPHS || [];
     
+    // This makes it easier on the backend, specifically storing info in the database
     data['country'] = COUNTRY_SELECTED;
     
-    console.log(data);
     
     setStatus('Sending object to server...');
+
+    // Object is now ready--transferring to the server
     $.ajax({
         type: "POST",
         url: "backend/create_scenario.php",

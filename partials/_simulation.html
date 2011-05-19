@@ -69,13 +69,17 @@ Initializing data load...</span>
     </div>
 </div>
 <script type="text/javascript">
+
+    // Global array that tracks what regions are graphed
     var GRAPH_ARR = [];
+    // Push a region onto the GRAPH_ARR
     function graphAdd(region) {
         GRAPH_ARR.push(region);
         scen.setGraph('ts_canvas', DATA_SELECT, GRAPH_ARR);
 
         scen.initGraph();
     }
+    // Remove a region from GRAPH_ARR
     function graphRemove(region) {
         for (var i = 0; i < GRAPH_ARR.length; i++) {
             if (GRAPH_ARR[i] === region) {
@@ -87,44 +91,59 @@ Initializing data load...</span>
             }
         }
     }
+
+    // Define variables used to track GRAPH and MAP data
+    // Also helps track SIMULATION status
     var DATA_SELECT = "I";
     var CANVAS_WIDTH;
     var CANVAS_HEIGHT;
     var map;
     var big_map; // for maximized map
     var IS_RUNNING = false;
-    var delay = (function(){
-        var timer = 0;
-        return function(callback, ms){
-        clearTimeout (timer);
-        timer = setTimeout(callback, ms);
-        };
-    })();
 
     // Display the map's info
-    $(".map_info").html("<strong>Country: </strong>"+scen.getCountry()+"&nbsp;&nbsp;<strong>Level: </strong>"+scen.getLevel());
+    // *** Currently disabled functionality *** //
+    //$(".map_info").html("<strong>Country: </strong>"+scen.getCountry()+"&nbsp;&nbsp;<strong>Level: </strong>"+scen.getLevel());
+
+
+
+    // This function is called from the ajax *complete* callback
+    // Will be executed only when the this partial html page has been loaded AND displayed on screen
+    // The function itself will initiate the graph and map, as well as critical callbacks used during laoding
     function simulationLoaded() {
        CANVAS_HEIGHT = CANVAS_WIDTH = $("#map-holder").width()*0.95;
 
        map = Raphael("map_canvas", CANVAS_WIDTH, CANVAS_HEIGHT);
        scen.setGraph('ts_canvas', 'I', []);
        scen.setMap(map).resizeMap({x: CANVAS_WIDTH, y: CANVAS_HEIGHT}).initGraph();
-       setTimeout(function() { mapInit.call(scen) }, 500); // Make regions clickable
+
+       // Make regions clickable! Small delay so the map will have time to initialize itself first
+       setTimeout(function() { mapInit.call(scen) }, 500);
+
+       // Set default delay to 600ms
        scen.setDelay(600);
 
+       // The following callback will be executed everytime new data has been loaded from the backend
+       // and the status on the top right simulation bar will be updated
        scen.setLoadCallback(function() {
 	       $('#sim_status').html('<img src="img/csv_load.gif" alt="loading" />' + ' Loading.... <strong>'+this.output.I.length+'</strong> cycles loaded. <a onclick="scen.stopLoad()">STOP LOADING</a>');
            $('#cycle_num').html(this.output.I.length);
        });
 
+       // The following callback will be executed *only once* when all output has been loaded
+       // and the status on the top right simulation bar will be updated
        scen.setLoadedCallback(function() {
 	       $('#sim_status').html("Finished loading "+this.output.I.length+" cycles");
            $('#cycle_num').html(this.output.I.length);
        });
 
+       // Initialize the progressbar
        $('#progressbar').progressbar({ value: 0 });
     }
 
+    // Initializes the map:
+    // In particular, it makes regions clickable (selectable) and unclickable
+    // Interacts with graphRemove() and graphAdd()
     function mapInit() {
         var map_ref = this.mapData;
         var count = 0;
@@ -133,16 +152,6 @@ Initializing data load...</span>
             map_ref.regions[region].attr({fill: "#fff"});
             var old_sw = 1,
                 clicked = false;
-           /* map_ref.regions[region].hover(function (event) {
-                var attr = this.attr();
-                old_sw = attr['stroke-width'] ? attr['stroke-width'] : 1;
-                this.attr({stroke: "#FF0000", 'stroke-width': 4});
-                clicked = false;
-            }, function (event) {
-                if (!clicked) {
-                    this.attr({stroke: '#000', 'stroke-width':old_sw});
-                }
-            });*/
             map_ref.regions[region].click(function (event) {
                 var attr = this.attr();
                 clicked = true;
@@ -158,19 +167,22 @@ Initializing data load...</span>
             
         }(region));
 
-        // Not ready yet, try again...
+        // If count == 0, the map wasn't properly initialized yet
+        // Not ready yet, try again in 500ms...
         if (count === 0) {
             var that = this;
             setTimeout(function() { mapInit.call(that); }, 500);
         }
     }
 
-    // Update the progressbar
+    // Updates the progressbar
     function setProgress(status) {
         $('#progressbar').progressbar( "option", "value", status );
     }
     
     // setup sim button action listeners
+
+    // Run -- combines RUN and RESUME functionality and tracks state
     $("#run").click(function(){
 	if (IS_RUNNING) {
 	    scen.resume();
@@ -185,10 +197,12 @@ Initializing data load...</span>
 	}
     });
     
+    // Pause simulation
     $("#pause").click(function(){
         scen.pause();
     });
 
+    // RESET and STOP buttons both stop a simulation
     $("#reset, #stop").click(function(){
         scen.reset().initGraph();
 	    IS_RUNNING = false;
@@ -196,11 +210,14 @@ Initializing data load...</span>
 
     });
 
+    // Triggered when the user *change* the value in the delay input field
     $('#delay_input').change(function() {
         var delay = parseInt($(this).val());
         scen.setDelay(delay);
     });
 
+    // Triggered when the user changes data type (S,E,I,R)
+    // Will update both graph and map settings
     $("#data_select").change(function(){
         DATA_SELECT = $("#data_select").val();
         scen.setGraph('ts_canvas', DATA_SELECT, GRAPH_ARR);
