@@ -13,10 +13,10 @@
         BACKEND_MAPS        = "backend/rendermap.php",
         BACKEND_REGIONS     = "backend/regions.php",
         BACKEND_STEM        = "backend/runstem.php",
-        BACKEND_OUTPUT      = "backend/getdata.php", //http://localhost/~bjorkstam/experimental/output/getdata.php?country=NOR&level=1&type=I&start=1&amount=100
-        MAP_SCALE           = {x: 100, y: 100},                  // X x Y scale
-        FETCH_DELAY         = 1000 * 10,             // delay between each output fetch
-        OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Should be high; like 10-100
+        BACKEND_OUTPUT      = "backend/getdata.php",
+        MAP_SCALE           = {x: 100, y: 100},                  // X x Y scale of map
+        FETCH_DELAY         = 1000 * 10,             // delay between each output fetch attempt
+        OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Higher number = less requests
 	    CYCLE_KILL	        = 500, // Kill STEM after cycles fetched. Set to 0 for continuous run
         simObj              = {},
         graphObj            = {},
@@ -156,7 +156,7 @@
     // Internal method that is used to trigger outputHelper(...)
     // Makes sure that STEM is running before delegating load calls
     var loadOutput = function() {
-        if (CYCLE_KILL > 0 && this.output.I.length >= CYCLE_KILL) {
+        if ((this.OPTIONS.CYCLE_KILL || CYCLE_KILL) > 0 && this.output.I.length >= (this.OPTIONS.CYCLE_KILL || CYCLE_KILL)) {
 	        this.stopLoad();
             return;
         }; 
