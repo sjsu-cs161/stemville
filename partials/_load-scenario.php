@@ -1,6 +1,9 @@
 <?php
+// This file represents the *LOAD SCENARIO* screen
 
+// Load the mongodb handlers
 require_once('../backend/MongoClass.php');
+// Create a new instance of MongoClass
 $mc = new MongoClass();
 
 ?>
@@ -9,6 +12,7 @@ $mc = new MongoClass();
 <div id="" style="text-align: center; margin-top: 30px">
     <select id="scen-select">
         <?php
+        // Poll all records from the database
         $scen = $mc->listAllRecords();
         for ($i=0; $i < count($scen); $i++) {
             echo '<option value="'.$scen[$i][project].'|||'.$scen[$i][scenario].'|||'.$scen[$i][maps][0][country].'|||'.$scen[$i][maps][0][level].'">'.$scen[$i][scenario].' ('.$scen[$i][maps][0][country].'_'.$scen[$i][maps][0][level].')</option>';
@@ -25,10 +29,14 @@ $mc = new MongoClass();
 <script type="text/javascript">
 
 $('#clear_processes').click(function() {
+    // Kills all STEM processes on the server and cleans out all output data
     $.get('backend/cleanrun.php');
 });
 
 $('#btn_load-scen').click(function() {
+    // Display load screen
+    // Figure out what the user selected
+    // Create new Scenario instance and redirect to simulation screen
     LOADER.load();
     var val         = $('#scen-select').val().split('|||')
       , proj_name   = val[0]
