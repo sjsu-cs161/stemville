@@ -175,8 +175,6 @@ Initializing data load...</span>
 	if (IS_RUNNING) {
 	    scen.resume();
 	} else {
-        // Following code fixes a *weird* behavior
-        scen.setGraph('ts_canvas', DATA_SELECT, GRAPH_ARR);
         scen.run(function(iter, max) {
             setProgress(100 * iter/max);
         }, function() {
@@ -205,6 +203,7 @@ Initializing data load...</span>
 
     $("#data_select").change(function(){
         DATA_SELECT = $("#data_select").val();
+        scen.setGraph('ts_canvas', DATA_SELECT, GRAPH_ARR);
         scen.setGraphLabel(null,null,DATA_SELECT).initGraph();
         scen.setMap(map, DATA_SELECT);
     });
