@@ -560,7 +560,7 @@
         simObj[this.OBJECT_ID].CALLBACK_FINISHED = callback_finished;
         simObj[this.OBJECT_ID].RUNNING           = true;
 
-        simulation.call(this, 0, this.output.I.length, callback, callback_finished);
+        simulation.call(this, 0, this.output[this.mapData.output].length, callback, callback_finished);
         
         return this;
     };
