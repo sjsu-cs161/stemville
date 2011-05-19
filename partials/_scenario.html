@@ -271,8 +271,21 @@
                 </form>
                 </div>
                 
-			    <h3><a href="#">Models</a></h3>
-			    <div>
+        	<h3><a href="#">Models</a></h3>
+        	<div>
+
+                <div class="help_box">
+                <h3>Newbie Tip</h3>
+                <p>Feel free to nest models within models.</p>
+                <p>Create the following nested structure:</p>
+                <pre>
+dis
+  -> pop
+       -> geo
+                </pre>
+                </div>
+
+                
                 <form class="cf" id="frm-models" name="frm-models">
                     <p class="cf">
                         <label>Parent:</label>
@@ -355,7 +368,29 @@
                 </div>
                 <h3><a href="#">Graphs</a></h3>
                 <div>
+
+
                 <div id="graphs_tab" style="display:none">
+
+                <div class="help_box">
+                        <h3>Newbie Tip</h3>
+                        <p>Assume you have picked <strong>USA</strong> and you want to map level <strong>2</strong>. Add the following graphs: </p>
+                        <p>
+                                <strong>dis/geo</strong> should have:
+                                <ul>
+                                        <li>USA/USA_2.graph
+                                        <li>USA/USA_2_area.graph
+                                        <li>commonborder/USA_2_USA_2.graph
+                                </ul>
+                        </p>
+                        <p>
+                                <strong>dis/pop</strong> should have:
+                                <ul>
+                                        <li>USA_2_human_20xx_population.graph
+                                </ul>
+                        </p>
+                </div>
+
                     <p class="cf">
                         <label>Model:</label>
                         <select id="graphs_model">
@@ -500,19 +535,20 @@
                </form>
                </div>
 
-			   <h3><a href="#"><b>Create</b></a></h3>
-			   <div class="finalize">
-			       <p class="cf" style="margin: 30px 0">Once you click <em>Generate Scenario</em> there is no going back. Please make sure that you have filled out all fields and setup your models correctly, including linking them to graphs as well as disease and infector.</p>
-			       <p class="cf" style="margin: 30px 0">After you click <em>Generate Scenario</em>, all the necessary scenario files will be created on the server and properly linked. You can access all created scenarios and load them by clicking on <em>Load Scenario</em> at any given time.</p>
-			       <p class="cf"><a class="button" onclick="buildScenario()">GENERATE SCENARIO</a></p>
-			       <p id="status"></p>
-			   </div>
+                <h3><a href="#"><b>Create</b></a></h3>
+                <div class="finalize">
+                <p class="cf" style="margin: 30px 0">Once you click <em>Generate Scenario</em> there is no going back. Please make sure that you have filled out all fields and setup your models correctly, including linking them to graphs as well as disease and infector.</p>
+                <p class="cf" style="margin: 30px 0">After you click <em>Generate Scenario</em>, all the necessary scenario files will be created on the server and properly linked. You can access all created scenarios and load them by clicking on <em>Load Scenario</em> at any given time.</p>
+                <p class="cf"><a class="button" onclick="buildScenario()">GENERATE SCENARIO</a></p>
+                <p id="status"></p>
+                </div>
 </div>
 </div>
 
 <script type = "text/javascript" charset="UTF-8">
 
-
+// Load select/drop-down options from server and populate
+// Solver and Disease models
 $.getJSON("rsrc/json/selectoptions.json",function(data) {
     // Johnny Martin would've been proud over this selector statement
     var cur_select = $('#frm-scenario select[name="solver"]');
@@ -532,27 +568,37 @@ $.getJSON("rsrc/json/selectoptions.json",function(data) {
       ;
 });
 
+// Turn the date fields into interactive datepickers
 $('#frm-sequencer input[name="start_date"]').datepicker({ dateFormat: 'yy-mm-dd' });
 $('#frm-sequencer input[name="end_date"]').datepicker({ dateFormat: 'yy-mm-dd' });
 
-// Extend String obj :)
+// Extend String obj w/ startsWith(...) functionality
 String.prototype.startsWith = function(str) {
     return ( str === this.substr( 0, str.length ) );
 }
-//$.getJSON('rsrc/json/models.json', function(data) { ISO_MODELS = data; });
+// Load GRAPHS
 $.getJSON('rsrc/json/graphs.json', function(data) { 
     ISO_GRAPHS = data;
 });
+// Load all region data
 $.getJSON('rsrc/json/full_ISO_3166.json', function(data) { 
     ISO_REGIONS = data;
 });
+
+// Default USA, will be overriden when user selects a country
 var COUNTRY_SELECTED = 'USA';
+
+
+// The following code deals w/ country selection
+// and disease origin drop-down options
 $('#select_country a.button').click(function() {
+    // Determine country selected and display forms
     COUNTRY_SELECTED = $('#select_country select').attr('value');
     $('#country-infect-intro').hide();
     $('#select_country').hide();
     $('#accordion').show();
     
+    // Display disease spread options
     $('#selectable_graphs').html('');
     var graphs = ISO_GRAPHS[COUNTRY_SELECTED];
     for (var i=0; i < graphs.length; i++) {
@@ -565,6 +611,7 @@ $('#select_country a.button').click(function() {
       , r_count
       ;
     
+    // Logic determining source of disease
     if (regions.length > 0) {
         $('#frm-infector input[name="manual-location"]').hide();
         $('#frm-infector select[name="loc1"]').show();
@@ -575,6 +622,12 @@ $('#select_country a.button').click(function() {
     for (var i=0; i < regions.length; i++) {
         $('#frm-infector select[name="loc1"]').append('<option value="'+regions[i].code+'">'+regions[i].name+'</option>');
     }
+    // The following code is used to present more drop-downs (locations, level by level)
+    // if and only if they are available options determined by the file loaded above (see ISO_REGIONS array)
+    // The code blocks (one nested level) are quite boring/irrelevant themselves
+    // All countries have a level 1 start
+    // Some countries have level 2 (the next block)
+    // Few countries have level 3 (the next indented block)
     $('#frm-infector select[name="loc1"]').change(function() {
         if (ISO_REGIONS[COUNTRY_SELECTED][2].length > 0) {
             val = $(this).val();
@@ -591,7 +644,9 @@ $('#select_country a.button').click(function() {
             if (r_count > 0) {
                 $('#frm-infector select[name="loc2"]').show()
             }
-            
+            // Next level (3) selection
+            // Populated fields based on level 2 selection
+            // Level 3 dropdown will *only* appear if a user selects a specific level 2 location
             $('#frm-infector select[name="loc2"]').change(function() {
                 if (ISO_REGIONS[COUNTRY_SELECTED][3].length > 0) {
                     val = $(this).val();

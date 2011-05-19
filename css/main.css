@@ -422,3 +422,32 @@ div#info_box a {
 div#info_box ol li {
     margin-left: 30px;
 }
+
+
+/* Create scenario page */
+
+div.help_box {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 300px;
+    background: #eee;
+    padding: 6px;
+
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+
+    font-size: 11px;
+}
+div.help_box p {
+    margin-top: 5px;
+}
+div.help_box ul {
+    list-style:none;
+}
+div.help_box ul li {
+    margin-left: 3px;
+    font-style: italic;
+}
