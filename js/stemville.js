@@ -124,8 +124,7 @@
     // Output helper method for internal use only
     // "Intelligently" loads STEM output into memory,
     // takes 2 params: type (S,E,I,R, etc.) and ctx (context)
-    // loads at most OUTPUT_AMOUNT cycles at a time, but knows
-    // when to load more or "sleep" for a bit
+    // loads at most OUTPUT_AMOUNT cycles at a time
     var outputHelper = function(type, ctx) {
         $.ajax({
             url: ctx.OPTIONS.BACKEND_OUTPUT || BACKEND_OUTPUT,
@@ -142,15 +141,14 @@
         			    ctx.callbacks.load.call(ctx);
         		    };
 
-                    /*if (output.data.length > (ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT)-5) {
-                        outputHelper(type, ctx);
-                    };*/
                 } else {
                     ctx.errors.push(output.msg);
                 };
             },
             complete: function() {
-                outputHelper(type,ctx);
+                if (ctx.loading) {
+                    outputHelper(type,ctx);
+                };
             }
          });
     };
