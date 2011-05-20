@@ -15,7 +15,7 @@
         BACKEND_STEM        = "backend/runstem.php",
         BACKEND_OUTPUT      = "backend/getdata.php",
         MAP_SCALE           = {x: 100, y: 100},                  // X x Y scale of map
-        FETCH_DELAY         = 1000 * 20,             // delay between each output fetch attempt
+        FETCH_DELAY         = 500,             // Delay waiting for STEM to start running before attempting data fetch
         OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Higher number = less requests
 	    CYCLE_KILL	        = 500, // Kill STEM after cycles fetched. Set to 0 for continuous run
         simObj              = {},
@@ -133,7 +133,7 @@
             timeout: 25000,
             success: function(data){
                 var output = jQuery.parseJSON(data); 
-                if (output.status === "success") {
+                if (output.status === "success" && ctx.loading) {
                     for (var i=0; i < output.data.length; i++) {
                         ctx.output[type].push(output.data[i]);
                     };
@@ -142,24 +142,40 @@
         			    ctx.callbacks.load.call(ctx);
         		    };
 
-                    if (output.data.length > (ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT)-5) {
+                    /*if (output.data.length > (ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT)-5) {
                         outputHelper(type, ctx);
-                    };
+                    };*/
                 } else {
                     ctx.errors.push(output.msg);
                 };
+            },
+            complete: function() {
+                outputHelper(type,ctx);
             }
          });
     };
 
+    // Internal method checking load status every second to ensure everything is in sync
+    var checkLoadStatus = function() {
 
+        if ((this.OPTIONS.CYCLE_KILL || CYCLE_KILL) === 0) {
+            return;
+        }
+
+        if ((this.OPTIONS.CYCLE_KILL || CYCLE_KILL) > 0 && this.output.I.length >= (this.OPTIONS.CYCLE_KILL || CYCLE_KILL)) {
+            this.stopLoad();
+            return;
+        } else {
+            var that = this;
+            setTimeout(function() {
+                checkLoadStatus.call(that);
+            }, 1000);
+        }; 
+    };
     // Internal method that is used to trigger outputHelper(...)
     // Makes sure that STEM is running before delegating load calls
     var loadOutput = function() {
-        if ((this.OPTIONS.CYCLE_KILL || CYCLE_KILL) > 0 && this.output.I.length >= (this.OPTIONS.CYCLE_KILL || CYCLE_KILL)) {
-	        this.stopLoad();
-            return;
-        }; 
+        
         this.status.stem_output = "loading data";
         var that = this;
         $.getJSON('backend/checkstem.php?pid='+this.PID, function(data) {            
@@ -168,6 +184,9 @@
                     outputHelper(t, that);
                 }(type));
 
+                checkLoadStatus.call(that);
+
+            } else {
                 setTimeout(function() {
                     loadOutput.call(that);
                 }, FETCH_DELAY);
@@ -320,6 +339,9 @@
         this.delay = 200;
         
 	    this.callbacks = {};
+        
+        // flag to keep track of output loading
+        this.loading = true; 
 
         // tracks map svg paths 
         this.mapData = {
@@ -662,6 +684,7 @@
     // stopLoad() stops the loading of STEM output data and kills the STEM process
     sv_proto.stopLoad = function() { 
         killSTEM.call(this);
+        this.loading = false;
         if (this.callbacks.loaded) {
             this.callbacks.loaded.call(this);
         };

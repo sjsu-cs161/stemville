@@ -102,11 +102,8 @@ if (isset($_GET['start']) && isset($_GET['amount'])) {
 				echo json_encode($out);
 				die();
             }
-        /* // Not useful code when sleeping -- only use when you want to eliminate the loop
-        } else {
-            echo json_encode(Array("status" => "error", "msg" => "COULD NOT READ DATA FROM FILE"));
         }
-        */
+        
         fclose($handle);
 
         // Requested data is not in the file yet, sleep and check again!
