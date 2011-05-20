@@ -4,7 +4,7 @@ JavaScript library to be used in the StemVille web-application. Creates a global
 
 Usage
 -----
-To create a new scenario:
+To create a new scenario, use the constructor **StemVille.Scenario(_projectName_, _scenarioName_, _country_, _level_)**:
 
     var scen = new StemVille.Scenario(244012012, 'TestScenario', 'SWE', 1);
 
