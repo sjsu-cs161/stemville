@@ -42,6 +42,12 @@ $scenario_folder = $dir_list[0];
 // Right now we have locked all disease names to "dis1"
 $disease_folder = "dis1/human"; //FOR NOW...
 
+// Because we have experienced some randomness in STEM out put
+// double check the format of the output dir 
+if (!is_dir($path_to_workspace . '/' . $scenario_folder . '/' . $disease_folder)) {
+    $disease_folder = "human";
+}
+
 // Construct the absolute path to the output directory
 $OUTPUT_DIR = STEM_ROOT_PATH.'/workspace/'.$project.'/Recorded Simulations/'.$scenario_folder.'/'.$disease_folder.'/';
 
