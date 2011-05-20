@@ -130,7 +130,7 @@
         $.ajax({
             url: ctx.OPTIONS.BACKEND_OUTPUT || BACKEND_OUTPUT,
             data: "project="+ctx.project_name+"&scenario="+ctx.scenario+"&type="+type+"&level="+ctx.level+"&start="+(ctx.output[type].length+1)+"&amount="+(ctx.OPTIONS.OUTPUT_AMOUNT || OUTPUT_AMOUNT),
-            timeout: 20000,
+            timeout: 25000,
             success: function(data){
                 var output = jQuery.parseJSON(data); 
                 if (output.status === "success") {
