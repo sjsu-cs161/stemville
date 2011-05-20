@@ -15,7 +15,7 @@
         BACKEND_STEM        = "backend/runstem.php",
         BACKEND_OUTPUT      = "backend/getdata.php",
         MAP_SCALE           = {x: 100, y: 100},                  // X x Y scale of map
-        FETCH_DELAY         = 1000 * 2,             // Delay waiting for STEM to start running before attempting data fetch
+        FETCH_DELAY         = 1000 * 5,             // Delay waiting for STEM to start running before attempting data fetch
         OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Higher number = less requests
 	    CYCLE_KILL	        = 500, // Kill STEM after cycles fetched. Set to 0 for continuous run
         simObj              = {},
