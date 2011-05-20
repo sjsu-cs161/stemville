@@ -15,7 +15,7 @@
         BACKEND_STEM        = "backend/runstem.php",
         BACKEND_OUTPUT      = "backend/getdata.php",
         MAP_SCALE           = {x: 100, y: 100},                  // X x Y scale of map
-        FETCH_DELAY         = 500,             // Delay waiting for STEM to start running before attempting data fetch
+        FETCH_DELAY         = 1000 * 2,             // Delay waiting for STEM to start running before attempting data fetch
         OUTPUT_AMOUNT       = 100,                  // Number of iterations to fetch per request. Higher number = less requests
 	    CYCLE_KILL	        = 500, // Kill STEM after cycles fetched. Set to 0 for continuous run
         simObj              = {},
@@ -62,7 +62,9 @@
                 if (output.status === "success") {
                     that.PID = output.pid;
                     that.status.stem = "started stem";
-                    loadOutput.call(that);
+                    setTimeout(function() { 
+                        loadOutput.call(that);
+                    }, FETCH_DELAY); 
                 } else {
                     that.status.stem = "could not start stem ... retrying soon";
                     that.errors.push(output.msg);
