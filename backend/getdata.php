@@ -109,6 +109,7 @@ if (isset($_GET['start']) && isset($_GET['amount'])) {
         // Requested data is not in the file yet, sleep and check again!
         sleep(1); // sleep 1 second
     }
+    echo json_encode(Array("status" => "error", "msg" => "NO DATA AVAILABLE"));
 } else {
     echo json_encode(Array("status" => "error", "msg" => "INVALID INPUT PARAMETER(S)"));
 }
