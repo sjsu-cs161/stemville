@@ -1,4 +1,10 @@
 <?php
+/*
+ * Takes the query 'project' and searches mongo database for an ISO country and
+ * level code. Returns a JSON encoded list of regions identified by ISO 3166
+ * codes. Fails if country and level gives is not in full_ISO_3166.json.
+ */
+
 require_once 'settings.php';
 
 require_once('MongoClass.php');

@@ -11,8 +11,8 @@ require_once 'settings.php';
 	require_once('MongoClass.php');
 	
 	// TEMP / FALLBACK VARIABLES
-    	$MAP_SCALE_X = 590; //?  LETS FOLLOW DISPLAY CONV THAT X >= Y  so 640 x 480 590 x450 etc 
-    	$MAP_SCALE_Y = 450; // IS the cANVAS ALSO THIS SIZE? canvas =  raphael(i,j, i+590,j+450)?
+    $MAP_SCALE_X = 590; //?  LETS FOLLOW DISPLAY CONV THAT X >= Y  so 640 x 480 590 x450 etc 
+    $MAP_SCALE_Y = 450; // IS the cANVAS ALSO THIS SIZE? canvas =  raphael(i,j, i+590,j+450)?
 	$COUNTRY = 'ITA';
 	$LEVEL = 1;
 	
@@ -38,6 +38,18 @@ require_once 'settings.php';
 	$INPUT_FILE = "../rsrc/svg/".$COUNTRY."/".$COUNTRY."_".$LEVEL."_MAP.xml";
 
 //****************************************************************************************
+    /*
+     * Scales an input lattitude or longitude value based on the largest and smallest lattitude and
+     * longitude values of the GML map data. Uses spread values to give proper scaling
+     * of countries like Russia, which has a huge east to west spread.
+     * @param $degreesE minimum east longitude
+     * @param $degreesW maximum west longitude
+     * @param $degreesPX input longitude value
+     * @param $degreesN maximum north lattitude
+     * @param $degreesS minimum south lattitude
+     * @param $degreesPY input lattitude value
+     * @return returns an array with the scaled x and y values
+     */
 	function scale($degreesE, $degreesW, $degreesPX, $degreesN, $degreesS, $degreesPY)
 	{
 		$ySpread = $degreesN - $degreesS;
@@ -62,25 +74,31 @@ require_once 'settings.php';
 		return $xy;
 	}
 //******************************************************************************
+    /*
+     * Converts the lattitude and longitude values from the GML data to x and y
+     * coordinates. Shifts x values based on y to x scale ratio.
+     * @param $data array of lattitude and longitude values from the GML data
+     * @return returns string of scaled x and y values
+     */
  	function latLonToXY($data)
 	{
-                global $maxN;
-            	global $maxS;
-            	global $maxE;
-            	global $maxW;
+        global $maxN;
+        global $maxS;
+        global $maxE;
+        global $maxW;
 		global $dWE;
 		global $dNS;
-                global $MAP_SCALE_X;
-            	global $MAP_SCALE_Y;
+        global $MAP_SCALE_X;
+        global $MAP_SCALE_Y;
             	
 		$ratio = $MAP_SCALE_Y/$MAP_SCALE_X;
 		$shift = ($MAP_SCALE_X - $MAP_SCALE_X*$ratio)/2.0;
 		
 		$latLonToXY = "";
-            	$latLonArray = $data;
+        $latLonArray = $data;
 
-	      	$y = "";		
-		$limit =  sizeof($latLonArray);
+        $y = "";
+		$limit = sizeof($latLonArray);
 		$limit--;
 
 		for ($i = 0; $i < $limit; $i = $i + 2)
@@ -93,9 +111,14 @@ require_once 'settings.php';
 			$latLonToXY .= $y." ";
 		}
 		return $latLonToXY;
-        }
+    }
 //******************************************************************************
-        function encodeSVGpath()
+    /*
+     * Converts scaled x and y coordinates into SVG path data. Data is
+     * stored in an array whose name is a region's ISO 3166 code and whose
+     * value is an array of paths that make up that region.
+     */
+    function encodeSVGpath()
 	{	
 		global $mapArray;	        
 		global $ll_data;
@@ -120,7 +143,8 @@ require_once 'settings.php';
 		}
      }
 //******************************************************************************	
-	
+	// Parsing of the GML xml file and setting of the maximum and minimum lat/lon
+    // values is done here
 	$bool = true;
 	$mapArray = array();
 			
