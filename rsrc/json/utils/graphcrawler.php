@@ -1,5 +1,7 @@
 <?php
 
+//THIS FILE WILL CRAWL ALL THROUGH THE ECLIPSE/PLUGINS DIR TO FIND THE FILES THAT CONTAIN GRAPH AND MODEL DATA
+
 $jarfile_list = array();
 $graphfolderlookslike = "org.eclipse.stem.data";
 $path_to_plugins_dir = "/home/user/langs/stem/plugins";//"/path/to/STEM/plugins/directory/on/this/machine/..";
@@ -29,7 +31,7 @@ for ($j = 0; $j < $i; ++$j)
 	exec("jar -ft ".$path_to_plugins_dir."/".$jarfile_list[$j], $output);
 	foreach ($output as $k=>$elem)
 	{
-		if (substr($elem,-6,6) === ".graph")
+		if (substr($elem,-6,6) === ".graph") //FIND ANY FILES THAT END IN .GRAPH OR .MODEL AND ADD THEM TO THE RESPECTIVE ARRAYS
 		{
 			$graphs[$g] = substr($jarfile_list[$j],0,-4)."/".$elem;
 			$g++;
@@ -41,7 +43,7 @@ for ($j = 0; $j < $i; ++$j)
 		}
 	}
 }
-if ($fhandle = fopen("ISO-3166-1.json","r"))
+if ($fhandle = fopen("ISO-3166-1.json","r"))  //OPEN UP THE ISO.JSON WE ARE GOING TO INDEX ALL OF THE GRAPH AND MODELS BY ISO 
 {
 	while(($buffer = fgets($fhandle, 8192)) !== false)
 		$cc = $buffer;
@@ -59,7 +61,7 @@ foreach ($cc as $key =>$elem)
 	{
 		if (preg_match("/".$key."/", $graphs[$x]) == 1)
 		{
-			$graphs_json[$key][$y] = array(); 
+			$graphs_json[$key][$y] = array(); //JUST SOME REGULAR EXPRESSION TYPE STUFF CASUAL USERS SHOULD NOT EDIT THIS CODE
 			$graphs_json[$key][$y]["path"] = str_replace(".", "/", $graphs[$x]);
 			$graphs_json[$key][$y]["path"] = str_replace("_1/1/1","", $graphs_json[$key][$y]["path"]);
 			$graphs_json[$key][$y]["path"] = str_replace("/graph",".graph", $graphs_json[$key][$y]["path"]);
@@ -67,9 +69,9 @@ foreach ($cc as $key =>$elem)
 			$graphs_json[$key][$y]["file"] = substr($f[0], 1);
 			$y++;
 		}
-	}
+	}// FOR EVERY GRAPH FILE FIGURE OUT WHICH COUNTRY IT BELONGS TO AND INDEX IT TO THE PROPER ISO CODE
 }
-echo json_encode($graphs_json);
+echo json_encode($graphs_json);  //BUILD THIS JSON OF ISO INDEXED GRAPHS
 */
 //MODELS
 
@@ -82,7 +84,7 @@ foreach ($cc as $key =>$elem)
 	{
 		if (preg_match("/".$key."/", $models[$x]) == 1)
 		{
-			$models_json[$key][$y] = array();
+			$models_json[$key][$y] = array(); //REGULAR EXPRESSION STUFF CASUAL USERS SHOULD NOT EDIT THIS CODE
 			$models_json[$key][$y]["path"] = str_replace(".","/", $models[$x]);
 			$models_json[$key][$y]["path"] = str_replace("_1/1/1","",$models_json[$key][$y]["path"]); 
 			$models_json[$key][$y]["path"] = str_replace("/model",".model", $models_json[$key][$y]["path"]);
@@ -91,9 +93,9 @@ foreach ($cc as $key =>$elem)
 			$models_json[$key][$y]["file"] = substr($f[0],1);
 			$y++;
 
-		}
+		}  //SAME THING LOOK AT EACH MODEL THAT WE FOUND AND INDEX IT TO AN ISO CODE
 	}
 }
-echo json_encode($models_json);
+echo json_encode($models_json); //BUILD THIS JSON OF ISO CODE INDEXED MODELS
 
 ?>
